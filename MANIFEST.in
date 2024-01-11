@@ -1,1 +1,1 @@
-include dpag/react/*
+recursive-include dpag/react *
