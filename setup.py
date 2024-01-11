@@ -63,6 +63,5 @@ setup(
         "django-storages[google]",
         "DjangoSharepointStorage"
     ],
-    scripts=['bin/dpag'],
     python_requires='>=3.6',
 )
