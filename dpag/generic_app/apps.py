@@ -91,4 +91,4 @@ def running_in_uvicorn():
     """
     Check if the application is running in Uvicorn context.
     """
-    return "dpag/__main__.py" in sys.argv[0]
+    return "start" in sys.argv
