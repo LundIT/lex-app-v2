@@ -128,7 +128,7 @@ LOGIN_REDIRECT_URL = '/process_admin/all'
 
 CSRF_TRUSTED_ORIGINS = ['https://*.' + os.getenv("DOMAIN_HOSTED", "localhost")]
 
-REACT_APP_BUILD_PATH = (Path(__file__).resolve().parent.parent / Path("react/app_source")).as_posix()
+REACT_APP_BUILD_PATH = (Path(__file__).resolve().parent.parent / Path("react/build")).as_posix()
 repo_name = os.getenv("PROJECT_ROOT").split("/")[-1]
 
 # Application definition
