@@ -3,4 +3,5 @@ tests/output.txt
 tests/input*
 tests/output*
 dist/*
+build/
 
