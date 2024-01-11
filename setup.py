@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="dpag-admin",
+    name="dpag",
     version="1.0.0",
     author="Melih Sünbül",
     author_email="m.sunbul@lund-it.com",
@@ -57,6 +57,6 @@ setup(
         "django-storages[google]",
         "DjangoSharepointStorage"
     ],
-    scripts=['bin/dpag-admin'],
+    scripts=['bin/dpag'],
     python_requires='>=3.6',
 )
