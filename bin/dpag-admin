@@ -21,7 +21,7 @@ if __name__ == '__main__':
         return None
 
 
-    dpag = find_package_path("dpag")
+    dpag = find_package_path("dpag-admin")
     print("dpag: " + dpag)
     PROJECT_ROOT_DIR = Path(os.getcwd()).resolve()
     print("PROJECT_ROOT_DIR: " + PROJECT_ROOT_DIR.as_posix())
