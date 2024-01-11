@@ -9,6 +9,11 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/LundIT/dpag-pip",
     packages=find_packages(),
+    entry_points={
+        'console_scripts': [
+            'dpag-admin = dpag.__main__:main',
+        ]
+    },
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
@@ -57,6 +62,6 @@ setup(
         "django-storages[google]",
         "DjangoSharepointStorage"
     ],
-    scripts=['bin/dpag'],
+    scripts=['bin/dpag-admin'],
     python_requires='>=3.6',
 )
