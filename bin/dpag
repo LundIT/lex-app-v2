@@ -7,26 +7,22 @@ import subprocess
 from pathlib import Path
 import site
 import django
-if __name__ == '__main__':
-    def find_package_path(package_name):
-        # Get site-packages directories
-        site_packages_dirs = site.getsitepackages()
+def find_package_path(package_name):
+    # Get site-packages directories
+    site_packages_dirs = site.getsitepackages()
 
-        # Search for the package in site-packages
-        for dir in site_packages_dirs:
-            package_path = os.path.join(dir, package_name)
-            if os.path.exists(package_path):
-                return package_path
+    # Search for the package in site-packages
+    for dir in site_packages_dirs:
+        package_path = os.path.join(dir, package_name)
+        if os.path.exists(package_path):
+            return package_path
 
-        return None
-
+    return None
+def main():
 
     dpag = find_package_path("dpag")
-    print("dpag: " + dpag)
     PROJECT_ROOT_DIR = Path(os.getcwd()).resolve()
-    print("PROJECT_ROOT_DIR: " + PROJECT_ROOT_DIR.as_posix())
     DJANGO_ROOT_DIR = PROJECT_ROOT_DIR / dpag
-    print("DJANGO_ROOT_DIR: " + DJANGO_ROOT_DIR.as_posix())
     sys.path.append(dpag)
 
     # The DJANGO_SETTINGS_MODULE has to be set to allow us to access django imports
