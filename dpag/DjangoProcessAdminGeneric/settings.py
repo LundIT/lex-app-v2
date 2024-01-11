@@ -59,7 +59,6 @@ warnings.simplefilter("ignore", CacheKeyWarning)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 NEW_BASE_DIR = Path(os.getenv("PROJECT_ROOT")).parent.as_posix()
 sys.path.append(NEW_BASE_DIR)
-print("HERE HERE")
 
 GRAPH_MODELS = {
   'app_labels': ["generic_app"],
@@ -130,7 +129,7 @@ LOGIN_REDIRECT_URL = '/process_admin/all'
 CSRF_TRUSTED_ORIGINS = ['https://*.' + os.getenv("DOMAIN_HOSTED", "localhost")]
 
 REACT_APP_BUILD_PATH = (Path(__file__).resolve().parent.parent / Path("react/build")).as_posix()
-repo_name = list(Path(os.getenv("PROJECT_ROOT")).glob("./**/migrations/__init__.py"))[0].parent.parent.name
+repo_name = os.getenv("PROJECT_ROOT").split("/")[-1]
 
 # Application definition
 

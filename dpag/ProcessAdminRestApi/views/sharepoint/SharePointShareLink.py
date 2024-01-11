@@ -1,5 +1,5 @@
-# from django_sharepoint_storage.SharePointClients import ctx
-# from django_sharepoint_storage.SharePointCloudStorageUtils import get_server_relative_path
+from django_sharepoint_storage.SharePointClients import ctx
+from django_sharepoint_storage.SharePointCloudStorageUtils import get_server_relative_path
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework_api_key.permissions import HasAPIKey
@@ -15,7 +15,7 @@ class SharePointShareLink(APIView):
         instance = model.objects.filter(pk=request.query_params['pk'])[0]
         file = instance.__getattribute__(request.query_params['field'])
 
-        # file = ctx.web.get_file_by_server_relative_path(get_server_relative_path(file.url)).execute_query()
-        share_link = "file.share_link(2).execute_query().value.sharingLinkInfo.Url"
+        file = ctx.web.get_file_by_server_relative_path(get_server_relative_path(file.url)).execute_query()
+        share_link = file.share_link(2).execute_query().value.sharingLinkInfo.Url
 
         return JsonResponse({"share_link": share_link})

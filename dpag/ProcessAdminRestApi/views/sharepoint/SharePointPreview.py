@@ -1,5 +1,5 @@
-# from django_sharepoint_storage.SharePointClients import ctx
-# from django_sharepoint_storage.SharePointCloudStorageUtils import get_server_relative_path
+from django_sharepoint_storage.SharePointClients import ctx
+from django_sharepoint_storage.SharePointCloudStorageUtils import get_server_relative_path
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework_api_key.permissions import HasAPIKey
@@ -16,8 +16,8 @@ class SharePointPreview(APIView):
         instance = model.objects.filter(pk=request.query_params['pk'])[0]
         file = instance.__getattribute__(request.query_params['field'])
 
-        # file = ctx.web.get_file_by_server_relative_path(get_server_relative_path(file.url)).get().execute_query()
-        preview_link = "asfd"
+        file = ctx.web.get_file_by_server_relative_path(get_server_relative_path(file.url)).get().execute_query()
+        preview_link = str(os.getenv('FILE_PREVIEW_LINK_BASE')) + "sourcedoc={" +file.unique_id +"}&action=embedview"
 
 
 
