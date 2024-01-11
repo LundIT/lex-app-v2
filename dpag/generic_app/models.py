@@ -98,7 +98,7 @@ app_name = Path(__file__).resolve().parent.parts[-1]
 base_path = Path(__file__).resolve().parent.parent.parent.parent.parent.parent.parent
 
 # List all .py files, excluding those in 'venv' directory and starting with '_'
-files = [f for f in base_path.glob("./**/[!_]*.py") if 'venv' not in f.parts and 'apps.py' not in f.parts]
+files = [f for f in base_path.glob("./**/[!_]*.py") if 'venv' not in f.parts]
 from generic_app.submodels.UserChangeLog import UserChangeLog
 from generic_app.submodels.CalculationLog import CalculationLog
 from generic_app.submodels.Log import Log
@@ -122,7 +122,7 @@ while i < len(files):
     file = files[i]
     i += 1
     name = file.stem
-    subfolders = '.'.join(file.parts[file.parts.index('submodels') + 1:-1])
+    subfolders = '.'.join(file.parts[file.parts.index(repo_name) :-1])
     if not is_special_file(file):
         try:
             # TODO ensure that no wrong things can be imported here. #Security Issue
@@ -191,7 +191,7 @@ try:
     if len(mod_files) == 1:
         mod_file = mod_files[0]
         name = mod_file.stem
-        subfolders = '.'.join(mod_file.parts[mod_file.parts.index('submodels') + 1:-1])
+        subfolders = '.'.join(mod_file.parts[mod_file.parts.index(repo_name): -1])
         exec(f"from {name} import create_groups")
         imported_function = eval("create_groups")
         imported_function()
@@ -202,7 +202,7 @@ auth_files = list(Path(__file__).resolve().parent.parent.parent.parent.parent.pa
 if len(auth_files) > 0:
     auth_file = auth_files[0]
     name = auth_file.stem
-    subfolders = '.'.join(auth_file.parts[file.parts.index('submodels') + 1:-1])
+    subfolders = '.'.join(auth_file.parts[auth_file.parts.index(repo_name): -1])
     exec(f"import {name} as {name}")
     auth_settings = eval(name)
 
@@ -210,7 +210,7 @@ if not model_structure_defined:
     sorted_files = sorted(files)
     for file in sorted_files:
         name = file.stem
-        subfolders = '.'.join(file.parts[file.parts.index('submodels') + 1:-1])
+        subfolders = '.'.join(file.parts[file.parts.index(repo_name): -1])
         if is_included_in_model_structure(file):
             imported_class = eval(name)
             if issubclass(imported_class, HTMLReport):
