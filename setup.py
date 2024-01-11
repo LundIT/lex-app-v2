@@ -9,6 +9,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/LundIT/dpag-pip",
     packages=find_packages(),
+    include_package_data=True,
     entry_points={
         'console_scripts': [
             'dpag = dpag.__main__:main',
