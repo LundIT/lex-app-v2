@@ -34,7 +34,7 @@ class ListModelEntries(ModelEntryProviderMixin, ListAPIView):
 
     def get_lookup_expressions(self, field_type):
         if field_type in INTERVAL_REQUIRING_FIELDS:
-            return ['exact', 'lte', 'gte', 'year', 'month', 'day']
+            return ['exact', 'lte', 'gte']
         if field_type in [TextField, AutoField]:
             return ['exact', 'icontains']
         return ['exact']
