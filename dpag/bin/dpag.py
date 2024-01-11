@@ -31,18 +31,14 @@ def main():
     os.environ.setdefault(
         "PROJECT_ROOT", PROJECT_ROOT_DIR.as_posix()
     )
-    print(PROJECT_ROOT_DIR.as_posix())
-    # This is for setting up django
-    print("sys.path: " + str(sys.path))
+
     django.setup()
-    # subprocess.run(["python3", "manage.py", "createcachetable"], cwd=DJANGO_ROOT_DIR)
-    # subprocess.run(["python3", "manage.py", "makemigrations"], cwd=DJANGO_ROOT_DIR)
-    # subprocess.run(["python3", "manage.py", "migrate"], cwd=DJANGO_ROOT_DIR)
+    subprocess.run(["python3", "manage.py", "createcachetable"], cwd=DJANGO_ROOT_DIR)
+    subprocess.run(["python3", "manage.py", "makemigrations"], cwd=DJANGO_ROOT_DIR)
+    subprocess.run(["python3", "manage.py", "migrate"], cwd=DJANGO_ROOT_DIR)
 
     command = ["uvicorn", "--reload", "--loop", "asyncio", f"--app-dir={DJANGO_ROOT_DIR}",
                "DjangoProcessAdminGeneric.asgi:application"]
-
-    # Use subprocess.run to execute the command
 
     subprocess.run(command)
 
