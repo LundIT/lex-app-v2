@@ -1,0 +1,2 @@
+/app    IN_CLOSE_WRITE,IN_CREATE,IN_DELETE  unison -auto -batch -confirmbigdel=true /app /vscode
+/vscode IN_CLOSE_WRITE,IN_CREATE,IN_DELETE  unison -auto -batch -confirmbigdel=true /app /vscode

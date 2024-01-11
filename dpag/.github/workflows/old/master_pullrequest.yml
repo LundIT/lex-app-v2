@@ -1,0 +1,41 @@
+# This is a basic workflow to help you get started with Actions
+
+name: ci-master-pullrequest
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  pull_request:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+      with:
+        ref: master
+
+    - uses: azure/login@v1.1
+      with:
+        login-server: lexreg.azurecr.io
+        creds: ${{ secrets.AZURE_CREDENTIALS_GLOBAL }}
+
+    - uses: azure/docker-login@v1
+      with:
+        login-server: lexreg.azurecr.io
+        username: ${{ secrets.AZURE_LEXREG_USERNAME_GLOBAL }}
+        password: ${{ secrets.AZURE_LEXREG_PASSWORD_GLOBAL }}
+
+    # Build the master branch
+    - name: Run docker build
+      run: docker build --no-cache -t django_process_admin:latest -f ./build/Dockerfile .
+
+    # As this is the pull request CI, the image shall just be built, but not pushed as the pull request
+    # might not be authorized to be merged yet

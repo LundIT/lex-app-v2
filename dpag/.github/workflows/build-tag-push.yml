@@ -1,0 +1,44 @@
+# This is a basic workflow to help you get started with Actions
+
+name: ci-build-tag-push
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: "Enter the tag name"
+        required: true
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - id: "gcloud-auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v1"
+        with:
+          token_format: "access_token"
+          credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
+          create_credentials_file: false
+
+      - uses: "docker/login-action@v1"
+        with:
+          registry: "europe-docker.pkg.dev" # or REGION-docker.pkg.dev
+          username: "oauth2accesstoken"
+          password: "${{ steps.gcloud-auth.outputs.access_token }}"
+
+      - name: Run docker build
+        run: docker build --no-cache -t django_process_admin:${{ github.event.inputs.tag_name }} -f ./build/Dockerfile .
+
+      - name: Run docker tag
+        run: |
+          docker tag django_process_admin:${{ github.event.inputs.tag_name }} europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/django_process_admin:${{ github.event.inputs.tag_name }}
+          docker tag django_process_admin:${{ github.event.inputs.tag_name }} europe-docker.pkg.dev/superb-blend-305320/lex-public-registry/django_process_admin:${{ github.event.inputs.tag_name }}
+
+      - name: Run docker push
+        run: |
+          docker push europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/django_process_admin:${{ github.event.inputs.tag_name }}
+          docker push europe-docker.pkg.dev/superb-blend-305320/lex-public-registry/django_process_admin:${{ github.event.inputs.tag_name }}

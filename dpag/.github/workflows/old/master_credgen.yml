@@ -1,0 +1,80 @@
+
+name: ci-master-credgen-push
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+      with:
+        ref: master
+
+    - uses: azure/login@v1.1
+      with:
+        login-server: lexreg.azurecr.io
+        creds: ${{ secrets.AZURE_CREDENTIALS_GLOBAL }}
+
+    - uses: azure/docker-login@v1
+      with:
+        login-server: lexreg.azurecr.io
+        username: ${{ secrets.AZURE_LEXREG_USERNAME_GLOBAL }}
+        password: ${{ secrets.AZURE_LEXREG_PASSWORD_GLOBAL }}
+
+    - uses: google-github-actions/setup-gcloud@v0
+      with:
+        service_account_email: ${{ secrets.GCP_EMAIL }}
+        service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+        export_default_credentials: true
+
+    - name: Configure Docker
+      run: |
+        gcloud auth configure-docker europe-docker.pkg.dev
+
+    # Build the image
+    - name: Run docker build
+      run: docker build --no-cache -t lex_credgen:master -f ./build/DockerfileCredentialGenerator .
+
+    # Retag the image so it can be pushed to Azure
+    - name: Run docker tag
+      run: docker tag lex_credgen:master lexreg.azurecr.io/lex_credgen:master
+
+    # Retag the image so it can be pushed to Azure
+    - name: Run docker tag
+      run: docker tag lex_credgen:master lexreg.azurecr.io/lex_credgen:latest
+
+    # Push the image to Azure
+    - name: Run docker push
+      run: docker push lexreg.azurecr.io/lex_credgen:master
+
+    # Push the image to Azure
+    - name: Run docker push
+      run: docker push lexreg.azurecr.io/lex_credgen:latest
+
+    # Tag for GCP
+    - name: Run docker tag
+      run: docker tag lex_credgen:master europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_credgen:master
+
+    # Push to GCP
+    - name: Run docker push
+      run: docker push europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_credgen:master
+
+    # Tag for GCP
+    - name: Run docker tag
+      run: docker tag lex_credgen:master europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_credgen:latest
+
+    # Push to GCP
+    - name: Run docker push
+      run: docker push europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_credgen:latest
+
