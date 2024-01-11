@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="Dpag",
+    name="dpag",
     version="1.0.0",
     author="Melih Sünbül",
     author_email="m.sunbul@lund-it.com",
