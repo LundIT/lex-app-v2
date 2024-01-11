@@ -11,7 +11,7 @@ setup(
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            'dpag-admin = dpag.__main__:main',
+            'dpag = dpag.__main__:main',
         ]
     },
     classifiers=[
@@ -62,6 +62,6 @@ setup(
         "django-storages[google]",
         "DjangoSharepointStorage"
     ],
-    scripts=['bin/dpag-admin'],
+    scripts=['bin/dpag'],
     python_requires='>=3.6',
 )
