@@ -1,5 +1,4 @@
-#!/Users/melihsunbul/LUND_IT/submodels/ACP_PFE/venv/bin/python
-# -*- coding: utf-8 -*-
+"""Dpag Command Line Interface."""
 import sys
 import os
 import subprocess
