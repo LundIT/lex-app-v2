@@ -7,12 +7,11 @@ from pathlib import Path
 import site
 import django
 import argparse
-
+import uvicorn
 
 def setup_django():
     PACKAGE_ROOT = Path(__file__).resolve().parent.parent.as_posix()
     PROJECT_ROOT_DIR = Path(os.getcwd()).resolve()
-    DJANGO_ROOT_DIR = PROJECT_ROOT_DIR / PACKAGE_ROOT
     sys.path.append(PACKAGE_ROOT)
 
     # The DJANGO_SETTINGS_MODULE has to be set to allow us to access django imports
@@ -45,18 +44,11 @@ def run_start(init):
         for command in ["createcachetable", "makemigrations", "migrate"]:
             run_django_commands(command)
 
-    command = ["uvicorn", "--reload", "--loop", "asyncio", f"--app-dir={PACKAGE_ROOT}",
-               "DjangoProcessAdminGeneric.asgi:application"]
-
-    subprocess.run(command)
+    uvicorn.run(app="DjangoProcessAdminGeneric.asgi:application", reload=True, app_dir=PACKAGE_ROOT, loop="asyncio")
 
 def main():
     parser = argparse.ArgumentParser(description='Dpag Command Line Interface')
     subparsers = parser.add_subparsers(dest='command', required=True)
-
-    parser_migrate = subparsers.add_parser('migrate')
-    parser_makemigrations = subparsers.add_parser('makemigrations')
-    parser_createcachtable = subparsers.add_parser('createcachtable')
 
     parser_start = subparsers.add_parser('start')
     parser_start.add_argument('--init', action='store_true', help='Perform initial migrations before starting to server')
