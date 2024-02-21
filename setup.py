@@ -61,7 +61,8 @@ setup(
         "sqlalchemy",
         "django_redis",
         "django-storages[google]",
-        "DjangoSharepointStorage"
+        "DjangoSharepointStorage",
+        "click"
     ],
     python_requires='>=3.6',
 )

@@ -91,4 +91,4 @@ def running_in_uvicorn():
     """
     Check if the application is running in Uvicorn context.
     """
-    return "start" in sys.argv
+    return "start" in sys.argv and not "--init" in sys.argv

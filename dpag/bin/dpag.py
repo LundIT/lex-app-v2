@@ -8,11 +8,16 @@ import site
 import django
 import argparse
 import uvicorn
+import click
+from django.core.management import get_commands, call_command
+
+DPAG_PACKAGE_ROOT = None
 
 def setup_django():
-    PACKAGE_ROOT = Path(__file__).resolve().parent.parent.as_posix()
+    global DPAG_PACKAGE_ROOT
+    DPAG_PACKAGE_ROOT = Path(__file__).resolve().parent.parent.as_posix()
     PROJECT_ROOT_DIR = Path(os.getcwd()).resolve()
-    sys.path.append(PACKAGE_ROOT)
+    sys.path.append(DPAG_PACKAGE_ROOT)
 
     # The DJANGO_SETTINGS_MODULE has to be set to allow us to access django imports
     os.environ.setdefault(
@@ -24,38 +29,27 @@ def setup_django():
 
     django.setup()
 
-    return PACKAGE_ROOT
-
-def run_django_commands(command):
+@click.group()
+def dpag():
     setup_django()
-    try:
-        from django.core.management import execute_from_command_line
-    except ImportError as exc:
-        raise ImportError(
-            "Couldn't import Django. Are you sure it's installed and "
-            "available on your PYTHONPATH environment variable? Did you "
-            "forget to activate a virtual environment?"
-        ) from exc
-    execute_from_command_line(["manage.py", command])
 
-def run_start(init):
-    PACKAGE_ROOT = setup_django()
-    if init:
-        for command in ["createcachetable", "makemigrations", "migrate"]:
-            run_django_commands(command)
 
-    uvicorn.run(app="DjangoProcessAdminGeneric.asgi:application", reload=True, app_dir=PACKAGE_ROOT, loop="asyncio")
+@dpag.command()
+def start():
+    global DPAG_PACKAGE_ROOT
+    uvicorn.run(app="DjangoProcessAdminGeneric.asgi:application", reload=True, app_dir=DPAG_PACKAGE_ROOT, loop="asyncio")
+
+@dpag.command()
+def init():
+    for command in ["createcachetable", "makemigrations", "migrate"]:
+        call_command(command)
+
+commands = get_commands()
+commands = list(commands.keys()) + ["createcachetable"]
+for command in commands:
+    @dpag.command(name=command)
+    def _():
+        call_command(command)
 
 def main():
-    parser = argparse.ArgumentParser(description='Dpag Command Line Interface')
-    subparsers = parser.add_subparsers(dest='command', required=True)
-
-    parser_start = subparsers.add_parser('start')
-    parser_start.add_argument('--init', action='store_true', help='Perform initial migrations before starting to server')
-
-    args = parser.parse_args()
-
-    if args.command != 'start':
-        run_django_commands(args.command)
-    else:
-        run_start(args.init)
+    dpag()
