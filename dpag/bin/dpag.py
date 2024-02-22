@@ -9,47 +9,81 @@ import django
 import argparse
 import uvicorn
 import click
-from django.core.management import get_commands, call_command
+from django.core.management import get_commands, call_command, load_command_class
 
-DPAG_PACKAGE_ROOT = None
+DPAG_PACKAGE_ROOT = Path(__file__).resolve().parent.parent.as_posix()
+PROJECT_ROOT_DIR = Path(os.getcwd()).resolve()
+sys.path.append(DPAG_PACKAGE_ROOT)
 
-def setup_django():
-    global DPAG_PACKAGE_ROOT
-    DPAG_PACKAGE_ROOT = Path(__file__).resolve().parent.parent.as_posix()
-    PROJECT_ROOT_DIR = Path(os.getcwd()).resolve()
-    sys.path.append(DPAG_PACKAGE_ROOT)
+# The DJANGO_SETTINGS_MODULE has to be set to allow us to access django imports
+os.environ.setdefault(
+    "DJANGO_SETTINGS_MODULE", "DjangoProcessAdminGeneric.settings"
+)
+os.environ.setdefault(
+    "PROJECT_ROOT", PROJECT_ROOT_DIR.as_posix()
+)
 
-    # The DJANGO_SETTINGS_MODULE has to be set to allow us to access django imports
-    os.environ.setdefault(
-        "DJANGO_SETTINGS_MODULE", "DjangoProcessAdminGeneric.settings"
-    )
-    os.environ.setdefault(
-        "PROJECT_ROOT", PROJECT_ROOT_DIR.as_posix()
-    )
+django.setup()
 
-    django.setup()
-
-@click.group()
-def dpag():
-    setup_django()
+dpag = click.Group()
 
 
-@dpag.command()
-def start():
-    global DPAG_PACKAGE_ROOT
-    uvicorn.run(app="DjangoProcessAdminGeneric.asgi:application", reload=True, app_dir=DPAG_PACKAGE_ROOT, loop="asyncio")
+def execute_django_command(command_name, args):
+    """
+    Generic handler to forward arguments and options to Django management commands.
+    """
+    # Forwarding the command to Django's call_command
+    call_command(command_name, *args)
 
-@dpag.command()
-def init():
-    for command in ["createcachetable", "makemigrations", "migrate"]:
-        call_command(command)
 
+def add_click_command(command_name):
+    """
+    Dynamically creates a Click command that wraps a Django management command.
+    """
+
+    @dpag.command(name=command_name, context_settings=dict(
+        ignore_unknown_options=True,
+        allow_extra_args=True,
+    ))
+    @click.pass_context
+    def command(ctx):
+        # Passing all received arguments and options to the Django command
+        execute_django_command(command_name, ctx.args)
+
+
+# Retrieve and extend the list of Django management commands
 commands = get_commands()
-commands = list(commands.keys()) + ["createcachetable"]
-for command in commands:
-    @dpag.command(name=command)
-    def _():
-        call_command(command)
+
+# Dynamically create and add a Click command for each Django management command
+for command_name in commands.keys():
+    add_click_command(command_name)
+
+
+
+@dpag.command(name="start", context_settings=dict(
+    ignore_unknown_options=True,
+    allow_extra_args=True,
+))
+@click.pass_context
+def start(ctx):
+    """Run the ASGI application with Uvicorn."""
+    uvicorn_args = ctx.args
+    uvicorn.main(uvicorn_args)
+
+
+@dpag.command(context_settings=dict(
+        ignore_unknown_options=True,
+        allow_extra_args=True,
+    ))
+@click.pass_context
+def init(ctx):
+    for command in ["createcachetable", "makemigrations", "migrate"]:
+        execute_django_command(command, ctx.args)
+
 
 def main():
-    dpag()
+    dpag(prog_name="dpag")
+
+
+if __name__ == "__main__":
+    main()
