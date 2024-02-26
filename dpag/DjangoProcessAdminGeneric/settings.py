@@ -59,7 +59,6 @@ warnings.simplefilter("ignore", CacheKeyWarning)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 NEW_BASE_DIR = Path(os.getenv("PROJECT_ROOT")).parent.as_posix()
 sys.path.append(NEW_BASE_DIR)
-print(NEW_BASE_DIR)
 
 GRAPH_MODELS = {
   'app_labels': ["generic_app"],
@@ -102,7 +101,7 @@ if os.getenv("STORAGE_TYPE") == "GCS":
     DEFAULT_FILE_STORAGE = 'DjangoProcessAdminGeneric.gcsUtils.Media'
     GS_BUCKET_NAME = os.getenv("GS_BUCKET_NAME")
     GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-        os.path.join(BASE_DIR, 'django-storages', 'gcpCredentials.json'),
+        os.path.join(os.getenv("PROJECT_ROOT"), 'django-storages', 'gcpCredentials.json'),
     )
     MEDIA_ROOT = "uploads/"
 
