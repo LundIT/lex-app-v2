@@ -15,6 +15,8 @@ DPAG_PACKAGE_ROOT = Path(__file__).resolve().parent.parent.as_posix()
 PROJECT_ROOT_DIR = Path(os.getcwd()).resolve()
 sys.path.append(DPAG_PACKAGE_ROOT)
 
+print(PROJECT_ROOT_DIR)
+
 # The DJANGO_SETTINGS_MODULE has to be set to allow us to access django imports
 os.environ.setdefault(
     "DJANGO_SETTINGS_MODULE", "DjangoProcessAdminGeneric.settings"
