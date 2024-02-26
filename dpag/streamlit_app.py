@@ -7,30 +7,30 @@ import streamlit as st
 import django
 from streamlit_keycloak import login
 
-app_name = 'generic_app'
-PROJECT_ROOT_DIR = Path(os.path.abspath(__file__))
-DJANGO_ROOT_DIR = PROJECT_ROOT_DIR
-files = list(Path(__file__).resolve().parent.glob("./generic_app/submodels/**/_streamlit_structure.py"))
 
-# Add the project base directory to the sys.path
-sys.path.append(DJANGO_ROOT_DIR.as_posix())
+DPAG_PACKAGE_ROOT = Path(__file__).resolve().parent.as_posix()
+PROJECT_ROOT_DIR = Path(os.getcwd()).resolve()
+
+sys.path.append(DPAG_PACKAGE_ROOT)
 
 # The DJANGO_SETTINGS_MODULE has to be set to allow us to access django imports
 os.environ.setdefault(
     "DJANGO_SETTINGS_MODULE", "DjangoProcessAdminGeneric.settings"
 )
+os.environ.setdefault(
+    "PROJECT_ROOT", PROJECT_ROOT_DIR.as_posix()
+)
 
-# This is for setting up django
 django.setup()
 
 
 if __name__ == '__main__':
     import sys
-    from DjangoProcessAdminGeneric.auth_helpers import resolve_user
-    if len(files) > 0:
-        file = files[0]
-        subfolders = '.'.join(file.parts[file.parts.index('submodels') + 1:-1])
-        exec(f"import {app_name}.submodels.{subfolders}._streamlit_structure as streamlit_structure")
+    from dpag.DjangoProcessAdminGeneric.auth_helpers import resolve_user
+    from dpag.DjangoProcessAdminGeneric.settings import repo_name
+    try:
+        exec(f"import {repo_name}._streamlit_structure as streamlit_structure")
+
         st.set_page_config(layout="wide")
         keycloak = login(
             url=os.getenv("KEYCLOAK_URL", "https://auth.test-excellence-cloud.de"),
@@ -48,3 +48,5 @@ if __name__ == '__main__':
                 streamlit_structure.main(user=keycloak.user_info)
             else:
                 st.error("You are not authorized to use this app.")
+    except ImportError:
+        pass

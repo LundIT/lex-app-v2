@@ -9,13 +9,13 @@ import django
 import argparse
 import uvicorn
 import click
+from streamlit.web.cli import main as streamlit_main
+from celery.bin.celery import celery as celery_main
 from django.core.management import get_commands, call_command, load_command_class
 
 DPAG_PACKAGE_ROOT = Path(__file__).resolve().parent.parent.as_posix()
 PROJECT_ROOT_DIR = Path(os.getcwd()).resolve()
 sys.path.append(DPAG_PACKAGE_ROOT)
-
-print(PROJECT_ROOT_DIR)
 
 # The DJANGO_SETTINGS_MODULE has to be set to allow us to access django imports
 os.environ.setdefault(
@@ -60,7 +60,30 @@ commands = get_commands()
 for command_name in commands.keys():
     add_click_command(command_name)
 
+@dpag.command(name="celery", context_settings=dict(
+    ignore_unknown_options=True,
+    allow_extra_args=True,
+))
+@click.pass_context
+def celery(ctx):
+    """Run the ASGI application with Uvicorn."""
+    celery_args = ctx.args
 
+    celery_main(celery_args)
+
+@dpag.command(name="streamlit", context_settings=dict(
+    ignore_unknown_options=True,
+    allow_extra_args=True,
+))
+@click.pass_context
+def streamlit(ctx):
+    """Run the ASGI application with Uvicorn."""
+    streamlit_args = ctx.args
+    file_index = next((i for i, item in enumerate(streamlit_args) if 'streamlit_app.py' in item), None)
+    if file_index is not None:
+        streamlit_args[file_index] = f"{DPAG_PACKAGE_ROOT}/{streamlit_args[file_index]}"
+
+    streamlit_main(streamlit_args)
 
 @dpag.command(name="start", context_settings=dict(
     ignore_unknown_options=True,
