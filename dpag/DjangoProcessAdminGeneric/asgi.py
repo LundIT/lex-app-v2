@@ -16,13 +16,13 @@ from channels.security.websocket import AllowedHostsOriginValidator
 
 import atexit
 import asyncio
-import ProcessAdminRestApi.routing
-from ProcessAdminRestApi.consumers.BackendHealthConsumer import BackendHealthConsumer
-from ProcessAdminRestApi.consumers.CalculationLogConsumer import CalculationLogConsumer
-from ProcessAdminRestApi.consumers.CalculationNotificationConsumer import CalculationNotificationConsumer
-from ProcessAdminRestApi.consumers.MonitoringConsumer import MonitoringConsumer
-from ProcessAdminRestApi.consumers.NotificationsConsumer import NotificationsConsumer
-from ProcessAdminRestApi.consumers.UpdateCalculationStatusConsumer import UpdateCalculationStatusConsumer
+import generic_app.rest_api.routing
+from generic_app.rest_api.consumers.BackendHealthConsumer import BackendHealthConsumer
+from generic_app.rest_api.consumers.CalculationLogConsumer import CalculationLogConsumer
+from generic_app.rest_api.consumers.CalculationNotificationConsumer import CalculationNotificationConsumer
+from generic_app.rest_api.consumers.MonitoringConsumer import MonitoringConsumer
+from generic_app.rest_api.consumers.NotificationsConsumer import NotificationsConsumer
+from generic_app.rest_api.consumers.UpdateCalculationStatusConsumer import UpdateCalculationStatusConsumer
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "DjangoProcessAdminGeneric.settings")
 django_asgi_app = get_asgi_application()
@@ -30,7 +30,7 @@ application = ProtocolTypeRouter(
     {
         "http": django_asgi_app,
         "websocket": AllowedHostsOriginValidator(
-            AuthMiddlewareStack(URLRouter(ProcessAdminRestApi.routing.websocket_urlpatterns))
+            AuthMiddlewareStack(URLRouter(generic_app.rest_api.routing.websocket_urlpatterns))
         ),
     }
 )
