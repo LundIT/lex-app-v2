@@ -21,8 +21,8 @@ setup(
         "Operating System :: OS Independent",
     ],
     install_requires=[
-        "generic_app @ git+https://github.com/LundIT/dpag-generic-app.git@v0.0.1",
-        "ProcessAdminRestApi @ git+https://github.com/LundIT/dpag-rest-api",
+        "generic_app @ git+https://github.com/LundIT/dpag-generic-app",
+        # "ProcessAdminRestApi @ git+https://github.com/LundIT/dpag-rest-api",
         "wheel",
         "django~=4.1.10",
         "django-rest-framework",
