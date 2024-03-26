@@ -1,5 +1,5 @@
 """
-ASGI config for DjangoProcessAdminGeneric project.
+ASGI config for lex_app project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 

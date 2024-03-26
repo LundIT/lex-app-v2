@@ -19,7 +19,7 @@ sys.path.append(LEX_APP_PACKAGE_ROOT)
 
 # The DJANGO_SETTINGS_MODULE has to be set to allow us to access django imports
 os.environ.setdefault(
-    "DJANGO_SETTINGS_MODULE", "DjangoProcessAdminGeneric.settings"
+    "DJANGO_SETTINGS_MODULE", "lex_app.settings"
 )
 os.environ.setdefault(
     "PROJECT_ROOT", PROJECT_ROOT_DIR.as_posix()

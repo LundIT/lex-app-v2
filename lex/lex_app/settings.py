@@ -98,7 +98,7 @@ if os.getenv("STORAGE_TYPE") == "SHAREPOINT":
     MEDIA_ROOT = "uploads/"
 
 if os.getenv("STORAGE_TYPE") == "GCS":
-    DEFAULT_FILE_STORAGE = 'DjangoProcessAdminGeneric.gcsUtils.Media'
+    DEFAULT_FILE_STORAGE = 'lex_app.gcsUtils.Media'
     GS_BUCKET_NAME = os.getenv("GS_BUCKET_NAME")
     GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
         os.path.join(os.getenv("PROJECT_ROOT"), 'django-storages', 'gcpCredentials.json'),
@@ -169,7 +169,7 @@ MIDDLEWARE = [
 
 DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF = False
 
-ROOT_URLCONF = 'DjangoProcessAdminGeneric.urls'
+ROOT_URLCONF = 'lex_app.urls'
 
 TEMPLATES = [
     {

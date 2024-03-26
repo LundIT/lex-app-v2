@@ -1,1 +1,1 @@
-recursive-include dpag/react *
+recursive-include lex/react *
