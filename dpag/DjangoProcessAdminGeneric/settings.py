@@ -138,7 +138,6 @@ INSTALLED_APPS = [
     'generic_app',
     repo_name,
     'celery',
-    'generic_app.rest_api.,
     'react',
     'django.contrib.admin',
     'django.contrib.auth',
