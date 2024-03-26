@@ -12,7 +12,7 @@ setup(
     include_package_data=True,
     entry_points={
         'console_scripts': [
-            'lex = lex.__main__:main',
+            'lex = lex_app.__main__:main',
         ]
     },
     classifiers=[
