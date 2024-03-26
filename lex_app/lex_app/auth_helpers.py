@@ -1,9 +1,3 @@
-from django.contrib.auth import get_user_model
-import requests
-
-import generic_app.models
-from generic_app.models import auth_settings
-
 from django.contrib.auth.models import User, Group
 from sentry_sdk import set_user
 

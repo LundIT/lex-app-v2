@@ -24,7 +24,7 @@ from generic_app.rest_api.consumers.MonitoringConsumer import MonitoringConsumer
 from generic_app.rest_api.consumers.NotificationsConsumer import NotificationsConsumer
 from generic_app.rest_api.consumers.UpdateCalculationStatusConsumer import UpdateCalculationStatusConsumer
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "DjangoProcessAdminGeneric.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lex_app.settings")
 django_asgi_app = get_asgi_application()
 application = ProtocolTypeRouter(
     {

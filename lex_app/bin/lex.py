@@ -1,4 +1,4 @@
-"""Dpag Command Line Interface."""
+"""lex-app Command Line Interface."""
 import sys
 import os
 import subprocess
@@ -13,9 +13,9 @@ from streamlit.web.cli import main as streamlit_main
 from celery.bin.celery import celery as celery_main
 from django.core.management import get_commands, call_command, load_command_class
 
-DPAG_PACKAGE_ROOT = Path(__file__).resolve().parent.parent.as_posix()
+LEX_APP_PACKAGE_ROOT = Path(__file__).resolve().parent.parent.as_posix()
 PROJECT_ROOT_DIR = Path(os.getcwd()).resolve()
-sys.path.append(DPAG_PACKAGE_ROOT)
+sys.path.append(LEX_APP_PACKAGE_ROOT)
 
 # The DJANGO_SETTINGS_MODULE has to be set to allow us to access django imports
 os.environ.setdefault(
@@ -27,7 +27,7 @@ os.environ.setdefault(
 
 django.setup()
 
-dpag = click.Group()
+lex = click.Group()
 
 
 def execute_django_command(command_name, args):
@@ -43,7 +43,7 @@ def add_click_command(command_name):
     Dynamically creates a Click command that wraps a Django management command.
     """
 
-    @dpag.command(name=command_name, context_settings=dict(
+    @lex.command(name=command_name, context_settings=dict(
         ignore_unknown_options=True,
         allow_extra_args=True,
     ))
@@ -60,7 +60,7 @@ commands = get_commands()
 for command_name in commands.keys():
     add_click_command(command_name)
 
-@dpag.command(name="celery", context_settings=dict(
+@lex.command(name="celery", context_settings=dict(
     ignore_unknown_options=True,
     allow_extra_args=True,
 ))
@@ -71,7 +71,7 @@ def celery(ctx):
 
     celery_main(celery_args)
 
-@dpag.command(name="streamlit", context_settings=dict(
+@lex.command(name="streamlit", context_settings=dict(
     ignore_unknown_options=True,
     allow_extra_args=True,
 ))
@@ -81,11 +81,11 @@ def streamlit(ctx):
     streamlit_args = ctx.args
     file_index = next((i for i, item in enumerate(streamlit_args) if 'streamlit_app.py' in item), None)
     if file_index is not None:
-        streamlit_args[file_index] = f"{DPAG_PACKAGE_ROOT}/{streamlit_args[file_index]}"
+        streamlit_args[file_index] = f"{LEX_APP_PACKAGE_ROOT}/{streamlit_args[file_index]}"
 
     streamlit_main(streamlit_args)
 
-@dpag.command(name="start", context_settings=dict(
+@lex.command(name="start", context_settings=dict(
     ignore_unknown_options=True,
     allow_extra_args=True,
 ))
@@ -96,7 +96,7 @@ def start(ctx):
     uvicorn.main(uvicorn_args)
 
 
-@dpag.command(context_settings=dict(
+@lex.command(context_settings=dict(
         ignore_unknown_options=True,
         allow_extra_args=True,
     ))
@@ -107,7 +107,7 @@ def init(ctx):
 
 
 def main():
-    dpag(prog_name="dpag")
+    lex(prog_name="lex")
 
 
 if __name__ == "__main__":

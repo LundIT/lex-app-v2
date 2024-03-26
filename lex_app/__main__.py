@@ -1,8 +1,8 @@
-"""Entry-point for the :program:`dpag` umbrella command."""
+"""Entry-point for the :program:`lex` umbrella command."""
 
 import sys
 def main() -> None:
-    """Entrypoint to the ``dpag`` umbrella command."""
+    """Entrypoint to the ``lex`` umbrella command."""
     from dpag.bin.dpag import main as _main
     sys.exit(_main())
 
