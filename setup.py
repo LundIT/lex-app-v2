@@ -7,7 +7,7 @@ setup(
     author_email="m.sunbul@lund-it.com",
     description="A Python / Django library to create business applications easily with complex logic",
     long_description_content_type="text/markdown",
-    url="https://github.com/LundIT/dpag-pip",
+    url="https://github.com/LundIT/lex-app",
     packages=find_packages(),
     include_package_data=True,
     entry_points={
@@ -21,8 +21,7 @@ setup(
         "Operating System :: OS Independent",
     ],
     install_requires=[
-        "generic_app @ git+https://github.com/LundIT/dpag-generic-app",
-        # "ProcessAdminRestApi @ git+https://github.com/LundIT/dpag-rest-api",
+        "generic_app @ git+https://github.com/LundIT/lex-generic-app",
         "wheel",
         "django~=4.1.10",
         "django-rest-framework",
