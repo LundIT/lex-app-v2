@@ -23,10 +23,3 @@ jobs:
       ref: ${{ inputs.ref}}
       increment: ${{ inputs.increment }}
     secrets: inherit
-
-  build-and-deploy:
-    needs: [release]
-    uses: ./.github/workflows/custom-image.yml
-    with:
-      tag_name: ${{ needs.release.outputs.version}}
-    secrets: inherit

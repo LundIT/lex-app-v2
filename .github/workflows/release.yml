@@ -5,6 +5,12 @@ on:
     types: [published]
 
 jobs:
+  build-image:
+    uses: ./.github/workflows/custom-image.yml
+    with:
+      tag_name: ${{ github.event.release.tag_name }}
+    secrets: inherit
+
   build-and-publish:
     name: Build and publish to PyPI
     runs-on: ubuntu-latest
