@@ -31,14 +31,14 @@ jobs:
           password: "${{ steps.gcloud-auth.outputs.access_token }}"
 
       - name: Run docker build
-        run: docker build --no-cache -t django_process_admin:${{ github.event.inputs.tag_name }} -f ./build/Dockerfile .
+        run: docker build --no-cache -t lex_app:${{ github.event.inputs.tag_name }} -f ./build/Dockerfile .
 
       - name: Run docker tag
         run: |
-          docker tag django_process_admin:${{ github.event.inputs.tag_name }} europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/django_process_admin:${{ github.event.inputs.tag_name }}
-          docker tag django_process_admin:${{ github.event.inputs.tag_name }} europe-docker.pkg.dev/superb-blend-305320/lex-public-registry/django_process_admin:${{ github.event.inputs.tag_name }}
+          docker tag lex_app:${{ github.event.inputs.tag_name }} europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app:${{ github.event.inputs.tag_name }}
+          docker tag lex_app:${{ github.event.inputs.tag_name }} europe-docker.pkg.dev/superb-blend-305320/lex-public-registry/lex_app:${{ github.event.inputs.tag_name }}
 
       - name: Run docker push
         run: |
-          docker push europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/django_process_admin:${{ github.event.inputs.tag_name }}
-          docker push europe-docker.pkg.dev/superb-blend-305320/lex-public-registry/django_process_admin:${{ github.event.inputs.tag_name }}
+          docker push europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app:${{ github.event.inputs.tag_name }}
+          docker push europe-docker.pkg.dev/superb-blend-305320/lex-public-registry/lex_app:${{ github.event.inputs.tag_name }}
