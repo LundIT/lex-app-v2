@@ -22,4 +22,4 @@ jobs:
 
       # Build the image
       - name: Run docker build
-        run: docker build --no-cache -t django_process_admin:dev -f ./build/Dockerfile .
+        run: docker build --no-cache -t lex_app:dev -f ./build/Dockerfile .

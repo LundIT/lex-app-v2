@@ -1,44 +1,34 @@
-# This workflow triggers deployment of the newest version on the production environment.
-# CURRENTLY DISABLED. ENABLE IT ONCE WE USE HELM FOR PRODUCTION
-
-name: CI-release
+name: Publish Python 🐍 distribution 📦 to PyPI
 
 on:
   release:
-    types: [published, deleted]
+    types: [published]
 
 jobs:
-  build:
+  build-and-publish:
+    name: Build and publish to PyPI
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+    - name: Check out code
+      uses: actions/checkout@v2
 
-      - id: latest
-        uses: gregziegan/fetch-latest-release@v1.0.3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'  # Use the version appropriate for your project
 
-      - name: Checkout instance-controller-deployment
-        uses: actions/checkout@v2
-        with:
-          repository: LundIT/instance-controller-deployment
-          token: ${{ secrets.PAT }}
-          path: ./instance-controller-deployment
-          ref: develop
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install setuptools wheel twine
 
-      - name: Update version in versions file
-        uses: sergeysova/jq-action@v2
-        with:
-          cmd: 'touch temp.json && jq ".versions.django_process_admin_generic = \"${{ steps.latest.outputs.tag_name }}\"" instance-controller-deployment/terraform/ic-prod-application/versions.auto.tfvars.json > temp.json && mv temp.json instance-controller-deployment/terraform/ic-prod-application/versions.auto.tfvars.json'
+    - name: Build package
+      run: |
+        python setup.py sdist bdist_wheel
 
-      - name: Push version update
-        run: |
-          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git config --global user.name 'github-actions[bot]'
-          cd instance-controller-deployment
-          git pull
-          git add terraform/ic-prod-application/versions.auto.tfvars.json
-          git commit -m "[DPAG][$(git rev-parse --short "$GITHUB_SHA")] Release version ${{ steps.latest.outputs.tag_name}}"
-          git push origin main
-          ls -a
+    - name: Publish package
+      uses: pypa/gh-action-pypi-publish@master
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_API_TOKEN }}

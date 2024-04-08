@@ -4,7 +4,6 @@ on:
   push:
     tags:
       - "headless-pycharm-v*"
-  workflow_dispatch:
 
 jobs:
   build-headless-pycharm:
@@ -44,40 +43,11 @@ jobs:
         run: |
           docker push --all-tags europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_headless_pycharm
 
-  trigger-deploy-to-test:
+  deploy-to-test:
     needs: [build-headless-pycharm]
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Checkout instance-controller-deployment
-        uses: actions/checkout@v2
-        with:
-          repository: LundIT/instance-controller-deployment
-          token: ${{ secrets.PAT }}
-          path: ./instance-controller-deployment
-          ref: develop
-
-      - name: Update dpag version in versions file
-        uses: mikefarah/yq@master
-        with:
-          cmd: |
-            VERSION=${{ needs.build-headless-pycharm.outputs.version}} yq -i '.lexDependencies.headlessPycharm = strenv(VERSION)' 'instance-controller-deployment/newest-versions.yaml'
-
-      - name: Update version in versions file
-        uses: sergeysova/jq-action@v2
-        with:
-          cmd: 'touch temp.json && jq ".versions.lex_headless_pycharm = \"${{ needs.build-headless-pycharm.outputs.version}}\"" instance-controller-deployment/terraform/ic-test-application/versions.auto.tfvars.json > temp.json && mv temp.json instance-controller-deployment/terraform/ic-test-application/versions.auto.tfvars.json'
-
-      - name: Push version update
-        run: |
-          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git config --global user.name 'github-actions[bot]'
-          cd instance-controller-deployment
-          git pull
-          git add terraform/ic-test-application/versions.auto.tfvars.json
-          git commit -m "[Headless-Pycharm][$(git rev-parse --short "$GITHUB_SHA")] Push version ${{ needs.build-headless-pycharm.outputs.version }}"
-          git pull
-          git push origin develop
-          ls -a
+    uses: LundIT/instance-controller-deployment/.github/workflows/provision-environment.yaml@develop
+    with:
+      lex_env: test
+      versions_override: '{"lex_headless_pycharm":"${{ needs.build-headless-pycharm.outputs.version }}"}'
+      versions_override_persist: true
+    secrets: inherit

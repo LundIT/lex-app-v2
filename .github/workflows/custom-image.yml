@@ -1,0 +1,107 @@
+name: Build image and deploy to env
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: "Enter the tag name"
+        required: false
+      deploy_to_env:
+        description: "Choose the environment to deploy this version to. Leave unchanged to skip deployment"
+        type: choice
+        options:
+          - disabled
+          - test
+          - staging
+          - prerelease
+        default: disabled
+  workflow_call:
+    inputs:
+      tag_name:
+        type: string
+        description: "Enter the tag name"
+        required: false
+      deploy_to_env:
+        description: "Choose the environment to deploy this version to. Leave unchanged to skip deployment"
+        type: string
+        default: disabled
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      TAG_NAME: ${{ steps.tag-name.outputs.TAG_NAME }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PAT}}
+
+      - id: "gcloud-auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v2"
+        with:
+          token_format: "access_token"
+          credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
+
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v2"
+        with:
+          version: ">= 363.0.0"
+
+      - uses: "docker/login-action@v1"
+        with:
+          registry: "europe-docker.pkg.dev"
+          username: "oauth2accesstoken"
+          password: "${{ steps.gcloud-auth.outputs.access_token }}"
+
+      - name: Set Tag Name
+        id: tag-name
+        run: |
+          if [ -z "${{inputs.tag_name}}" ]; then
+            echo "TAG_NAME=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+            echo "TAG_NAME=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          else
+            echo "TAG_NAME=${{inputs.tag_name}}" >> $GITHUB_ENV
+            echo "TAG_NAME=${{inputs.tag_name}}" >> $GITHUB_OUTPUT
+          fi
+          echo "SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Check if tag exists for backend
+        id: check_tag
+        run: |
+          EXISTS=$(gcloud artifacts docker tags list europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app --filter="TAG:${{ env.SHA }}" --format="value(TAG.split('/').slice(-1))" 2>/dev/null)
+          if [ -z "$EXISTS" ]; then
+            echo "::set-output name=tag_exists::false"
+          else
+            echo "::set-output name=tag_exists::true"
+          fi
+
+      - name: Retag image
+        if: steps.check_tag.outputs.tag_exists == 'true'
+        run: |
+          gcloud artifacts docker tags add europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app:${{env.SHA}} europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/django_process_admin:${{ env.TAG_NAME }}
+
+      - name: Set up Docker Buildx
+        if: steps.check_tag.outputs.tag_exists == 'false'
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Push Docker image
+        if: steps.check_tag.outputs.tag_exists == 'false'
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app:${{ env.TAG_NAME }},europe-docker.pkg.dev/superb-blend-305320/lex-public-registry/django_process_admin:${{ env.TAG_NAME }}
+          context: .
+          file: ./build/Dockerfile
+          cache-from: type=registry,ref=europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app:cache
+          cache-to: type=registry,ref=europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app:cache,mode=max
+
+  deploy-to-test:
+    if: inputs.deploy_to_env != 'disabled'
+    needs: [build]
+    uses: LundIT/instance-controller-deployment/.github/workflows/provision-environment.yaml@develop
+    with:
+      lex_env: ${{ inputs.deploy_to_env }}
+      versions_override: '{ "django_process_admin_generic":"${{ needs.build.outputs.TAG_NAME }}"}'
+      versions_override_persist: true
+    secrets: inherit
