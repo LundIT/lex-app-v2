@@ -79,7 +79,7 @@ jobs:
       - name: Retag image
         if: steps.check_tag.outputs.tag_exists == 'true'
         run: |
-          gcloud artifacts docker tags add europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app:${{env.SHA}} europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/django_process_admin:${{ env.TAG_NAME }}
+          gcloud artifacts docker tags add europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app:${{env.SHA}} europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app:${{ env.TAG_NAME }}
 
       - name: Set up Docker Buildx
         if: steps.check_tag.outputs.tag_exists == 'false'
@@ -90,18 +90,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app:${{ env.TAG_NAME }},europe-docker.pkg.dev/superb-blend-305320/lex-public-registry/django_process_admin:${{ env.TAG_NAME }}
+          tags: europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app:${{ env.TAG_NAME }},europe-docker.pkg.dev/superb-blend-305320/lex-public-registry/lex_app:${{ env.TAG_NAME }}
           context: .
           file: ./build/Dockerfile
           cache-from: type=registry,ref=europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app:cache
           cache-to: type=registry,ref=europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app:cache,mode=max
-
-  deploy-to-test:
-    if: inputs.deploy_to_env != 'disabled'
-    needs: [build]
-    uses: LundIT/instance-controller-deployment/.github/workflows/provision-environment.yaml@develop
-    with:
-      lex_env: ${{ inputs.deploy_to_env }}
-      versions_override: '{ "django_process_admin_generic":"${{ needs.build.outputs.TAG_NAME }}"}'
-      versions_override_persist: true
-    secrets: inherit

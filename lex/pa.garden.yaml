@@ -1,6 +1,0 @@
-# garden.yml
-kind: Module
-type: container
-name: dpag
-dockerfile: build/Dockerfile
-image: dpag-dev
