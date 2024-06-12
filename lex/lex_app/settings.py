@@ -87,6 +87,8 @@ else:
             },
     }
 
+DEFAULT_FILE_STORAGE = 'lex_app.CustomDefaultStorage.CustomDefaultStorage'
+
 SHAREPOINT_APP_CLIENT_ID = os.getenv("SHAREPOINT_APP_CLIENT_ID")
 SHAREPOINT_APP_CLIENT_SECRET = os.getenv("SHAREPOINT_APP_CLIENT_SECRET")
 SHAREPOINT_URL = os.getenv("SHAREPOINT_URL", "local")
@@ -130,7 +132,7 @@ CSRF_TRUSTED_ORIGINS = ['https://*.' + os.getenv("DOMAIN_HOSTED", "localhost")]
 
 REACT_APP_BUILD_PATH = (Path(__file__).resolve().parent.parent / Path("react/build")).as_posix()
 repo_name = os.getenv("PROJECT_ROOT").split("/")[-1]
-
+LEGACY_MEDIA_ROOT = os.path.join(NEW_BASE_DIR, f"{repo_name}/")
 # Application definition
 
 INSTALLED_APPS = [
@@ -199,6 +201,7 @@ CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.db.DatabaseCache",
         "LOCATION": "default_cache",
+        'TIMEOUT': None,
     },
     "oidc": {
         "BACKEND": "django.core.cache.backends.db.DatabaseCache",
