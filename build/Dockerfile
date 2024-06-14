@@ -1,6 +1,5 @@
-ARG IMAGE_VERSION
 FROM python:3.8.5-slim-buster
-
+ARG IMAGE_VERSION
 # install all necessary packages
 WORKDIR /app
 RUN apt-get update && apt-get install -y curl gnupg2 wget apt-transport-https ca-certificates gnupg sudo&& \
