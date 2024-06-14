@@ -24,9 +24,4 @@ RUN apt-get update && apt-get install -y curl gnupg2 wget apt-transport-https ca
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install virtualenv
-ENV VIRTUAL_ENV=/app/venv
-RUN python3 -m virtualenv $VIRTUAL_ENV
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-
 RUN pip install --no-cache-dir "git+https://github.com/LundIT/lex-app@$IMAGE_VERSION"

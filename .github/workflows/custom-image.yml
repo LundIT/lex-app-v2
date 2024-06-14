@@ -42,5 +42,7 @@ jobs:
           tags: europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app:${{ github.event.release.tag_name }},europe-docker.pkg.dev/superb-blend-305320/lex-public-registry/lex_app:${{ github.event.release.tag_name }}
           context: .
           file: ./build/Dockerfile
+          cache-from: type=registry,ref=europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app:cache
+          cache-to: type=registry,ref=europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app:cache,mode=max
           build-args: |
             IMAGE_VERSION=${{ github.event.release.tag_name }}
