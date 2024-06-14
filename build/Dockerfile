@@ -1,3 +1,4 @@
+ARG IMAGE_VERSION
 FROM python:3.8.5-slim-buster
 
 # install all necessary packages
@@ -23,3 +24,10 @@ RUN apt-get update && apt-get install -y curl gnupg2 wget apt-transport-https ca
     fc-cache -fv && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install virtualenv
+ENV VIRTUAL_ENV=/app/venv
+RUN python3 -m virtualenv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+RUN pip install --no-cache-dir "git+https://github.com/LundIT/lex-app@$IMAGE_VERSION"
