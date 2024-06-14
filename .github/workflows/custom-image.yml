@@ -1,30 +1,8 @@
 name: Build image and deploy to env
 
 on:
-  workflow_dispatch:
-    inputs:
-      tag_name:
-        description: "Enter the tag name"
-        required: false
-      deploy_to_env:
-        description: "Choose the environment to deploy this version to. Leave unchanged to skip deployment"
-        type: choice
-        options:
-          - disabled
-          - test
-          - staging
-          - prerelease
-        default: disabled
-  workflow_call:
-    inputs:
-      tag_name:
-        type: string
-        description: "Enter the tag name"
-        required: false
-      deploy_to_env:
-        description: "Choose the environment to deploy this version to. Leave unchanged to skip deployment"
-        type: string
-        default: disabled
+  release:
+    types: [published]
 
 jobs:
   build:
@@ -54,22 +32,10 @@ jobs:
           username: "oauth2accesstoken"
           password: "${{ steps.gcloud-auth.outputs.access_token }}"
 
-      - name: Set Tag Name
-        id: tag-name
+      - name: Check if tag exists for backend in prod registry
+        id: check_prod_tag
         run: |
-          if [ -z "${{inputs.tag_name}}" ]; then
-            echo "TAG_NAME=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-            echo "TAG_NAME=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-          else
-            echo "TAG_NAME=${{inputs.tag_name}}" >> $GITHUB_ENV
-            echo "TAG_NAME=${{inputs.tag_name}}" >> $GITHUB_OUTPUT
-          fi
-          echo "SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-
-      - name: Check if tag exists for backend
-        id: check_tag
-        run: |
-          EXISTS=$(gcloud artifacts docker tags list europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app --filter="TAG:${{ env.SHA }}" --format="value(TAG.split('/').slice(-1))" 2>/dev/null)
+          EXISTS=$(gcloud artifacts docker tags list europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app --filter="TAG:${{ github.event.release.tag_name }}"" --format="value(TAG.split('/').slice(-1))" 2>/dev/null)
           if [ -z "$EXISTS" ]; then
             echo "::set-output name=tag_exists::false"
           else
@@ -77,9 +43,24 @@ jobs:
           fi
 
       - name: Retag image
-        if: steps.check_tag.outputs.tag_exists == 'true'
+        if: steps.check_prod_tag.outputs.tag_exists == 'true'
         run: |
-          gcloud artifacts docker tags add europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app:${{env.SHA}} europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app:${{ env.TAG_NAME }}
+          gcloud artifacts docker tags add europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app:${{ github.event.release.tag_name }}" europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app:${{ github.event.release.tag_name }}"
+
+      - name: Check if tag exists for backend in public registry
+        id: check_public_tag
+        run: |
+          EXISTS=$(gcloud artifacts docker tags list europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app --filter="TAG:${{ github.event.release.tag_name }}"" --format="value(TAG.split('/').slice(-1))" 2>/dev/null)
+          if [ -z "$EXISTS" ]; then
+            echo "::set-output name=tag_exists::false"
+          else
+            echo "::set-output name=tag_exists::true"
+          fi
+
+      - name: Retag image
+        if: steps.check_public_tag.outputs.tag_exists == 'true'
+        run: |
+          gcloud artifacts docker tags add europe-docker.pkg.dev/superb-blend-305320/lex-public-registry/lex_app:${{ github.event.release.tag_name }}" europe-docker.pkg.dev/superb-blend-305320/lex-public-registry/lex_app:${{ github.event.release.tag_name }}"
 
       - name: Set up Docker Buildx
         if: steps.check_tag.outputs.tag_exists == 'false'
@@ -90,7 +71,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app:${{ env.TAG_NAME }},europe-docker.pkg.dev/superb-blend-305320/lex-public-registry/lex_app:${{ env.TAG_NAME }}
+          tags: europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app:${{ github.event.release.tag_name }},europe-docker.pkg.dev/superb-blend-305320/lex-public-registry/lex_app:${{ github.event.release.tag_name }}
           context: .
           file: ./build/Dockerfile
           cache-from: type=registry,ref=europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app:cache
