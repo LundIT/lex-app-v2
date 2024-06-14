@@ -1,7 +1,6 @@
 ../.github
 .idea
 .vscode
-venv
 deployment
 __pycache__/
 .git
