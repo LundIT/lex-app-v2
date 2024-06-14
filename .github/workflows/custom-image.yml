@@ -35,7 +35,7 @@ jobs:
       - name: Check if tag exists for backend in prod registry
         id: check_prod_tag
         run: |
-          EXISTS=$(gcloud artifacts docker tags list europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app --filter="TAG:${{ github.event.release.tag_name }}" --format="value(TAG)" 2>/dev/null)
+          EXISTS=$(gcloud artifacts docker tags list europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app --filter="TAG:${{ github.event.release.tag_name }}" --format="value(tags)" 2>/dev/null)
           if [ -z "$EXISTS" ]; then
             echo "::set-output name=tag_exists::false"
           else
@@ -50,7 +50,7 @@ jobs:
       - name: Check if tag exists for backend in public registry
         id: check_public_tag
         run: |
-          EXISTS=$(gcloud artifacts docker tags list europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app --filter="TAG:${{ github.event.release.tag_name }}"  --format="value(TAG)" 2>/dev/null)
+          EXISTS=$(gcloud artifacts docker tags list europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_app --filter="TAG:${{ github.event.release.tag_name }}"  --format="value(tags)" 2>/dev/null)
           if [ -z "$EXISTS" ]; then
             echo "::set-output name=tag_exists::false"
           else
