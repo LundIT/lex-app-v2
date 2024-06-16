@@ -103,7 +103,7 @@ if os.getenv("STORAGE_TYPE") == "GCS":
     DEFAULT_FILE_STORAGE = 'lex_app.gcsUtils.Media'
     GS_BUCKET_NAME = os.getenv("GS_BUCKET_NAME")
     GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-        os.path.join(os.getenv("PROJECT_ROOT"), 'django-storages', 'gcpCredentials.json'),
+        os.path.join(NEW_BASE_DIR, 'django-storages', 'gcpCredentials.json'),
     )
     MEDIA_ROOT = "uploads/"
 
