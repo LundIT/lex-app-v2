@@ -39,5 +39,5 @@ amqp
 sqlalchemy
 django_redis
 django-storages[google]
-DjangoSharepointStorage==1.0.6
+DjangoSharepointStorage==1.0.7
 click
