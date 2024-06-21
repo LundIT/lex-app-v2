@@ -92,6 +92,9 @@ def streamlit(ctx):
 @click.pass_context
 def start(ctx):
     """Run the ASGI application with Uvicorn."""
+    os.environ.setdefault(
+        "CALLED_FROM_START_COMMAND", "True"
+    )
     uvicorn_args = ctx.args
     uvicorn.main(uvicorn_args)
 
