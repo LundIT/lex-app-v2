@@ -488,7 +488,7 @@ LOGGING = {
     'user_change_log': {
         'console': {
             'class': ['console'],
-            'level': 'INFO',
+            'level': os.getenv("LOG_LEVEL", "DEBUG"),
         }
     }
 }
