@@ -30,6 +30,8 @@ if __name__ == '__main__':
     from lex_app.settings import repo_name
     try:
         exec(f"import {repo_name}._streamlit_structure as streamlit_structure")
+        st.set_page_config(layout="wide")
+
 
         auth_type = os.getenv("STREAMLIT_AUTH_TYPE", "PRIVATE")
 
