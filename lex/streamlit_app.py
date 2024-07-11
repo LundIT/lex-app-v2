@@ -31,22 +31,30 @@ if __name__ == '__main__':
     try:
         exec(f"import {repo_name}._streamlit_structure as streamlit_structure")
 
-        st.set_page_config(layout="wide")
-        keycloak = login(
-            url=os.getenv("KEYCLOAK_URL", "https://auth.test-excellence-cloud.de"),
-            realm=os.getenv("KEYCLOAK_REALM", "lex"),
-            client_id=os.getenv("KEYCLOAK_CLIENT_ID", "LEX_LOCAL_ENV"),
-            auto_refresh=False,
-            init_options={
-                "checkLoginIframe": False
-            }
-        )
+        auth_type = os.getenv("STREAMLIT_AUTH_TYPE", "PUBLIC")
 
-        if keycloak.authenticated:
-            user = resolve_user(request=None, id_token=keycloak.user_info)
-            if user:
-                streamlit_structure.main(user=keycloak.user_info)
-            else:
-                st.error("You are not authorized to use this app.")
+        if auth_type == "PUBLIC":
+            streamlit_structure.main(user={'name': 'Anonymous User'})
+        else:
+            keycloak = login(
+                url=os.getenv("KEYCLOAK_URL", "https://auth.test-excellence-cloud.de"),
+                realm=os.getenv("KEYCLOAK_REALM", "lex"),
+                client_id=os.getenv("STREAMLIT_KEYCLOAK_CLIENT_ID", "LEX_LOCAL_ENV"),
+                auto_refresh=False,
+                init_options={
+                    "checkLoginIframe": False
+                }
+            )
+
+            if keycloak.authenticated:
+                try:
+                    user = resolve_user(request=None, id_token=keycloak.user_info, rbac=(auth_type == "PRIVATE"))
+                    if user:
+                        streamlit_structure.main(user=keycloak.user_info)
+                    else:
+                        st.error("You are not authorized to use this app.")
+                except:
+                    st.error("You are not authorized to use this app.")
+
     except ImportError:
         pass
