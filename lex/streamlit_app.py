@@ -50,7 +50,10 @@ if __name__ == '__main__':
                 try:
                     user = resolve_user(request=None, id_token=keycloak.user_info, rbac=(auth_type == "PRIVATE"))
                     if user:
-                        streamlit_structure.main(user=keycloak.user_info)
+                        try:
+                            streamlit_structure.main(user=keycloak.user_info)
+                        except:
+                            st.error("An error occurred while trying to load the app. Please contact with your administrator.")
                     else:
                         st.error("You are not authorized to use this app.")
                 except:
