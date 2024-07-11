@@ -31,7 +31,7 @@ if __name__ == '__main__':
     try:
         exec(f"import {repo_name}._streamlit_structure as streamlit_structure")
 
-        auth_type = os.getenv("STREAMLIT_AUTH_TYPE", "PUBLIC")
+        auth_type = os.getenv("STREAMLIT_AUTH_TYPE", "PRIVATE")
 
         if auth_type == "PUBLIC":
             streamlit_structure.main(user={'name': 'Anonymous User'})
