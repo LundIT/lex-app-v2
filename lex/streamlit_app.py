@@ -54,8 +54,12 @@ if __name__ == '__main__':
                     if user:
                         try:
                             streamlit_structure.main(user=keycloak.user_info)
-                        except:
-                            st.error("An error occurred while trying to load the app. Please contact with your administrator.")
+                        except Exception as e:
+                            if os.getenv("DEPLOYMENT_ENVIRONMENT") == "PROD":
+                                st.error("An error occurred while trying to load the app. Please contact with your administrator.")
+                            else:
+                                raise e
+
                     else:
                         st.error("You are not authorized to use this app.")
                 except:
