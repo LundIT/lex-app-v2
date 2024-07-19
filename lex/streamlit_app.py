@@ -39,7 +39,7 @@ if __name__ == '__main__':
             streamlit_structure.main(user={'name': 'Anonymous User'})
         else:
             keycloak = login(
-                url=os.getenv("KEYCLOAK_URL", "https://auth.test-excellence-cloud.de"),
+                url=os.getenv("KEYCLOAK_URL", "https://auth.excellence-cloud.dev"),
                 realm=os.getenv("KEYCLOAK_REALM", "lex"),
                 client_id=os.getenv("STREAMLIT_KEYCLOAK_CLIENT_ID", "LEX_LOCAL_ENV"),
                 auto_refresh=False,
