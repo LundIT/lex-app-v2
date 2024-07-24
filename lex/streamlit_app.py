@@ -6,6 +6,7 @@ import streamlit as st
 
 import django
 from streamlit_keycloak import login
+import traceback
 
 
 LEX_APP_PACKAGE_ROOT = Path(__file__).resolve().parent.as_posix()
@@ -49,21 +50,15 @@ if __name__ == '__main__':
             )
 
             if keycloak.authenticated:
-                try:
-                    user = resolve_user(request=None, id_token=keycloak.user_info, rbac=(auth_type == "PRIVATE"))
-                    if user:
-                        try:
-                            streamlit_structure.main(user=keycloak.user_info)
-                        except Exception as e:
-                            if os.getenv("DEPLOYMENT_ENVIRONMENT") == "PROD":
-                                st.error("An error occurred while trying to load the app. Please contact with your administrator.")
-                            raise e
-
-                    else:
-                        st.error("You are not authorized to use this app.")
-                except Exception as e:
+                user = resolve_user(request=None, id_token=keycloak.user_info, rbac=(auth_type == "PRIVATE"))
+                if user:
+                    streamlit_structure.main(user=keycloak.user_info)
+                else:
                     st.error("You are not authorized to use this app.")
-                    raise e
 
-    except ImportError:
-        pass
+    except Exception as e:
+        if os.getenv("DEPLOYMENT_ENVIRONMENT") != "PROD":
+            raise e
+        else:
+            with st.expander(":red[An error occurred while trying to load the app.]"):
+                st.error(traceback.format_exc())
