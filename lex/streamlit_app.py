@@ -61,7 +61,7 @@ if __name__ == '__main__':
 
                     else:
                         st.error("You are not authorized to use this app.")
-                except:
+                except Exception as e:
                     st.error("You are not authorized to use this app.")
                     raise e
 
