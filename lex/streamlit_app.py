@@ -1,7 +1,7 @@
 import os
 import streamlit as st
 
-from streamlit_keycloak import login
+from streamlit_keycloak_lex import login
 import traceback
 import base64
 from urllib.parse import urlencode
