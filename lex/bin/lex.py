@@ -24,6 +24,7 @@ os.environ.setdefault(
 os.environ.setdefault(
     "PROJECT_ROOT", PROJECT_ROOT_DIR.as_posix()
 )
+os.environ.setdefault("LEX_APP_PACKAGE_ROOT", LEX_APP_PACKAGE_ROOT)
 
 django.setup()
 
