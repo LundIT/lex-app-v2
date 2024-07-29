@@ -34,10 +34,11 @@ uvicorn[standard]
 nest_asyncio
 Office365-REST-Python-Client
 streamlit
-streamlit-keycloak @ git+https://github.com/LundIT/streamlit-keycloak
+streamlit-keycloak-lex
 amqp
 sqlalchemy
 django_redis
 django-storages[google]
+pillow
 DjangoSharepointStorage==1.0.9
 click
