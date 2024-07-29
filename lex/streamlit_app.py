@@ -106,7 +106,7 @@ if __name__ == '__main__':
                     with col2:
                         with st.container(border=True):
                             st.image(f'{os.getenv("PROJECT_ROOT")}/{streamlit_structure.LOGIN_LOGO}' if hasattr(
-                                streamlit_structure, "LOGIN_LOGO") else LUND_LOGO, width=200)
+                                streamlit_structure, "LOGIN_LOGO") else LUND_LOGO)
                             st.markdown(
                                 f'<h3>{streamlit_structure.LOGIN_TITLE if hasattr(streamlit_structure, "LOGIN_TITLE") else "Welcome to the Dashboard"}</h3>',
                                 unsafe_allow_html=True)
