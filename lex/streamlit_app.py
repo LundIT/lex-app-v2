@@ -45,7 +45,6 @@ if __name__ == '__main__':
         st.set_page_config(layout="wide")
 
         keycloak_endpoint = os.getenv('KEYCLOAK_URL', default='https://auth.excellence-cloud.dev')
-        keycloak_client_id = os.getenv('KEYCLOAK_CLIENT_ID', default='LEX_LOCAL_ENV')
         keycloak_realm = os.getenv('KEYCLOAK_REALM', default='lex')
 
         auth_type = os.getenv("STREAMLIT_AUTH_TYPE", "PRIVATE")
@@ -53,66 +52,57 @@ if __name__ == '__main__':
         if auth_type == "PUBLIC":
             streamlit_structure.main(user={'name': 'Anonymous User'})
         else:
-            st.markdown(
-                """
-                <style>
-                    div[data-testid="column"] {
-                        height: 60vh;
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: center;
-                    }
-                    div[data-testid="column"]:nth-of-type(2) div[data-testid="stVerticalBlock"] *
-                    {
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        justify-content: center;
-                        text-align: center;
-                    }
-
-                    div[data-testid="column"]:nth-of-type(2) [data-testid="stVerticalBlockBorderWrapper"] > div > [data-testid="stVerticalBlock"] > [data-testid="stVerticalBlockBorderWrapper"] 
-                    { 
-                        background: white; box-shadow: rgba(149, 157, 165, 0.08) 0px 8px 24px; padding: 2rem 
-                    } 
-                    div[data-testid="column"]:nth-of-type(2) a {
-                        display: none !important;
-                    }
-                    button[data-testid="StyledFullScreenButton"] {
-                        display: none !important;
-                    }
+            html_content = """
+            <style>
+                div[data-testid="column"]:nth-of-type(2) [data-testid="stVerticalBlockBorderWrapper"] > div > [data-testid="stVerticalBlock"] > [data-testid="stVerticalBlockBorderWrapper"] {
+                    background: white;
+                    box-shadow: rgba(149, 157, 165, 0.08) 0px 8px 24px;
+                    padding: 2rem;
+                }
             </style>
-                """, unsafe_allow_html=True
-            )
-
+            """
             if st.session_state.get("user_info"):
                 params = urlencode(
                     {"post_logout_redirect_uri": f"{os.getenv('STREAMLIT_URL', 'http://localhost:8501')}?embed=true",
                      "id_token_hint": st.session_state.id_token, })
                 footer_html = f"""
-                        <div style='position: fixed; bottom: 12px; right: 12px; z-index: 100000000; font-size: 15px; background: rgb(240, 242, 246); padding: 10px 13px; border-radius: 13px;'>
-                        <span> © 2024 LEX by Lund IT &nbsp; | &nbsp; </span><b><a target="_self" href="{keycloak_endpoint}/realms/{keycloak_realm}/protocol/openid-connect/logout?{params}">Logout</a></b>
-                        </div>
-                        """
+                                        <div style='position: fixed; bottom: 12px; right: 12px; z-index: 100000000; font-size: 15px; background: rgb(240, 242, 246); padding: 10px 13px; border-radius: 13px;'>
+                                        <span> © 2024 LEX by Lund IT &nbsp; | &nbsp; </span><b><a target="_self" href="{keycloak_endpoint}/realms/{keycloak_realm}/protocol/openid-connect/logout?{params}">Logout</a></b>
+                                        </div>
+                                        """
                 st.markdown(footer_html, unsafe_allow_html=True)
 
             if not st.session_state.authenticated:
-                container = st.empty()  # Create an empty container that can be cleared later
+
+                login_background = f'{os.getenv("PROJECT_ROOT")}/{streamlit_structure.LOGIN_BACKGROUND}' if hasattr(
+                    streamlit_structure, "LOGIN_BACKGROUND") else LUND_BG
+                login_logo = f'{os.getenv("PROJECT_ROOT")}/{streamlit_structure.LOGIN_LOGO}' if hasattr(
+                                streamlit_structure, "LOGIN_LOGO") else LUND_LOGO
+                login_title = streamlit_structure.LOGIN_TITLE if hasattr(streamlit_structure,
+                                                                         "LOGIN_TITLE") else "Welcome to the Dashboard"
+                login_text = streamlit_structure.LOGIN_TEXT if hasattr(streamlit_structure,
+                                                                       "LOGIN_TEXT") else "Transforming finance one byte at a time..."
+
+                container = st.empty()
 
                 with container.container():
                     col1, col2, col3 = st.columns([0.4, 0.2, 0.4])
-                    set_bg(f'{os.getenv("PROJECT_ROOT")}/{streamlit_structure.LOGIN_BACKGROUND}' if hasattr(
-                        streamlit_structure, "LOGIN_BACKGROUND") else LUND_BG)
+                    set_bg(login_background)
                     with col2:
+                        st.markdown("""
+                            <div style='height: 20vh;'></div>
+                        """, unsafe_allow_html=True)
                         with st.container(border=True):
-                            st.image(f'{os.getenv("PROJECT_ROOT")}/{streamlit_structure.LOGIN_LOGO}' if hasattr(
-                                streamlit_structure, "LOGIN_LOGO") else LUND_LOGO)
-                            st.markdown(
-                                f'<h3>{streamlit_structure.LOGIN_TITLE if hasattr(streamlit_structure, "LOGIN_TITLE") else "Welcome to the Dashboard"}</h3>',
-                                unsafe_allow_html=True)
-                            # st.title(streamlit_structure.LOGIN_TITLE if hasattr(streamlit_structure, "LOGIN_TITLE") else "Welcome to the Dashboard")
-                            st.write(streamlit_structure.LOGIN_TEXT if hasattr(streamlit_structure,
-                                                                               "LOGIN_TEXT") else "Transforming finance one byte at a time...")
+                            html_login_section = f"""<div style='display: flex; height: 100%; width: 100%; align-items: center; justify-content: center;'>
+                                                    <div style='display: flex; flex-direction: column; justify-content: center; text-align: center;'>
+                                                        <div alt="Login Logo" style='width: 200px; aspect-ratio: 3 / 2; background-image: url(data:image/png;base64,{base64.b64encode(open(login_logo, "rb").read()).decode()}); background-repeat:no-repeat; background-position: center;'>
+                                                        </div>
+                                                        <h3>{login_title}</h3>
+                                                        <p>{login_text}</p>
+                                                    </div>
+                                                </div>"""
+                            html_content += html_login_section
+                            st.markdown(html_content, unsafe_allow_html=True)
                             keycloak = login(
                                 url=os.getenv("KEYCLOAK_URL", "https://auth.excellence-cloud.dev"),
                                 realm=os.getenv("KEYCLOAK_REALM", "lex"),
