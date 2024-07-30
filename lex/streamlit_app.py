@@ -7,7 +7,7 @@ import base64
 from urllib.parse import urlencode
 from PIL import Image
 
-LUND_LOGO = Image.open(f"{os.getenv('LEX_APP_PACKAGE_ROOT')}/assets/lex-logo.png")
+LUND_LOGO = f"{os.getenv('LEX_APP_PACKAGE_ROOT')}/assets/lex-logo.png"
 LUND_BG = f"{os.getenv('LEX_APP_PACKAGE_ROOT')}/assets/lex-bg.jpg"
 
 
@@ -86,7 +86,7 @@ if __name__ == '__main__':
                 container = st.empty()
 
                 with container.container():
-                    col1, col2, col3 = st.columns([0.4, 0.2, 0.4])
+                    col1, col2, col3 = st.columns([0.4,0.2,0.4])
                     set_bg(login_background)
                     with col2:
                         st.markdown("""
@@ -95,7 +95,7 @@ if __name__ == '__main__':
                         with st.container(border=True):
                             html_login_section = f"""<div style='display: flex; height: 100%; width: 100%; align-items: center; justify-content: center;'>
                                                     <div style='display: flex; flex-direction: column; justify-content: center; text-align: center;'>
-                                                        <div alt="Login Logo" style='width: 200px; aspect-ratio: 3 / 2; background-image: url(data:image/png;base64,{base64.b64encode(open(login_logo, "rb").read()).decode()}); background-repeat:no-repeat; background-position: center;'>
+                                                        <div alt="Login Logo" style='width: 200px; aspect-ratio: 3 / 2; background-image: url(data:image/png;base64,{base64.b64encode(open(login_logo, "rb").read()).decode()}); background-size: contain; background-repeat:no-repeat; background-position: center;'>
                                                         </div>
                                                         <h3>{login_title}</h3>
                                                         <p>{login_text}</p>
