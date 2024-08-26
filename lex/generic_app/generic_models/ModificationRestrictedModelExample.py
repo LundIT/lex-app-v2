@@ -56,6 +56,3 @@ class ModificationRestrictedModelExample(Model):
     This is an example how a model is realized, where the modification of instances is restricted.
     """
     modification_restriction = ExampleModelModificationRestriction()
-
-    class Meta:
-        app_label = 'generic_app'

@@ -1,5 +1,5 @@
 from generic_app.generic_models.ModificationRestrictedModelExample import AdminReportsModificationRestriction
-from django.db import models
+from generic_app import models
 
 
 class CalculationIDs(models.Model):
@@ -8,6 +8,3 @@ class CalculationIDs(models.Model):
     context_id = models.TextField(default='test_id')
     calculation_record = models.TextField()
     calculation_id = models.TextField(default='test_id')
-
-    class Meta:
-        app_label = 'generic_app'

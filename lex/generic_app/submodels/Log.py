@@ -15,28 +15,24 @@ from django.core.files.storage import default_storage
 from generic_app.generic_models.ModificationRestrictedModelExample import AdminReportsModificationRestriction
 from generic_app.generic_models.fields.XLSX_field import XLSXField
 from generic_app.rest_api.helpers import convert_dfs_in_excel
-from django.db import models
+from generic_app import models
 from generic_app.submodels.CalculationLog import CalculationLog
 from generic_app.rest_api.context import context_id
 from generic_app.submodels.CalculationIDs import CalculationIDs
-from generic_app.generic_models.calculated_model import CalculatedModelMixin
-from generic_app.generic_models.fields.XLSX_field import XLSXField
 
-class Log(CalculatedModelMixin, models.Model):
+
+class Log(models.CalculatedModelMixin, models.Model):
     modification_restriction = AdminReportsModificationRestriction()
     id = models.AutoField(primary_key=True)
     group = models.TextField(null=True)
-    logfile = XLSXField(default='', max_length=300)
-    input_validation = XLSXField(default='', max_length=300)
+    logfile = models.XLSXField(default='', max_length=300)
+    input_validation = models.XLSXField(default='', max_length=300)
 
     t0 = datetime.datetime.now()
 
     defining_fields = ['group']
 
     filter = []
-
-    class Meta:
-        app_label = 'generic_app'
 
     @staticmethod
     def log(function):

@@ -99,17 +99,18 @@ app_name = Path(__file__).resolve().parent.parts[-1]
 base_path = Path(os.getenv("PROJECT_ROOT")).resolve()
 # List all .py files, excluding those in 'venv' directory and starting with '_'
 files = [f for f in base_path.glob("./**/[!_]*.py") if 'venv' not in f.parts and '.venv' not in f.parts and 'build' not in f.parts]
-# from generic_app.submodels.UserChangeLog import UserChangeLog
-# from generic_app.submodels.CalculationLog import CalculationLog
-# from generic_app.submodels.CalculationIDs import CalculationIDs
-# from generic_app.submodels.Log import Log
+from generic_app.submodels.UserChangeLog import UserChangeLog
+from generic_app.submodels.CalculationLog import CalculationLog
+from generic_app.submodels.CalculationIDs import CalculationIDs
+from generic_app.submodels.Log import Log
 from generic_app.submodels.Streamlit import Streamlit
 
 # migrations need to lie on the top level of the repository. Therefore, the
 repo_name = settings.repo_name
 settings.MIGRATION_MODULES[repo_name] = f'{repo_name}.migrations'
 
-processAdminSite.register([Streamlit])
+processAdminSite.register([UserChangeLog, CalculationIDs, CalculationLog, Streamlit, Log])
+adminSite.register([UserChangeLog, CalculationIDs, CalculationLog, Log])
 processAdminSite.registerHTMLReport("streamlit", Streamlit)
 
 model_structure_defined = False
@@ -219,7 +220,7 @@ if not model_structure_defined:
                 insert_model_to_structure(model_structure, subfolders, imported_class._meta.model_name)
 
 model_structure = shorten_model_structure(model_structure)
-# model_structure['Z_Reports'] = {'userchangelog': None, 'calculationlog': None, 'log': None}
+model_structure['Z_Reports'] = {'userchangelog': None, 'calculationlog': None, 'log': None}
 if os.getenv("IS_STREAMLIT_ENABLED") == "true":
     model_structure['Streamlit'] = {'streamlit': None}
 

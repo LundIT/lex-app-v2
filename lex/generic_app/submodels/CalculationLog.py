@@ -7,7 +7,7 @@ from celery import current_task
 
 from generic_app.generic_models.ModificationRestrictedModelExample import AdminReportsModificationRestriction
 from generic_app.rest_api.context import context_id
-from django.db import models
+from generic_app import models
 import inspect
 from django.core.cache import cache
 from lex.lex_app import settings
@@ -41,9 +41,6 @@ class CalculationLog(models.Model):
     PROGRESS = 'Progress'
     INPUT = 'Input Validation'
     OUTPUT = 'Output Validation'
-
-    class Meta:
-        app_label = 'generic_app'
 
     def save(self, *args, **kwargs):
         print(self.calculationId + ": " + self.message)
