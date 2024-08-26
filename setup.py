@@ -1,4 +1,7 @@
 from setuptools import setup, find_packages
+from setuptools.command.install import install
+import os
+import shutil
 
 with open('requirements.txt') as f:
     install_requires = f.read().splitlines()
@@ -37,7 +40,6 @@ setup(
     cmdclass={
         'install': CustomInstallCommand,
     },
-
     include_package_data=True,
     entry_points={
         'console_scripts': [
