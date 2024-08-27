@@ -7,8 +7,8 @@ from rest_framework.views import APIView
 from rest_framework_api_key.permissions import HasAPIKey
 from django.http import JsonResponse
 
-from generic_app.submodels.CalculationLog import CalculationLog
-from generic_app.submodels.UserChangeLog import UserChangeLog
+from lex.lex_app.logging.CalculationLog import CalculationLog
+from lex.lex_app.logging.UserChangeLog import UserChangeLog
 
 
 class InitCalculationLogs(APIView):

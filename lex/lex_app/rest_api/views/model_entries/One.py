@@ -2,15 +2,15 @@ import threading
 import traceback
 from datetime import datetime
 
-from generic_app.rest_api.context import OperationContext
+from lex.lex_app.rest_api.context import OperationContext
 from django.db.models.signals import post_save
 from rest_framework.exceptions import APIException
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, CreateAPIView
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin
 
-from generic_app.rest_api.views.model_entries.mixins.DestroyOneWithPayloadMixin import DestroyOneWithPayloadMixin
-from generic_app.rest_api.views.model_entries.mixins.ModelEntryProviderMixin import ModelEntryProviderMixin
-from generic_app.rest_api.views.utils import get_user_name, get_user_email
+from lex.lex_app.rest_api.views.model_entries.mixins.DestroyOneWithPayloadMixin import DestroyOneWithPayloadMixin
+from lex.lex_app.rest_api.views.model_entries.mixins.ModelEntryProviderMixin import ModelEntryProviderMixin
+from lex.lex_app.rest_api.views.utils import get_user_name, get_user_email
 
 from django.core.cache import cache
 from django.db import transaction
@@ -22,7 +22,7 @@ user_email = None
 class OneModelEntry(ModelEntryProviderMixin, DestroyOneWithPayloadMixin, RetrieveUpdateDestroyAPIView, CreateAPIView):
 
     def create(self, request, *args, **kwargs):
-        from generic_app.submodels.UserChangeLog import UserChangeLog
+        from lex.lex_app.logging.UserChangeLog import UserChangeLog
         global user_name
         global user_email
         model_container = self.kwargs['model_container']
@@ -53,9 +53,9 @@ class OneModelEntry(ModelEntryProviderMixin, DestroyOneWithPayloadMixin, Retriev
             return response
 
     def update(self, request, *args, **kwargs):
-        from generic_app.submodels.UserChangeLog import UserChangeLog
-        from generic_app.submodels.CalculationIDs import CalculationIDs
-        from generic_app.models import update_handler
+        from lex.lex_app.logging.UserChangeLog import UserChangeLog
+        from lex.lex_app.logging.CalculationIDs import CalculationIDs
+        from lex.lex_app.models import update_handler
 
         model_container = self.kwargs['model_container']
         global user_name

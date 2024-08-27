@@ -2,10 +2,10 @@ import typing
 
 from django.db.models import Model
 
-from generic_app.generic_models.ModelModificationRestriction import ModelModificationRestriction
-from generic_app.generic_models.Process import Process
-from generic_app.generic_models.html_report import HTMLReport
-from generic_app.rest_api.serializers import model2serializer
+from lex.lex_app.models.ModelModificationRestriction import ModelModificationRestriction
+from lex.lex_app.models.Process import Process
+from lex.lex_app.models.html_report import HTMLReport
+from lex.lex_app.rest_api.serializers import model2serializer
 
 foreign_key_name = 'ForeignKey'
 many_to_many_name = 'ManyToManyField'
@@ -88,7 +88,7 @@ def create_model_containers(models2admins):
     models2containers = dict()
 
     for model_class, process_admin in models2admins.items():
-        from generic_app.generic_models.html_report import HTMLReport
+        from lex.lex_app.models.html_report import HTMLReport
         if not issubclass(model_class, HTMLReport):
 
             if model_class._meta.abstract:

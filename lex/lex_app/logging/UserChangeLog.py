@@ -1,4 +1,4 @@
-from generic_app.generic_models.ModificationRestrictedModelExample import AdminReportsModificationRestriction
+from lex.lex_app.models.ModificationRestrictedModelExample import AdminReportsModificationRestriction
 from generic_app import models
 
 

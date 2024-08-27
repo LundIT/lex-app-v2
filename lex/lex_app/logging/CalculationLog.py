@@ -5,14 +5,14 @@ from datetime import datetime
 
 from celery import current_task
 
-from generic_app.generic_models.ModificationRestrictedModelExample import AdminReportsModificationRestriction
-from generic_app.rest_api.context import context_id
+from lex.lex_app.models.ModificationRestrictedModelExample import AdminReportsModificationRestriction
+from lex.lex_app.rest_api.context import context_id
 from generic_app import models
 import inspect
 from django.core.cache import cache
 from lex.lex_app import settings
 
-from generic_app.submodels.CalculationIDs import CalculationIDs
+from lex.lex_app.logging.CalculationIDs import CalculationIDs
 
 #### Note: Messages shall be delivered in the following format: "Severity: Message" The colon and the whitespace after are required for the code to work correctly ####
 # Severity could be something like 'Error', 'Warning', 'Caution', etc. (See Static variables below!)

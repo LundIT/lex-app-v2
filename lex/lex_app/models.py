@@ -7,22 +7,22 @@ from glob import glob
 
 from pathlib import Path
 
-from generic_app.generic_models.Created_by_model import CreatedByMixin
-from generic_app.generic_models.Process import Process
-from generic_app.rest_api.signals import custom_post_save
-from generic_app.rest_api.views.model_entries import One
+from lex.lex_app.models.Created_by_model import CreatedByMixin
+from lex.lex_app.models.Process import Process
+from lex.lex_app.rest_api.signals import custom_post_save
+from lex.lex_app.rest_api.views.model_entries import One
 from django.db.models import Model, AutoField, TextField, FloatField, DateTimeField, ForeignKey, CASCADE, FileField, \
     IntegerField, BooleanField
 
-from generic_app.generic_models.fields.HTML_field import HTMLField
-from generic_app.generic_models.fields.PDF_field import PDFField
-from generic_app.generic_models.fields.XLSX_field import XLSXField
-from generic_app.generic_models.fields.Bokeh_field import BokehField
+from lex.lex_app.models.fields.HTML_field import HTMLField
+from lex.lex_app.models.fields.PDF_field import PDFField
+from lex.lex_app.models.fields.XLSX_field import XLSXField
+from lex.lex_app.models.fields.Bokeh_field import BokehField
 
 from lex_app import settings
-from generic_app.generic_models.calculated_model import CalculatedModelMixin
-from generic_app.generic_models.html_report import HTMLReport
-from generic_app.generic_models.upload_model import UploadModelMixin, ConditionalUpdateMixin
+from lex.lex_app.models.calculated_model import CalculatedModelMixin
+from lex.lex_app.models.html_report import HTMLReport
+from lex.lex_app.models.upload_model import UploadModelMixin, ConditionalUpdateMixin
 from django.db.models import Model
 from django.db.models.signals import post_save, post_delete, pre_save
 from django.dispatch import receiver
@@ -99,11 +99,11 @@ app_name = Path(__file__).resolve().parent.parts[-1]
 base_path = Path(os.getenv("PROJECT_ROOT")).resolve()
 # List all .py files, excluding those in 'venv' directory and starting with '_'
 files = [f for f in base_path.glob("./**/[!_]*.py") if 'venv' not in f.parts and '.venv' not in f.parts and 'build' not in f.parts]
-from generic_app.submodels.UserChangeLog import UserChangeLog
-from generic_app.submodels.CalculationLog import CalculationLog
-from generic_app.submodels.CalculationIDs import CalculationIDs
-from generic_app.submodels.Log import Log
-from generic_app.submodels.Streamlit import Streamlit
+from lex.lex_app.logging.UserChangeLog import UserChangeLog
+from lex.lex_app.logging.CalculationLog import CalculationLog
+from lex.lex_app.logging.CalculationIDs import CalculationIDs
+from lex.lex_app.logging.Log import Log
+from lex.lex_app.logging.Streamlit import Streamlit
 
 # migrations need to lie on the top level of the repository. Therefore, the
 repo_name = settings.repo_name

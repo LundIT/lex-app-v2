@@ -1,8 +1,8 @@
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
-from generic_app.rest_api.views.model_entries.filter_backends import PrimaryKeyListFilterBackend
-from generic_app.rest_api.views.model_entries.mixins.ModelEntryProviderMixin import ModelEntryProviderMixin
+from lex.lex_app.rest_api.views.model_entries.filter_backends import PrimaryKeyListFilterBackend
+from lex.lex_app.rest_api.views.model_entries.mixins.ModelEntryProviderMixin import ModelEntryProviderMixin
 
 
 class ManyModelEntries(ModelEntryProviderMixin, GenericAPIView):

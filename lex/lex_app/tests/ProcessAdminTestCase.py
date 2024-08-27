@@ -10,7 +10,7 @@ from django.core.files.storage import default_storage
 from django.test import TestCase
 from unittest import TestCase
 import json
-from generic_app.models import *
+from lex.lex_app.models import *
 from pathlib import Path
 from lex.lex_app import settings
 from django.apps import apps

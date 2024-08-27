@@ -9,9 +9,9 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
 
-from generic_app.generic_models.upload_model import IsCalculatedField, CalculateField
-from generic_app.rest_api.views.model_entries.filter_backends import UserReadRestrictionFilterBackend
-from generic_app.rest_api.views.model_entries.mixins.ModelEntryProviderMixin import ModelEntryProviderMixin
+from lex.lex_app.models.upload_model import IsCalculatedField, CalculateField
+from lex.lex_app.rest_api.views.model_entries.filter_backends import UserReadRestrictionFilterBackend
+from lex.lex_app.rest_api.views.model_entries.mixins.ModelEntryProviderMixin import ModelEntryProviderMixin
 
 INTERVAL_REQUIRING_FIELDS = {FloatField, IntegerField, DateField, DateTimeField}
 CALCULATION_FIELDS = {IsCalculatedField, CalculateField}

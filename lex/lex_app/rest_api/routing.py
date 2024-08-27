@@ -1,9 +1,9 @@
 from django.urls import path
 
-from generic_app.rest_api.consumers.BackendHealthConsumer import BackendHealthConsumer
-from generic_app.rest_api.consumers.CalculationLogConsumer import CalculationLogConsumer
-from generic_app.rest_api.consumers.UpdateCalculationStatusConsumer import UpdateCalculationStatusConsumer
-from generic_app.rest_api.consumers.CalculationsConsumer import CalculationsConsumer
+from lex.lex_app.rest_api.consumers.BackendHealthConsumer import BackendHealthConsumer
+from lex.lex_app.rest_api.consumers.CalculationLogConsumer import CalculationLogConsumer
+from lex.lex_app.rest_api.consumers.UpdateCalculationStatusConsumer import UpdateCalculationStatusConsumer
+from lex.lex_app.rest_api.consumers.CalculationsConsumer import CalculationsConsumer
 
 websocket_urlpatterns = [
     path('ws/health', BackendHealthConsumer.as_asgi(),

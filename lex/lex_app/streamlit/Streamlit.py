@@ -1,5 +1,5 @@
 import os
-from generic_app.generic_models.html_report import HTMLReport
+from lex.lex_app.models.html_report import HTMLReport
 
 class Streamlit(HTMLReport):
 

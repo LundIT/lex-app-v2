@@ -6,10 +6,10 @@ from rest_framework.exceptions import APIException
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, CreateAPIView
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin
 
-from generic_app.rest_api.subprocess_lib.Logger import Logger
-from generic_app.rest_api.views.model_entries.mixins.DestroyOneWithPayloadMixin import DestroyOneWithPayloadMixin
-from generic_app.rest_api.views.model_entries.mixins.ModelEntryProviderMixin import ModelEntryProviderMixin
-from generic_app.rest_api.views.utils import get_user_name, get_user_email
+from lex.lex_app.rest_api.subprocess_lib.Logger import Logger
+from lex.lex_app.rest_api.views.model_entries.mixins.DestroyOneWithPayloadMixin import DestroyOneWithPayloadMixin
+from lex.lex_app.rest_api.views.model_entries.mixins.ModelEntryProviderMixin import ModelEntryProviderMixin
+from lex.lex_app.rest_api.views.utils import get_user_name, get_user_email
 
 from django.db import transaction
 
@@ -19,8 +19,8 @@ user_email = None
 
 class CreateOrUpdate(ModelEntryProviderMixin, DestroyOneWithPayloadMixin, RetrieveUpdateDestroyAPIView, CreateAPIView):
     def update(self, request, *args, **kwargs):
-        from generic_app.submodels.UserChangeLog import UserChangeLog
-        from generic_app.models import update_handler
+        from lex.lex_app.logging.UserChangeLog import UserChangeLog
+        from lex.lex_app.models import update_handler
         model_container = self.kwargs['model_container']
         global user_name
         global user_email

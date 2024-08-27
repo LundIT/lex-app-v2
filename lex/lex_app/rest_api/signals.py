@@ -1,6 +1,6 @@
 import os
 
-from generic_app.rest_api.calculated_model_updates.update_handler import CalculatedModelUpdateHandler
+from lex.lex_app.rest_api.calculated_model_updates.update_handler import CalculatedModelUpdateHandler
 from django.dispatch import receiver
 
 from django.db.models.signals import post_save
@@ -10,7 +10,7 @@ from asgiref.sync import async_to_sync
 
 @receiver(post_save)
 def calculation_ids(sender, instance, created, **kwargs):
-    from generic_app.submodels.CalculationIDs import CalculationIDs
+    from lex.lex_app.logging.CalculationIDs import CalculationIDs
 
     if sender == CalculationIDs:
         channel_layer = get_channel_layer()
@@ -30,8 +30,8 @@ def calculation_ids(sender, instance, created, **kwargs):
         async_to_sync(channel_layer.group_send)("calculations", message)
 @receiver(post_save)
 def calculation_logs(sender, instance, created, **kwargs):
-    from generic_app.submodels.CalculationLog import CalculationLog
-    from generic_app.submodels.UserChangeLog import UserChangeLog
+    from lex.lex_app.logging.CalculationLog import CalculationLog
+    from lex.lex_app.logging.UserChangeLog import UserChangeLog
 
     if created and (sender == CalculationLog or sender == UserChangeLog):
         channel_layer = get_channel_layer()
@@ -42,7 +42,7 @@ def calculation_logs(sender, instance, created, **kwargs):
         async_to_sync(channel_layer.group_send)(f'{instance.calculation_record}', message)
 @receiver(post_save)
 def send_calculation_notification(sender, instance, created, **kwargs):
-    from generic_app.submodels.CalculationLog import CalculationLog
+    from lex.lex_app.logging.CalculationLog import CalculationLog
 
     if created and sender == CalculationLog and instance.is_notification:
         channel_layer = get_channel_layer()
@@ -58,7 +58,7 @@ def send_calculation_notification(sender, instance, created, **kwargs):
         async_to_sync(channel_layer.group_send)(f'calculation_notification', message)
 
 def update_calculation_status(instance):
-    from generic_app.generic_models.upload_model import ConditionalUpdateMixin
+    from lex.lex_app.models.upload_model import ConditionalUpdateMixin
 
     if issubclass(instance.__class__, ConditionalUpdateMixin):
         channel_layer = get_channel_layer()
@@ -74,8 +74,8 @@ def update_calculation_status(instance):
         async_to_sync(channel_layer.group_send)(f'update_calculation_status', message)
 
 def get_model_data(calculation_record, calculationId):
-    from generic_app.submodels.CalculationLog import CalculationLog
-    from generic_app.submodels.UserChangeLog import UserChangeLog
+    from lex.lex_app.logging.CalculationLog import CalculationLog
+    from lex.lex_app.logging.UserChangeLog import UserChangeLog
 
     messages = []
 

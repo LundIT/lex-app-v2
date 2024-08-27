@@ -17,7 +17,7 @@ def load_data(test, generic_app_models):
     """
     Load data asynchronously if conditions are met.
     """
-    from generic_app.models import auth_settings
+    from lex.lex_app.models import auth_settings
 
     if should_load_data(auth_settings):
         try:
@@ -58,8 +58,8 @@ class LexAppConfig(GenericAppConfig):
         """
         Check conditions and decide whether to load data asynchronously.
         """
-        from generic_app.tests.ProcessAdminTestCase import ProcessAdminTestCase
-        from generic_app.models import auth_settings
+        from lex.lex_app.tests.ProcessAdminTestCase import ProcessAdminTestCase
+        from lex.lex_app.models import auth_settings
 
         test = ProcessAdminTestCase()
 

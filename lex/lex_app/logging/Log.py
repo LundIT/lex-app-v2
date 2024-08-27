@@ -12,13 +12,13 @@ from django.core.cache import cache
 from django.core.files import File
 from django.core.files.storage import default_storage
 
-from generic_app.generic_models.ModificationRestrictedModelExample import AdminReportsModificationRestriction
-from generic_app.generic_models.fields.XLSX_field import XLSXField
-from generic_app.rest_api.helpers import convert_dfs_in_excel
+from lex.lex_app.models.ModificationRestrictedModelExample import AdminReportsModificationRestriction
+from lex.lex_app.models.fields.XLSX_field import XLSXField
+from lex.lex_app.rest_api.helpers import convert_dfs_in_excel
 from generic_app import models
-from generic_app.submodels.CalculationLog import CalculationLog
-from generic_app.rest_api.context import context_id
-from generic_app.submodels.CalculationIDs import CalculationIDs
+from lex.lex_app.logging.CalculationLog import CalculationLog
+from lex.lex_app.rest_api.context import context_id
+from lex.lex_app.logging.CalculationIDs import CalculationIDs
 
 
 class Log(models.CalculatedModelMixin, models.Model):
