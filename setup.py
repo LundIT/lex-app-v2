@@ -34,9 +34,6 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/LundIT/lex-app",
     packages=find_packages(),
-    cmdclass={
-        'install': CustomInstallCommand,
-    },
     include_package_data=True,
     entry_points={
         'console_scripts': [
