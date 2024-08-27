@@ -1,2 +1,3 @@
 recursive-include lex/react *
 recursive-include lex/assets *
+recursive-exclude lex/generic_app *
