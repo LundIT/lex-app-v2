@@ -1,5 +1,5 @@
-from lex.lex_app.models.ModificationRestrictedModelExample import AdminReportsModificationRestriction
-from generic_app import models
+from lex.lex_app.lex_models.ModificationRestrictedModelExample import AdminReportsModificationRestriction
+from django.db import models
 
 
 class CalculationIDs(models.Model):
@@ -8,3 +8,6 @@ class CalculationIDs(models.Model):
     context_id = models.TextField(default='test_id')
     calculation_record = models.TextField()
     calculation_id = models.TextField(default='test_id')
+
+    class Meta:
+        app_label = 'lex_app'

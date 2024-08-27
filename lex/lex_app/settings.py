@@ -137,7 +137,8 @@ LEGACY_MEDIA_ROOT = os.path.join(NEW_BASE_DIR, f"{repo_name}/")
 
 INSTALLED_APPS = [
     'channels',
-    'lex_app',
+    'lex.lex_app.apps.LexAppConfig',
+    # f'{repo_name}.apps.CFDBConfig',
     repo_name,
     'celery',
     'react',

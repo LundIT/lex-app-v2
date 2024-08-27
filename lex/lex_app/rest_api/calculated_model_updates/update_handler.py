@@ -1,5 +1,5 @@
-from lex.lex_app.models.calculated_model import CalculatedModelMixin
-from lex.lex_app.models.process_admin_model import DependencyAnalysisMixin
+from lex.lex_app.lex_models.calculated_model import CalculatedModelMixin
+from lex.lex_app.lex_models.process_admin_model import DependencyAnalysisMixin
 
 
 def calc_and_save(entry):

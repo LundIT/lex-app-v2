@@ -8,6 +8,7 @@ from lex_app.settings import repo_name
 class CleanCalculations(APIView):
     http_method_names = ['post']
     permission_classes = [HasAPIKey | IsAuthenticated]
+
     def post(self, request, *args, **kwargs):
         will_be_cleaned = []
 

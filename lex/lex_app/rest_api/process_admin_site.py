@@ -6,8 +6,8 @@ from rest_framework_simplejwt.views import TokenRefreshView
 
 from lex.lex_app.rest_api.auth import TokenObtainPairWithUserView
 from lex.lex_app.rest_api.model_collection.model_collection import ModelCollection
-from lex.lex_app.models.calculated_model import CalculatedModelMixin
-from lex.lex_app.models.model_process_admin import ModelProcessAdmin
+from lex.lex_app.lex_models.calculated_model import CalculatedModelMixin
+from lex.lex_app.lex_models.model_process_admin import ModelProcessAdmin
 from lex.lex_app.rest_api.views.calculations.CleanCalculations import CleanCalculations
 from lex.lex_app.rest_api.views.file_operations.FileDownload import FileDownloadView
 from lex.lex_app.rest_api.views.file_operations.ModelExport import ModelExportView
@@ -30,7 +30,17 @@ from lex.lex_app.rest_api.views.calculations.InitCalculationLogs import InitCalc
 from lex.lex_app.rest_api import converters
 from lex.lex_app.rest_api.views.global_search_for_models.Search import Search
 
-class ProcessAdminSite:
+class SingletonMeta(type):
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            instance = super().__call__(*args, **kwargs)
+            cls._instances[cls] = instance
+        return cls._instances[cls]
+
+
+class ProcessAdminSite(metaclass=SingletonMeta):
     """
     Used as instance, i.e. inheriting this class is not necessary in order to use it.
     """
@@ -46,14 +56,22 @@ class ProcessAdminSite:
         self.global_filter_structure = {}
         self.html_reports = {}
         self.processes = {}
+        self.widget_structure = []
 
         self.initialized = False
         self.model_collection = None
+
     def register_model_styling(self, model_styling):
         """
         :param model_styling: dict that contains styling parameters for each model
         """
         self.model_styling = model_styling
+
+    def register_widget_structure(self, widget_structure):
+        """
+        :param model_styling: dict that contains styling parameters for each model
+        """
+        self.widget_structure = widget_structure
 
     def register_global_filter_structure(self, global_filter_structure):
         """
@@ -106,7 +124,8 @@ class ProcessAdminSite:
 
         for model in model_or_iterable:
             if model in self.registered_models:
-                raise Exception('Model %s already registered' % model._meta.model_name)
+                # raise Exception('Model %s already registered' % model._meta.model_name)
+                pass
             else:
                 self.registered_models[model] = process_admin
                 # TODO why was this in here in the first place?
@@ -142,14 +161,16 @@ class ProcessAdminSite:
                  name='model-entries-list'),
             path('api/model_entries/<model:model_container>/<str:calculationId>/one/<int:pk>', OneModelEntry.as_view(),
                  name='model-one-entry-read-update-delete'),
-            path('api/model_entries/<model:model_container>/<str:calculationId>/one', OneModelEntry.as_view(), name='model-one-entry-create'),
+            path('api/model_entries/<model:model_container>/<str:calculationId>/one', OneModelEntry.as_view(),
+                 name='model-one-entry-create'),
             path('api/run_step/<model:model_container>/<str:pk>', CreateOrUpdate.as_view(),
                  name='run_step'),
             path('api/model_entries/<model:model_container>/many', ManyModelEntries.as_view(),
                  name='model-many-entries'),
             path('api/global-search/<str:query>', Search.as_view(model_collection=self.model_collection),
                  name='global-search'),
-            path('api/<model:model_container>/model-permissions', ModelPermissions.as_view(), name='model-restrictions'),
+            path('api/<model:model_container>/model-permissions', ModelPermissions.as_view(),
+                 name='model-restrictions'),
             path('api/project-info', ProjectInfo.as_view(),
                  name='project-info'),
             path('api/widget_structure', Widgets.as_view(), name='widget-structure'),
@@ -164,7 +185,8 @@ class ProcessAdminSite:
         ]
 
         url_patterns_for_sharepoint = [
-            path('api/<model:model_container>/sharepoint-file-download', SharePointFileDownload.as_view(), name='sharepoint-file-download'),
+            path('api/<model:model_container>/sharepoint-file-download', SharePointFileDownload.as_view(),
+                 name='sharepoint-file-download'),
             path('api/<model:model_container>/sharepoint-file-share-link', SharePointShareLink.as_view(),
                  name='sharepoint-file-share-link'),
             path('api/<model:model_container>/sharepoint-file-preview-link', SharePointPreview.as_view(),
@@ -178,6 +200,7 @@ class ProcessAdminSite:
         # TODO: Move this to a logically more appropriate place
         # TODO: remove tree induction
         if not self.initialized:
+            print(self.model_structure)
             self.model_collection = ModelCollection(self.registered_models, self.model_structure,
                                                     self.model_styling, self.global_filter_structure)
             self.initialized = True

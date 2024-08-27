@@ -4,7 +4,7 @@ import pandas as pd
 from django.core.files.storage import default_storage
 from pandas.api.types import is_datetime64_any_dtype as is_datetime
 
-from lex.lex_app.models.fields.XLSX_field import XLSXField
+from lex.lex_app.rest_api.fields.XLSX_field import XLSXField
 
 
 def convert_dfs_in_excel(path, data_frames, sheet_names=None, merge_cells=False, formats={}, index=True):

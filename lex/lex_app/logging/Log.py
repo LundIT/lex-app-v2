@@ -12,27 +12,31 @@ from django.core.cache import cache
 from django.core.files import File
 from django.core.files.storage import default_storage
 
-from lex.lex_app.models.ModificationRestrictedModelExample import AdminReportsModificationRestriction
-from lex.lex_app.models.fields.XLSX_field import XLSXField
+from lex.lex_app.lex_models.ModificationRestrictedModelExample import AdminReportsModificationRestriction
+from lex.lex_app.rest_api.fields.XLSX_field import XLSXField
 from lex.lex_app.rest_api.helpers import convert_dfs_in_excel
-from generic_app import models
+from django.db import models
 from lex.lex_app.logging.CalculationLog import CalculationLog
 from lex.lex_app.rest_api.context import context_id
 from lex.lex_app.logging.CalculationIDs import CalculationIDs
+from lex.lex_app.lex_models.calculated_model import CalculatedModelMixin
+from lex.lex_app.rest_api.fields.XLSX_field import XLSXField
 
-
-class Log(models.CalculatedModelMixin, models.Model):
+class Log(CalculatedModelMixin, models.Model):
     modification_restriction = AdminReportsModificationRestriction()
     id = models.AutoField(primary_key=True)
     group = models.TextField(null=True)
-    logfile = models.XLSXField(default='', max_length=300)
-    input_validation = models.XLSXField(default='', max_length=300)
+    logfile = XLSXField(default='', max_length=300)
+    input_validation = XLSXField(default='', max_length=300)
 
     t0 = datetime.datetime.now()
 
     defining_fields = ['group']
 
     filter = []
+
+    class Meta:
+        app_label = 'lex_app'
 
     @staticmethod
     def log(function):

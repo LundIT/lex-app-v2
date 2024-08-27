@@ -5,11 +5,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_api_key.permissions import HasAPIKey
 
-from lex.lex_app.models.fields.Bokeh_field import BokehField
-from lex.lex_app.models.fields.HTML_field import HTMLField
-from lex.lex_app.models.fields.PDF_field import PDFField
-from lex.lex_app.models.fields.XLSX_field import XLSXField
-from lex.lex_app.models.upload_model import CalculateField, IsCalculatedField
+from lex.lex_app.rest_api.fields.Bokeh_field import BokehField
+from lex.lex_app.rest_api.fields.HTML_field import HTMLField
+from lex.lex_app.rest_api.fields.PDF_field import PDFField
+from lex.lex_app.rest_api.fields.XLSX_field import XLSXField
+from lex.lex_app.lex_models.upload_model import CalculateField, IsCalculatedField
 from lex.lex_app.rest_api.views.permissions.UserPermission import UserPermission
 
 DJANGO_FIELD2TYPE_NAME = {

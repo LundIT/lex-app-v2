@@ -5,9 +5,9 @@ from datetime import datetime
 
 from celery import current_task
 
-from lex.lex_app.models.ModificationRestrictedModelExample import AdminReportsModificationRestriction
+from lex.lex_app.lex_models.ModificationRestrictedModelExample import AdminReportsModificationRestriction
 from lex.lex_app.rest_api.context import context_id
-from generic_app import models
+from django.db import models
 import inspect
 from django.core.cache import cache
 from lex.lex_app import settings
@@ -41,6 +41,9 @@ class CalculationLog(models.Model):
     PROGRESS = 'Progress'
     INPUT = 'Input Validation'
     OUTPUT = 'Output Validation'
+
+    class Meta:
+        app_label = 'lex_app'
 
     def save(self, *args, **kwargs):
         print(self.calculationId + ": " + self.message)

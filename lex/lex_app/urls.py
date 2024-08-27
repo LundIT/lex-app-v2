@@ -21,7 +21,6 @@ from react.views import serve_react
 
 url_prefix = os.getenv("DJANGO_BASE_PATH") if os.getenv("DJANGO_BASE_PATH") is not None else ""
 
-print(settings.REACT_APP_BUILD_PATH)
 urlpatterns = [
     path('health', views.HealthCheck.as_view(), name='health_view'),
     path(url_prefix + 'admin/', adminSite.urls),

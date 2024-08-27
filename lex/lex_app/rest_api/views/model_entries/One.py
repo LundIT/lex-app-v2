@@ -55,7 +55,7 @@ class OneModelEntry(ModelEntryProviderMixin, DestroyOneWithPayloadMixin, Retriev
     def update(self, request, *args, **kwargs):
         from lex.lex_app.logging.UserChangeLog import UserChangeLog
         from lex.lex_app.logging.CalculationIDs import CalculationIDs
-        from lex.lex_app.models import update_handler
+        from lex.lex_app.lex_models import update_handler
 
         model_container = self.kwargs['model_container']
         global user_name

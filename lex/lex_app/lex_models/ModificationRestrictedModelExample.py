@@ -1,6 +1,6 @@
 from django.db.models import Model
 
-from lex.lex_app.models.ModelModificationRestriction import ModelModificationRestriction
+from lex.lex_app.lex_models.ModelModificationRestriction import ModelModificationRestriction
 
 
 class AdminReportsModificationRestriction(ModelModificationRestriction):
@@ -49,10 +49,3 @@ class ExampleModelModificationRestriction(ModelModificationRestriction):
 
     def can_be_created(self, instance, user, violations):
         pass
-
-
-class ModificationRestrictedModelExample(Model):
-    """
-    This is an example how a model is realized, where the modification of instances is restricted.
-    """
-    modification_restriction = ExampleModelModificationRestriction()

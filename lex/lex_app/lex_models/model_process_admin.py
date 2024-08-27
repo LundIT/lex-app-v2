@@ -1,4 +1,4 @@
-from lex.lex_app.models.upload_model import UploadModelMixin
+from lex.lex_app.lex_models.upload_model import UploadModelMixin
 
 
 def subtract_from_list(minuend_list, subtrahend_set):

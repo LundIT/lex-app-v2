@@ -58,7 +58,7 @@ def send_calculation_notification(sender, instance, created, **kwargs):
         async_to_sync(channel_layer.group_send)(f'calculation_notification', message)
 
 def update_calculation_status(instance):
-    from lex.lex_app.models.upload_model import ConditionalUpdateMixin
+    from lex.lex_app.lex_models.upload_model import ConditionalUpdateMixin
 
     if issubclass(instance.__class__, ConditionalUpdateMixin):
         channel_layer = get_channel_layer()

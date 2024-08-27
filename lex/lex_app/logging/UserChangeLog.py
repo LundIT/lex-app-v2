@@ -1,5 +1,5 @@
-from lex.lex_app.models.ModificationRestrictedModelExample import AdminReportsModificationRestriction
-from generic_app import models
+from lex.lex_app.lex_models.ModificationRestrictedModelExample import AdminReportsModificationRestriction
+from django.db import models
 
 
 class UserChangeLog(models.Model):
@@ -11,6 +11,9 @@ class UserChangeLog(models.Model):
     traceback = models.TextField(default="", null=True)
     calculationId = models.TextField(default='-1')
     calculation_record = models.TextField(default="legacy")
+
+    class Meta:
+        app_label = 'lex_app'
 
     def save(self, *args, **kwargs):
         if self.id is None:

@@ -17,7 +17,7 @@ def load_data(test, generic_app_models):
     """
     Load data asynchronously if conditions are met.
     """
-    from lex.lex_app.models import auth_settings
+    from lex.lex_app.lex_models import auth_settings
 
     if should_load_data(auth_settings):
         try:
@@ -48,18 +48,20 @@ class LexAppConfig(GenericAppConfig):
 
     def ready(self):
         super().ready()
-        generic_app_models = {f"{model.__name__}": model for model in
-                              set(list(apps.get_app_config(repo_name).models.values())
-                                  + list(apps.get_app_config(repo_name).models.values()))}
-        nest_asyncio.apply()
-        asyncio.run(self.async_ready(generic_app_models))
+        super().start('ArmiraCashflowDB')
+
+        # generic_app_models = {f"{model.__name__}": model for model in
+        #                       set(list(apps.get_app_config(repo_name).models.values())
+        #                           + list(apps.get_app_config(repo_name).models.values()))}
+        # nest_asyncio.apply()
+        # asyncio.run(self.async_ready(generic_app_models))
 
     async def async_ready(self, generic_app_models):
         """
         Check conditions and decide whether to load data asynchronously.
         """
         from lex.lex_app.tests.ProcessAdminTestCase import ProcessAdminTestCase
-        from lex.lex_app.models import auth_settings
+        from lex.lex_app.lex_models import auth_settings
 
         test = ProcessAdminTestCase()
 

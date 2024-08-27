@@ -9,7 +9,7 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
 
-from lex.lex_app.models.upload_model import IsCalculatedField, CalculateField
+from lex.lex_app.lex_models.upload_model import IsCalculatedField, CalculateField
 from lex.lex_app.rest_api.views.model_entries.filter_backends import UserReadRestrictionFilterBackend
 from lex.lex_app.rest_api.views.model_entries.mixins.ModelEntryProviderMixin import ModelEntryProviderMixin
 
