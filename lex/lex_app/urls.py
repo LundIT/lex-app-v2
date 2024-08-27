@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path, include, re_path
-from . import settings
+from . import settings, views
 from .ProcessAdminSettings import processAdminSite, adminSite
 import os
 from react.views import serve_react
@@ -23,8 +23,8 @@ url_prefix = os.getenv("DJANGO_BASE_PATH") if os.getenv("DJANGO_BASE_PATH") is n
 
 print(settings.REACT_APP_BUILD_PATH)
 urlpatterns = [
+    path('health', views.HealthCheck.as_view(), name='health_view'),
     path(url_prefix + 'admin/', adminSite.urls),
     path(url_prefix, processAdminSite.urls),
-    path(url_prefix, include('generic_app.urls')),
     re_path(r"^(?P<path>.*)$", serve_react, {"document_root": settings.REACT_APP_BUILD_PATH}),
 ]

@@ -4,10 +4,12 @@ import threading
 import traceback
 import asyncio
 from celery import shared_task
-from django.apps import AppConfig, apps
+from django.apps import apps
 from lex_app.settings import repo_name
 from asgiref.sync import sync_to_async
 import nest_asyncio
+
+from lex_app.utils import GenericAppConfig
 
 
 @shared_task(name="initial_data_upload", max_retries=0)
@@ -41,10 +43,11 @@ def should_load_data(auth_settings):
     return hasattr(auth_settings, 'initial_data_load') and auth_settings.initial_data_load
 
 
-class GenericAppConfig(AppConfig):
-    name = 'generic_app'
+class LexAppConfig(GenericAppConfig):
+    name = 'lex_app'
 
     def ready(self):
+        super().ready()
         generic_app_models = {f"{model.__name__}": model for model in
                               set(list(apps.get_app_config(repo_name).models.values())
                                   + list(apps.get_app_config(repo_name).models.values()))}
