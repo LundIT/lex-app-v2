@@ -33,14 +33,14 @@ setup(
     description="A Python / Django library to create business applications easily with complex logic",
     long_description_content_type="text/markdown",
     url="https://github.com/LundIT/lex-app",
-    packages=find_packages(exclude=['lex.generic_app']),
+    packages=find_packages(exclude=['generic_app']),
     # package_data={
     #     '': ['generic_app/*'],  # Track the moved directory for cleanup
     # },
     cmdclass={
         'install': CustomInstallCommand,
     },
-    include_package_data=False,
+    include_package_data=True,
     entry_points={
         'console_scripts': [
             'lex = lex.__main__:main',
