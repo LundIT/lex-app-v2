@@ -17,11 +17,11 @@ def load_data(test, generic_app_models):
     """
     Load data asynchronously if conditions are met.
     """
-    from lex.lex_app.lex_models import auth_settings
+    from ArmiraCashflowDB import _authentication_settings
 
-    if should_load_data(auth_settings):
+    if should_load_data(_authentication_settings):
         try:
-            test.test_path = auth_settings.initial_data_load
+            test.test_path = _authentication_settings.initial_data_load
             print("All models are empty: Starting Initial Data Fill")
             if os.getenv("STORAGE_TYPE", "LEGACY") == "LEGACY":
                 asyncio.run(sync_to_async(test.setUp)())
@@ -48,31 +48,32 @@ class LexAppConfig(GenericAppConfig):
 
     def ready(self):
         super().ready()
-        super().start('ArmiraCashflowDB')
-
-        # generic_app_models = {f"{model.__name__}": model for model in
-        #                       set(list(apps.get_app_config(repo_name).models.values())
-        #                           + list(apps.get_app_config(repo_name).models.values()))}
-        # nest_asyncio.apply()
-        # asyncio.run(self.async_ready(generic_app_models))
+        super().start(
+            repo='ArmiraCashflowDB'
+        )
+        generic_app_models = {f"{model.__name__}": model for model in
+                              set(list(apps.get_app_config(repo_name).models.values())
+                                  + list(apps.get_app_config(repo_name).models.values()))}
+        nest_asyncio.apply()
+        asyncio.run(self.async_ready(generic_app_models))
 
     async def async_ready(self, generic_app_models):
         """
         Check conditions and decide whether to load data asynchronously.
         """
         from lex.lex_app.tests.ProcessAdminTestCase import ProcessAdminTestCase
-        from lex.lex_app.lex_models import auth_settings
+        from ArmiraCashflowDB import _authentication_settings
 
         test = ProcessAdminTestCase()
 
         if (not running_in_uvicorn()
                 or os.getenv("CELERY_ACTIVE")
-                or not auth_settings
-                or not hasattr(auth_settings, 'initial_data_load')
-                or not auth_settings.initial_data_load):
+                or not _authentication_settings
+                or not hasattr(_authentication_settings, 'initial_data_load')
+                or not _authentication_settings.initial_data_load):
             return
 
-        if await are_all_models_empty(test, auth_settings, generic_app_models):
+        if await are_all_models_empty(test, _authentication_settings, generic_app_models):
             if (os.getenv("DEPLOYMENT_ENVIRONMENT")
                     and os.getenv("ARCHITECTURE") == "MQ/Worker"):
                 load_data.delay(test, generic_app_models)
@@ -80,17 +81,17 @@ class LexAppConfig(GenericAppConfig):
                 x = threading.Thread(target=load_data, args=(test, generic_app_models,))
                 x.start()
         else:
-            test.test_path = auth_settings.initial_data_load
+            test.test_path = _authentication_settings.initial_data_load
             non_empty_models = await sync_to_async(test.get_list_of_non_empty_models)(generic_app_models)
             print(f"Loading Initial Data not triggered due to existence of objects of Model: {non_empty_models}")
             print("Not all referenced Models are empty")
 
 
-async def are_all_models_empty(test, auth_settings, generic_app_models):
+async def are_all_models_empty(test, _authentication_settings, generic_app_models):
     """
     Check if all models are empty.
     """
-    test.test_path = auth_settings.initial_data_load
+    test.test_path = _authentication_settings.initial_data_load
     return await sync_to_async(test.check_if_all_models_are_empty)(generic_app_models)
 
 

@@ -8,80 +8,104 @@ from django.core.exceptions import ImproperlyConfigured
 from django.db import models
 from django.contrib import admin
 from lex.lex_app.model_utils.ModelRegistration import ModelRegistration
+from lex.lex_app.model_utils.ModelStructureBuilder import ModelStructureBuilder
+
+
+def create_api_key():
+    try:
+        from rest_framework_api_key.models import APIKey
+        if APIKey.objects.count() == 0:
+            api_key, key = APIKey.objects.create_key(name='APIKey')
+            print("API_KEY:", key)
+        else:
+            print("API_KEY already exists")
+    except ImportError as e:
+        print(f"Error importing APIKey: {e}")
 
 
 class GenericAppConfig(AppConfig):
+    _EXCLUDED_FILES = ("asgi", "wsgi", "settings", "urls", 'setup')
+    _EXCLUDED_DIRS = ('venv', '.venv', 'build', 'migrations')
+    _EXCLUDED_PREFIXES = ('_', '.')
+    _EXCLUDED_POSTFIXES = ('_', '.', 'create_db', 'CalculationIDs', '_test')
+
+    def __init__(self, app_name, app_module):
+        super().__init__(app_name, app_module)
+        self.subdir = None
+        self.project_path = None
+        self.model_structure_builder = None
+        self.pending_relationships = None
+        self.discovered_models = None
 
     def ready(self):
-        self.start(self.name)
+        self.start(repo=self.name, subdir=f"lex.{self.name}.")
 
-
-    def start(self, repo_name=None):
-        from lex.lex_app.streamlit.Streamlit import Streamlit
-
-        self.model_structure = {}
-        self.model_styling = {}
-        self.global_filter_structure = {}
-        self.widget_structure = []
-
-        print('Name of the app', repo_name)
-        if repo_name == 'lex_app':
-            base_path = os.path.dirname(self.module.__file__)
-        else:
-            base_path = Path(os.getenv("PROJECT_ROOT")).resolve()
+    def start(self, repo=None, subdir=""):
         self.pending_relationships = {}
         self.discovered_models = {}
-        self.module = importlib.import_module(repo_name)
-        self.path = base_path
-        self.discover_models(self.path, repo_name=repo_name)
-        self.resolve_relationships(repo_name=repo_name)
-        self.register_models_with_admin()
-        ModelRegistration.register_models([Streamlit])
+        self.model_structure_builder = ModelStructureBuilder(repo=repo)
+        self.project_path = os.path.dirname(self.module.__file__) if subdir else Path(
+            os.getenv("PROJECT_ROOT")).resolve()
+        self.subdir = f"" if not subdir else subdir
 
-    def discover_models(self, path, repo_name):
+        self.discover_models(self.project_path, repo=repo)
+        self.resolve_relationships(repo=repo)
+
+        if not self.model_structure_builder.model_structure and not subdir:
+            self.model_structure_builder.build_structure(self.discovered_models)
+
+        self.register_models_with_admin()
+
+        if sys.argv[1:2] == ["runserver"]:
+            create_api_key()
+
+    def discover_models(self, path, repo):
         for root, dirs, files in os.walk(path):
             # Skip 'venv', '.venv', and 'build' directories
-            dirs[:] = [d for d in dirs if d not in ['venv', '.venv', 'build', 'migrations']]
-
+            dirs[:] = [directory for directory in dirs if self._dir_filter(directory)]
             for file in files:
                 # Process only .py files that do not start with '_'
-                module_path = os.path.join(root, file)
-                module_name = os.path.relpath(module_path, self.path)
-                module_name = module_name.replace(os.path.sep, '.')[:-3]
 
-                if repo_name == 'lex_app':
-                    full_module_name = f"lex.{repo_name}.{module_name}"
-                else:
-                    full_module_name = f"{module_name}"
+                absolute_path = os.path.join(root, file)
+                module_name = os.path.relpath(absolute_path, self.project_path)
+                rel_module_name = module_name.replace(os.path.sep, '.')[:-3]
+                module_name = rel_module_name.split('.')[-1]
+                full_module_name = f"{self.subdir}{rel_module_name}"
 
-                if not self.is_special_file(file):
-                    if file.endswith('model_structure.py'):
-                        module = importlib.import_module(full_module_name)
-                        if (hasattr(module, "get_model_structure")):
-                            self.model_structure = module.get_model_structure()
-                        if (hasattr(module, "get_widget_structure")):
-                            self.widget_structure = module.get_widget_structure()
-                        if (hasattr(module, "get_model_styling")):
-                            self.model_styling = module.get_model_styling()
-                        if (hasattr(module, "get_global_filter_structure")):
-                            self.global_filter_structure = module.get_global_filter_structure()
+                if self._is_valid_module(module_name, file):
+                    self._process_module(full_module_name, file)
 
-                    else:  # Remove .py
-                        # Skip specific modules
-                        if module_name.split('.')[-1] in ["asgi", "wsgi", "settings", "urls", 'setup']:
-                            continue
+    def _dir_filter(self, directory):
+        return directory not in self._EXCLUDED_DIRS
 
-                        self.load_models_from_module(full_module_name)
+    def _is_valid_module(self, module_name, file):
+        return (file.endswith('.py') and
+                not module_name.startswith(self._EXCLUDED_PREFIXES) and
+                not module_name.endswith(self._EXCLUDED_POSTFIXES) and
+                module_name not in self._EXCLUDED_FILES)
+
+    def _process_module(self, full_module_name, file):
+        if file.endswith('model_structure.py'):
+            self.model_structure_builder.extract_and_save_structure(full_module_name)
+        elif file.endswith('_authentication_settings.py'):
+            try:
+                module = importlib.import_module(full_module_name)
+                module.create_groups()
+            except ImportError as e:
+                print(f"Error importing authentication settings: {e}")
+            except Exception as e:
+                print(f"Authentication settings doesn't have method create_groups()")
+        else:
+            self.load_models_from_module(full_module_name)
 
     def load_models_from_module(self, full_module_name):
         from lex.lex_app.lex_models.html_report import HTMLReport
-
         try:
             print('Loading models from module', full_module_name)
             if not full_module_name.startswith('.'):
                 module = importlib.import_module(full_module_name)
                 for name, obj in module.__dict__.items():
-                    if (isinstance(obj, type) and issubclass(obj, models.Model) and obj is not models.Model):
+                    if isinstance(obj, type) and issubclass(obj, models.Model) and obj is not models.Model:
                         if not obj._meta.abstract:
                             self.add_model(name, obj)
         except ImportError as e:
@@ -98,12 +122,12 @@ class GenericAppConfig(AppConfig):
                     if isinstance(related_model, str):
                         self.pending_relationships[name].append((field.name, related_model))
 
-    def resolve_relationships(self, repo_name):
+    def resolve_relationships(self, repo):
         for model_name, relationships in self.pending_relationships.items():
             model = self.discovered_models[model_name]
             for field_name, related_model_name in relationships:
                 if '.' not in related_model_name:
-                    related_model_name = f"{repo_name}.{related_model_name}"
+                    related_model_name = f"{repo}.{related_model_name}"
 
                 try:
                     related_model = self.get_model_c(related_model_name)
@@ -123,21 +147,13 @@ class GenericAppConfig(AppConfig):
         return self.discovered_models.get(model_name)
 
     def register_models_with_admin(self):
-        ModelRegistration.register_models(list(filter(lambda x: not admin.site.is_registered(x), self.discovered_models.values())))
+        from lex_app.streamlit.Streamlit import Streamlit
 
-        ModelRegistration.register_model_structure(self.model_structure)
-        ModelRegistration.register_model_styling(self.model_styling)
-        ModelRegistration.register_global_filter_structure(self.global_filter_structure)
-        ModelRegistration.register_widget_structure(self.widget_structure)
+        ModelRegistration.register_models(
+            [o for o in self.discovered_models.values() if not admin.site.is_registered(o)])
 
-
-    def is_special_file(self, file):
-        file_without_extension = os.path.splitext(file)[0]
-
-        return (file_without_extension.startswith("_") or
-                file_without_extension.startswith(".") or
-                file_without_extension.endswith("_test") or
-                file_without_extension.endswith("create_db") or
-                file_without_extension.endswith("Log") or
-                # file_without_extension.endswith("Streamlit") or
-                file_without_extension.endswith("CalculationIDs"))
+        ModelRegistration.register_model_structure(self.model_structure_builder.model_structure)
+        ModelRegistration.register_model_styling(self.model_structure_builder.model_styling)
+        ModelRegistration.register_global_filter_structure(self.model_structure_builder.global_filter_structure)
+        ModelRegistration.register_widget_structure(self.model_structure_builder.widget_structure)
+        ModelRegistration.register_models([Streamlit])

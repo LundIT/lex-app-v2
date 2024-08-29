@@ -104,11 +104,11 @@ def check_model_structure(model_sub_structure, registered_models_set):
     for node, sub_tree in model_sub_structure.items():
         if isinstance(sub_tree, dict):
             check_model_structure(sub_tree, registered_models_set)
-        else:
-            if sub_tree is not None:
-                raise ValueError('The leaves have to be None, but found %s' % type(sub_tree))
-            if node not in registered_models_set:
-                raise ValueError('There is no registered model with name %s' % node)
+        # else:
+        #     if sub_tree is not None:
+        #         raise ValueError('The leaves have to be None, but found %s' % type(sub_tree))
+        #     if node not in registered_models_set:
+        #         raise ValueError('There is no registered model with name %s' % node)
 
 
 def get_readable_name_for(node_name, model_collection):

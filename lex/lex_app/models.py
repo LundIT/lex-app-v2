@@ -22,10 +22,12 @@
 # from lex_app import settings
 # from lex.lex_app.lex_models.calculated_model import CalculatedModelMixin
 # from lex.lex_app.lex_models.html_report import HTMLReport
-# from lex.lex_app.lex_models.upload_model import UploadModelMixin, ConditionalUpdateMixin
+import os
+
+from lex.lex_app.lex_models.upload_model import UploadModelMixin, ConditionalUpdateMixin
 # from django.db.models import Model
-# from django.db.models.signals import post_save, post_delete, pre_save
-# from django.dispatch import receiver
+from django.db.models.signals import post_save, post_delete, pre_save
+from django.dispatch import receiver
 #
 # from lex_app.ProcessAdminSettings import processAdminSite, adminSite
 # from asgiref.sync import sync_to_async
@@ -246,18 +248,18 @@
 #     except Exception as e:
 #         print(traceback.print_exc())
 #
-# @receiver(post_save)
-# def update_handler(sender, **kwargs):
-#     if issubclass(sender, UploadModelMixin):
-#         update_method = kwargs["instance"].update
-#         if (hasattr(update_method, 'delay') and
-#                 os.getenv("DEPLOYMENT_ENVIRONMENT") and
-#                 os.getenv("ARCHITECTURE") == "MQ/Worker"):
-#             # @custom_shared_task decorator is used
-#             update_method.delay(kwargs["instance"])
-#         else:
-#             # @custom_shared_task decorator is not used
-#             sender.update(kwargs["instance"])
+@receiver(post_save)
+def update_handler(sender, **kwargs):
+    if issubclass(sender, UploadModelMixin):
+        update_method = kwargs["instance"].update
+        if (hasattr(update_method, 'delay') and
+                os.getenv("DEPLOYMENT_ENVIRONMENT") and
+                os.getenv("ARCHITECTURE") == "MQ/Worker"):
+            # @custom_shared_task decorator is used
+            update_method.delay(kwargs["instance"])
+        else:
+            # @custom_shared_task decorator is not used
+            sender.update(kwargs["instance"])
 #
 # # @receiver(post_delete)
 # # def delete_file(sender, instance, **kwargs):

@@ -2,26 +2,65 @@ from pathlib import Path
 from typing import Dict, Type, List
 from django.db import models
 import os
+import importlib
 
 
 class ModelStructureBuilder:
-    def __init__(self, repo_name: str):
-        self.repo_name = repo_name
-        self.model_structure: Dict = {}
+    def __init__(self, repo: str = ""):
+        self.repo = repo
+        self.model_structure = {}
+        self.model_styling = {}
+        self.global_filter_structure = {}
+        self.widget_structure = []
 
-    def build_structure(self, models: List[Type[models.Model]]) -> Dict:
-        for model in models:
-            path = self._get_model_path(model)
-            self._insert_model_to_structure(path, model._meta.model_name)
+    def extract_and_save_structure(self, full_module_name: str) -> None:
+        try:
+            module = importlib.import_module(full_module_name)
+        except ImportError as e:
+            raise ImportError(f"Failed to import module {full_module_name}: {e}")
+
+        structure_methods = {
+            "model_structure": "get_model_structure",
+            "widget_structure": "get_widget_structure",
+            "model_styling": "get_model_styling",
+            "global_filter_structure": "get_global_filter_structure"
+        }
+
+        for attr, method_name in structure_methods.items():
+            if hasattr(module, method_name):
+                try:
+                    setattr(self, attr, getattr(module, method_name)())
+                except Exception as e:
+                    print(f"Error calling {method_name}: {e}")
+            else:
+                print(f"Warning: {method_name} not found in {full_module_name}")
+
+    def get_extracted_structures(self):
+        return {
+            "model_structure": self.model_structure,
+            "widget_structure": self.widget_structure,
+            "model_styling": self.model_styling,
+            "global_filter_structure": self.global_filter_structure
+        }
+
+    def build_structure(self, models) -> Dict:
+        for model_name, model in models.items():
+            if self.repo not in model.__module__:
+                continue
+            path = self._get_model_path(model.__module__)
+            self._insert_model_to_structure(path, str(model_name).lower())
 
         self._shorten_model_structure()
         self._add_reports_to_structure()
         return self.model_structure
 
-    def _get_model_path(self, model: Type[models.Model]) -> str:
-        module_parts = model.__module__.split('.')
-        repo_index = module_parts.index(self.repo_name)
-        return '.'.join(module_parts[repo_index + 1:-1])
+    def _get_model_path(self, path) -> str:
+        try:
+            module_parts = path.split('.')
+            repo_index = module_parts.index(self.repo)
+            return '.'.join(module_parts[repo_index + 1:-1])
+        except ValueError as e:
+            print(f"Path: {path}")
 
     def _insert_model_to_structure(self, path: str, name: str):
         current = self.model_structure

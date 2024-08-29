@@ -18,49 +18,39 @@ class ModelRegistration:
             elif issubclass(model, Process):
                 processAdminSite.registerProcess(model.__name__.lower(), model)
                 processAdminSite.register([model])
-            else:
+            elif not issubclass(model, type) and not model._meta.abstract:
                 processAdminSite.register([model])
                 adminSite.register([model])
+
+                # from lex.lex_app.lex_models.upload_model import UploadModelMixin, ConditionalUpdateMixin
+                # if issubclass(model, ConditionalUpdateMixin):
+                #     if os.getenv("CALLED_FROM_START_COMMAND"):
+                #         @sync_to_async
+                #         def reset_instances_with_aborted_calculations():
+                #             if not os.getenv("CELERY_ACTIVE"):
+                #                 aborted_calc_instances = imported_class.objects.filter(calculate=True)
+                #                 aborted_calc_instances.update(calculate=False)
+                # 
+                #         nest_asyncio.apply()
+                #         loop = asyncio.get_event_loop()
+                #         loop.run_until_complete(reset_instances_with_aborted_calculations())
 
     @classmethod
     def register_model_structure(cls, structure: dict):
         from lex.lex_app.ProcessAdminSettings import processAdminSite, adminSite
-        # from lex.lex_app.logging.UserChangeLog import UserChangeLog
-        # from lex.lex_app.logging.CalculationLog import CalculationLog
-        # from lex.lex_app.logging.CalculationIDs import CalculationIDs
-        # from lex.lex_app.logging.Log import Log
-        # from lex.lex_app.streamlit.Streamlit import Streamlit
-        # from django.contrib.auth.models import User, Group, Permission
-        # from django.contrib.contenttypes.models import ContentType
-
-        print(structure)
-        # built_in_models = [Streamlit]
-        # cls.register_models(built_in_models)
-        # processAdminSite.register([<Streamlit])
-
-        # processAdminSite.registerHTMLReport("streamlit", Streamlit)
-        # model_structure = shorten_model_structure(structure)
-
-        # structure['Z_Reports'] = {'userchangelog': None, 'calculationlog': None, 'log': None}
-        # if os.getenv("IS_STREAMLIT_ENABLED") == "true":
-        #     structure['Streamlit'] = {'streamlit': None}
-
-        processAdminSite.register_model_structure(structure)
+        if structure: processAdminSite.register_model_structure(structure)
 
     @classmethod
     def register_model_styling(cls, styling: dict):
         from lex.lex_app.ProcessAdminSettings import processAdminSite, adminSite
-
-        processAdminSite.register_model_styling(styling)
+        if styling: processAdminSite.register_model_styling(styling)
 
     @classmethod
     def register_global_filter_structure(cls, filter_structure: dict):
         from lex.lex_app.ProcessAdminSettings import processAdminSite, adminSite
-
-        processAdminSite.register_global_filter_structure(filter_structure)
+        if filter_structure: processAdminSite.register_global_filter_structure(filter_structure)
 
     @classmethod
     def register_widget_structure(cls, structure):
         from lex.lex_app.ProcessAdminSettings import processAdminSite, adminSite
-
-        processAdminSite.register_widget_structure(structure)
+        if structure: processAdminSite.register_widget_structure(structure)
