@@ -59,6 +59,7 @@ class GenericAppConfig(AppConfig):
         if sys.argv[1:2] == ["runserver"]:
             create_api_key()
 
+    # Extracting models from the valid python files, and processing them one by one
     def discover_models(self, path, repo):
         for root, dirs, files in os.walk(path):
             # Skip 'venv', '.venv', and 'build' directories
@@ -146,6 +147,7 @@ class GenericAppConfig(AppConfig):
                 return self.apps.get_app_config(app_label).get_model(model_name)
         return self.discovered_models.get(model_name)
 
+    # All model Registrations happen here
     def register_models_with_admin(self):
         from lex_app.streamlit.Streamlit import Streamlit
 

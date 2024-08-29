@@ -1,4 +1,5 @@
 from lex.lex_app.lex_models.upload_model import UploadModelMixin
+from lex_app.decorators.LexSingleton import LexSingleton
 
 
 def subtract_from_list(minuend_list, subtrahend_set):
@@ -17,6 +18,9 @@ def get_displayed_fields(model):
     return [field.name for field in model._meta.get_fields() if not is_excluded(field)]
 
 
+# I made all the models that can be singleton to singleton
+# Beware there might be an expected behavior if the logic is reliant of creating a new object everytime
+@LexSingleton
 class ModelProcessAdmin:
 
     def __init__(self, to_display_string=None, fields_not_in_table_view=None, main_field=None,

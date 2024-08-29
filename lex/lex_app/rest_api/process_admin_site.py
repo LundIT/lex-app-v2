@@ -2,6 +2,7 @@ from django.db.models.base import ModelBase
 from django.db.models.signals import post_save
 from django.http import HttpResponse
 from django.urls import path, register_converter
+from lex_app.decorators.LexSingleton import LexSingleton
 from rest_framework_simplejwt.views import TokenRefreshView
 
 from lex.lex_app.rest_api.auth import TokenObtainPairWithUserView
@@ -30,17 +31,9 @@ from lex.lex_app.rest_api.views.calculations.InitCalculationLogs import InitCalc
 from lex.lex_app.rest_api import converters
 from lex.lex_app.rest_api.views.global_search_for_models.Search import Search
 
-class SingletonMeta(type):
-    _instances = {}
 
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instances:
-            instance = super().__call__(*args, **kwargs)
-            cls._instances[cls] = instance
-        return cls._instances[cls]
-
-
-class ProcessAdminSite(metaclass=SingletonMeta):
+@LexSingleton
+class ProcessAdminSite:
     """
     Used as instance, i.e. inheriting this class is not necessary in order to use it.
     """
@@ -200,7 +193,6 @@ class ProcessAdminSite(metaclass=SingletonMeta):
         # TODO: Move this to a logically more appropriate place
         # TODO: remove tree induction
         if not self.initialized:
-            print(self.model_structure)
             self.model_collection = ModelCollection(self.registered_models, self.model_structure,
                                                     self.model_styling, self.global_filter_structure)
             self.initialized = True
