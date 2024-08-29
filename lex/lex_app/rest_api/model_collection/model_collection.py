@@ -120,8 +120,10 @@ def get_readable_name_for(node_name, model_collection):
     else:
         return node_name
 
+
 READABLE_NAME = 'readable_name'
 TYPE = 'type'
+
 
 def enrich_model_structure_with_readable_names_and_types(node_name, model_tree, model_collection):
     readable_name = get_readable_name_for(node_name, model_collection)

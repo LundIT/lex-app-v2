@@ -5,6 +5,8 @@ import traceback
 import asyncio
 from celery import shared_task
 from django.apps import apps
+
+from lex_app.model_utils.LexAuthentication import LexAuthentication
 from lex_app.settings import repo_name
 from asgiref.sync import sync_to_async
 import nest_asyncio
@@ -17,7 +19,7 @@ def load_data(test, generic_app_models):
     """
     Load data asynchronously if conditions are met.
     """
-    from ArmiraCashflowDB import _authentication_settings
+    _authentication_settings = LexAuthentication()
 
     if should_load_data(_authentication_settings):
         try:
@@ -49,7 +51,7 @@ class LexAppConfig(GenericAppConfig):
     def ready(self):
         super().ready()
         super().start(
-            repo='ArmiraCashflowDB'
+            repo=repo_name
         )
         generic_app_models = {f"{model.__name__}": model for model in
                               set(list(apps.get_app_config(repo_name).models.values())
@@ -62,7 +64,8 @@ class LexAppConfig(GenericAppConfig):
         Check conditions and decide whether to load data asynchronously.
         """
         from lex.lex_app.tests.ProcessAdminTestCase import ProcessAdminTestCase
-        from ArmiraCashflowDB import _authentication_settings
+        _authentication_settings = LexAuthentication()
+        print(_authentication_settings.initial_data_load)
 
         test = ProcessAdminTestCase()
 

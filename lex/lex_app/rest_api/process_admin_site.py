@@ -131,6 +131,27 @@ class ProcessAdminSite:
                 model.create()
         return HttpResponse("Created")
 
+    def get_container_func(self, model_container):
+        return self.model_collection.get_container(model_container)
+
+    def get_model_structure_func(self):
+        return self.model_collection.model_structure_with_readable_names
+
+    def get_model_styling_func(self):
+        return self.model_collection.model_styling
+
+    def get_global_filters_func(self):
+        # Define the function that returns the global filters
+        return self.model_collection.global_filters
+
+    def get_html_report_func(self, report_name, user):
+        # Define the function that returns the HTML report
+        return self.html_reports[report_name].get_html(user)
+
+    def get_process_structure_func(self, process_name):
+        return self.processes[process_name]()
+        pass
+
     def _get_urls(self):
         register_converter(converters.create_model_converter(self.model_collection), 'model')
 

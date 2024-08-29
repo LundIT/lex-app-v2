@@ -28,6 +28,8 @@ from datetime import timedelta
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
+
+
 def traces_sampler(sampling_context):
     if sampling_context == "/health":
         # Drop this transaction, by setting its sample rate to 0%

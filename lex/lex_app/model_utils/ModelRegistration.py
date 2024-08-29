@@ -1,5 +1,8 @@
 from typing import Dict, Type, List
-from django.db import models
+
+import asyncio
+import nest_asyncio
+from asgiref.sync import sync_to_async
 import os
 
 
@@ -22,18 +25,18 @@ class ModelRegistration:
                 processAdminSite.register([model])
                 adminSite.register([model])
 
-                # from lex.lex_app.lex_models.upload_model import UploadModelMixin, ConditionalUpdateMixin
-                # if issubclass(model, ConditionalUpdateMixin):
-                #     if os.getenv("CALLED_FROM_START_COMMAND"):
-                #         @sync_to_async
-                #         def reset_instances_with_aborted_calculations():
-                #             if not os.getenv("CELERY_ACTIVE"):
-                #                 aborted_calc_instances = imported_class.objects.filter(calculate=True)
-                #                 aborted_calc_instances.update(calculate=False)
-                # 
-                #         nest_asyncio.apply()
-                #         loop = asyncio.get_event_loop()
-                #         loop.run_until_complete(reset_instances_with_aborted_calculations())
+                from lex.lex_app.lex_models.upload_model import UploadModelMixin, ConditionalUpdateMixin
+                if issubclass(model, ConditionalUpdateMixin):
+                    if os.getenv("CALLED_FROM_START_COMMAND"):
+                        @sync_to_async
+                        def reset_instances_with_aborted_calculations():
+                            if not os.getenv("CELERY_ACTIVE"):
+                                aborted_calc_instances = model.objects.filter(calculate=True)
+                                aborted_calc_instances.update(calculate=False)
+
+                        nest_asyncio.apply()
+                        loop = asyncio.get_event_loop()
+                        loop.run_until_complete(reset_instances_with_aborted_calculations())
 
     @classmethod
     def register_model_structure(cls, structure: dict):

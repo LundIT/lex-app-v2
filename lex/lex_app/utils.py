@@ -9,6 +9,7 @@ from django.db import models
 from django.contrib import admin
 from lex.lex_app.model_utils.ModelRegistration import ModelRegistration
 from lex.lex_app.model_utils.ModelStructureBuilder import ModelStructureBuilder
+from lex_app.model_utils.LexAuthentication import LexAuthentication
 
 
 def create_api_key():
@@ -81,7 +82,7 @@ class GenericAppConfig(AppConfig):
 
     def _is_valid_module(self, module_name, file):
         return (file.endswith('.py') and
-                not module_name.startswith(self._EXCLUDED_PREFIXES) and
+                # not module_name.startswith(self._EXCLUDED_PREFIXES) and
                 not module_name.endswith(self._EXCLUDED_POSTFIXES) and
                 module_name not in self._EXCLUDED_FILES)
 
@@ -91,7 +92,7 @@ class GenericAppConfig(AppConfig):
         elif file.endswith('_authentication_settings.py'):
             try:
                 module = importlib.import_module(full_module_name)
-                module.create_groups()
+                LexAuthentication().load_settings(module)
             except ImportError as e:
                 print(f"Error importing authentication settings: {e}")
             except Exception as e:
@@ -100,7 +101,6 @@ class GenericAppConfig(AppConfig):
             self.load_models_from_module(full_module_name)
 
     def load_models_from_module(self, full_module_name):
-        from lex.lex_app.lex_models.html_report import HTMLReport
         try:
             print('Loading models from module', full_module_name)
             if not full_module_name.startswith('.'):
