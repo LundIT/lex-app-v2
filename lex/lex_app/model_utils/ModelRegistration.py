@@ -1,4 +1,3 @@
-from typing import Dict, Type, List
 
 import asyncio
 import nest_asyncio
@@ -7,7 +6,6 @@ import os
 
 
 class ModelRegistration:
-
     @classmethod
     def register_models(cls, models):
         from lex.lex_app.ProcessAdminSettings import processAdminSite, adminSite
