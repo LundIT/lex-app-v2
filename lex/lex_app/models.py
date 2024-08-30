@@ -248,6 +248,7 @@ from django.dispatch import receiver
 #     except Exception as e:
 #         print(traceback.print_exc())
 #
+# TODO: Move it Somewhere and delete this file
 @receiver(post_save)
 def update_handler(sender, **kwargs):
     if issubclass(sender, UploadModelMixin):

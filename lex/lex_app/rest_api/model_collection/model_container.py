@@ -7,11 +7,9 @@ from lex.lex_app.rest_api.serializers import model2serializer
 
 
 class ModelContainer:
-    def __init__(self, model_class: Model, process_admin, models2containers: Dict[Model, 'ModelContainer']) -> None:
+    def __init__(self, model_class: Model, process_admin) -> None:
         self.model_class = model_class
         self.process_admin = process_admin
-        self._models2containers = models2containers
-        self._models2containers[self.model_class] = self
         self.dependent_model_containers: Set['ModelContainer'] = set()
         self.obj_serializer = model2serializer(self.model_class, self.process_admin.get_fields_in_table_view(
             self.model_class)) if hasattr(model_class, '_meta') else None
@@ -40,12 +38,3 @@ class ModelContainer:
             'can_create_in_general': restriction.can_create_in_general(user, None),
             'can_delete_in_general': restriction.can_delete_in_general(user, None)
         }
-
-    def read_dependencies(self):
-        if hasattr(self.model_class, '_meta'):
-            for field in get_relation_fields(self.model_class):
-                other_model = field.remote_field.model
-                other_container = self._models2containers[other_model]
-                other_container.dependent_model_containers.add(self)
-                if field.get_internal_type() == MANY_TO_MANY_NAME:
-                    self.dependent_model_containers.add(other_container)

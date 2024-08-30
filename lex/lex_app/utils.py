@@ -12,16 +12,24 @@ from lex.lex_app.model_utils.ModelStructureBuilder import ModelStructureBuilder
 from lex_app.model_utils.LexAuthentication import LexAuthentication
 
 
-def create_api_key():
-    try:
-        from rest_framework_api_key.models import APIKey
-        if APIKey.objects.count() == 0:
-            api_key, key = APIKey.objects.create_key(name='APIKey')
-            print("API_KEY:", key)
-        else:
-            print("API_KEY already exists")
-    except ImportError as e:
-        print(f"Error importing APIKey: {e}")
+# def create_api_key():
+#     try:
+#         from rest_framework_api_key.models import APIKey
+#         if APIKey.objects.count() == 0:
+#             api_key, key = APIKey.objects.create_key(name='APIKey')
+#             print("API_KEY:", key)
+#         else:
+#             print("API_KEY already exists")
+#     except ImportError as e:
+#         print(f"Error importing APIKey: {e}")
+
+
+def _is_structure_yaml_file(file):
+    return file == "model_structure.yaml"
+
+
+def _is_structure_file(file):
+    return file.endswith('_structure.py')
 
 
 class GenericAppConfig(AppConfig):
@@ -50,15 +58,15 @@ class GenericAppConfig(AppConfig):
         self.subdir = f"" if not subdir else subdir
 
         self.discover_models(self.project_path, repo=repo)
-        self.resolve_relationships(repo=repo)
 
         if not self.model_structure_builder.model_structure and not subdir:
             self.model_structure_builder.build_structure(self.discovered_models)
 
-        self.register_models_with_admin()
+        self.register_models()
 
-        if sys.argv[1:2] == ["runserver"]:
-            create_api_key()
+        # TODO: Creation of API KEY should be possible in IC per instance
+        # if sys.argv[1:2] == ["runserver"]:
+        #     create_api_key()
 
     # Extracting models from the valid python files, and processing them one by one
     def discover_models(self, path, repo):
@@ -74,7 +82,9 @@ class GenericAppConfig(AppConfig):
                 module_name = rel_module_name.split('.')[-1]
                 full_module_name = f"{self.subdir}{rel_module_name}"
 
-                if self._is_valid_module(module_name, file):
+                if _is_structure_yaml_file(file):
+                    self.model_structure_builder.extract_from_yaml(absolute_path)
+                elif self._is_valid_module(module_name, file):
                     self._process_module(full_module_name, file)
 
     def _dir_filter(self, directory):
@@ -87,68 +97,39 @@ class GenericAppConfig(AppConfig):
                 module_name not in self._EXCLUDED_FILES)
 
     def _process_module(self, full_module_name, file):
-        if file.endswith('model_structure.py'):
-            self.model_structure_builder.extract_and_save_structure(full_module_name)
-        elif file.endswith('_authentication_settings.py'):
+        if file.endswith('_authentication_settings.py'):
             try:
                 module = importlib.import_module(full_module_name)
                 LexAuthentication().load_settings(module)
             except ImportError as e:
                 print(f"Error importing authentication settings: {e}")
+                raise
             except Exception as e:
                 print(f"Authentication settings doesn't have method create_groups()")
+                raise
         else:
             self.load_models_from_module(full_module_name)
 
     def load_models_from_module(self, full_module_name):
         try:
-            print('Loading models from module', full_module_name)
             if not full_module_name.startswith('.'):
                 module = importlib.import_module(full_module_name)
                 for name, obj in module.__dict__.items():
-                    if isinstance(obj, type) and issubclass(obj, models.Model) and obj is not models.Model:
-                        if not obj._meta.abstract:
-                            self.add_model(name, obj)
-        except ImportError as e:
+                    if (isinstance(obj, type)
+                            and issubclass(obj, models.Model)
+                            and hasattr(obj, '_meta')
+                            and not obj._meta.abstract):
+                        self.add_model(name, obj)
+        except (AttributeError, ImportError) as e:
             print(f"Error importing {full_module_name}: {e}")
+            raise
 
     def add_model(self, name, model):
         if name not in self.discovered_models:
             self.discovered_models[name] = model
-            self.pending_relationships[name] = []
-
-            for field in model._meta.fields + model._meta.many_to_many:
-                if isinstance(field, models.ForeignKey) or isinstance(field, models.ManyToManyField):
-                    related_model = field.remote_field.model
-                    if isinstance(related_model, str):
-                        self.pending_relationships[name].append((field.name, related_model))
-
-    def resolve_relationships(self, repo):
-        for model_name, relationships in self.pending_relationships.items():
-            model = self.discovered_models[model_name]
-            for field_name, related_model_name in relationships:
-                if '.' not in related_model_name:
-                    related_model_name = f"{repo}.{related_model_name}"
-
-                try:
-                    related_model = self.get_model_c(related_model_name)
-                    field = model._meta.get_field(field_name)
-                    field.remote_field.model = related_model
-                except LookupError:
-                    raise ImproperlyConfigured(
-                        f"Related model '{related_model_name}' for '{model_name}.{field_name}' not found")
-
-    def get_model_c(self, model_name):
-        if '.' in model_name:
-            app_label, model_name = model_name.split('.')
-            try:
-                return self.apps.get_model(app_label, model_name)
-            except AttributeError:
-                return self.apps.get_app_config(app_label).get_model(model_name)
-        return self.discovered_models.get(model_name)
 
     # All model Registrations happen here
-    def register_models_with_admin(self):
+    def register_models(self):
         from lex_app.streamlit.Streamlit import Streamlit
 
         ModelRegistration.register_models(
@@ -156,6 +137,5 @@ class GenericAppConfig(AppConfig):
 
         ModelRegistration.register_model_structure(self.model_structure_builder.model_structure)
         ModelRegistration.register_model_styling(self.model_structure_builder.model_styling)
-        ModelRegistration.register_global_filter_structure(self.model_structure_builder.global_filter_structure)
         ModelRegistration.register_widget_structure(self.model_structure_builder.widget_structure)
         ModelRegistration.register_models([Streamlit])

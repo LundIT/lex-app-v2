@@ -15,6 +15,9 @@ class ModelStructureObtainView(APIView):
     http_method_names = ['get']
     model_collection = None
     permission_classes = [HasAPIKey | IsAuthenticated]
+    get_model_structure_func = None
+    get_container_func = None
+
 
     def delete_restricted_nodes_from_model_structure(self, model_structure, user):
         """credit to MSeifert
@@ -22,7 +25,7 @@ class ModelStructureObtainView(APIView):
         nodes = list(model_structure.keys())
         for n in nodes:
             if 'children' not in model_structure[n]:
-                container = self.model_collection.get_container(n)
+                container = self.get_container_func(n)
                 if not container.get_general_modification_restrictions_for_user(user)['can_read_in_general']:
                     del model_structure[n]
 
@@ -32,7 +35,8 @@ class ModelStructureObtainView(APIView):
 
     def get(self, request, *args, **kwargs):
         user = request.user
-        user_dependet_model_structure = copy.deepcopy(self.model_collection.model_structure_with_readable_names)
+        # user_dependet_model_structure = copy.deepcopy(self.model_collection.model_structure_with_readable_names)
+        user_dependet_model_structure = copy.deepcopy(self.get_model_structure_func())
         self.delete_restricted_nodes_from_model_structure(user_dependet_model_structure, user)
         return Response(user_dependet_model_structure)
 
@@ -68,16 +72,6 @@ class ModelStylingObtainView(APIView):
                 pass
 
         return Response(user_dependent_model_styling)
-
-
-class GlobalFilterObtainView(APIView):
-    http_method_names = ['get']
-    model_collection: ModelCollection = None
-
-    def get(self, request, *args, **kwargs):
-        user = request.user
-        global_filter_structure = self.model_collection.global_filters.copy()
-        return Response(global_filter_structure)
 
 
 class Overview(APIView):

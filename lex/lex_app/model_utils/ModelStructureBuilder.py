@@ -4,14 +4,27 @@ from django.db import models
 import os
 import importlib
 
+from lex_app.model_utils.parse_utils import ModelStructure
+
 
 class ModelStructureBuilder:
     def __init__(self, repo: str = ""):
         self.repo = repo
         self.model_structure = {}
         self.model_styling = {}
-        self.global_filter_structure = {}
         self.widget_structure = []
+
+    def extract_from_yaml(self, path: str):
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"File not found: {path}")
+
+        if not path.endswith('.yaml'):
+            raise ValueError(f"Invalid file format: {path}")
+
+        info = ModelStructure(path)
+        self.model_structure = info.structure
+        self.model_styling = info.styling
+
 
     def extract_and_save_structure(self, full_module_name: str) -> None:
         try:
@@ -23,7 +36,6 @@ class ModelStructureBuilder:
             "model_structure": "get_model_structure",
             "widget_structure": "get_widget_structure",
             "model_styling": "get_model_styling",
-            "global_filter_structure": "get_global_filter_structure"
         }
 
         for attr, method_name in structure_methods.items():
@@ -40,17 +52,16 @@ class ModelStructureBuilder:
             "model_structure": self.model_structure,
             "widget_structure": self.widget_structure,
             "model_styling": self.model_styling,
-            "global_filter_structure": self.global_filter_structure
         }
 
     def build_structure(self, models) -> Dict:
+        # TODO: Filter models by repo
         for model_name, model in models.items():
             if self.repo not in model.__module__:
                 continue
             path = self._get_model_path(model.__module__)
             self._insert_model_to_structure(path, str(model_name).lower())
 
-        self._shorten_model_structure()
         self._add_reports_to_structure()
         return self.model_structure
 
@@ -70,13 +81,6 @@ class ModelStructureBuilder:
             current = current[p]
         current[name] = None
 
-    def _shorten_model_structure(self):
-        self.model_structure = self._shorten_dict(self.model_structure)
-
-    def _shorten_dict(self, d: Dict) -> Dict:
-        while len(d) == 1 and isinstance(next(iter(d.values())), dict):
-            d = next(iter(d.values()))
-        return d
 
     def _add_reports_to_structure(self):
         self.model_structure['Z_Reports'] = {'userchangelog': None, 'calculationlog': None, 'log': None}

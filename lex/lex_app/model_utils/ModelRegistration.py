@@ -47,11 +47,6 @@ class ModelRegistration:
         if styling: processAdminSite.register_model_styling(styling)
 
     @classmethod
-    def register_global_filter_structure(cls, filter_structure: dict):
-        from lex.lex_app.ProcessAdminSettings import processAdminSite, adminSite
-        if filter_structure: processAdminSite.register_global_filter_structure(filter_structure)
-
-    @classmethod
     def register_widget_structure(cls, structure):
         from lex.lex_app.ProcessAdminSettings import processAdminSite, adminSite
         if structure: processAdminSite.register_widget_structure(structure)

@@ -45,8 +45,6 @@ class ProcessAdminSite:
         self.registered_models = {}  # Model-classes to ModelProcessAdmin-instances
         self.model_structure = {}
         self.model_styling = {}
-        self.global_filter = {}
-        self.global_filter_structure = {}
         self.html_reports = {}
         self.processes = {}
         self.widget_structure = []
@@ -65,12 +63,6 @@ class ProcessAdminSite:
         :param model_styling: dict that contains styling parameters for each model
         """
         self.widget_structure = widget_structure
-
-    def register_global_filter_structure(self, global_filter_structure):
-        """
-        :param global_filter_structure: dict that contains information which models are affected by the global filtering
-        """
-        self.global_filter_structure = global_filter_structure
 
     def registerHTMLReport(self, name, report):
         self.html_reports[name] = report
@@ -139,11 +131,6 @@ class ProcessAdminSite:
 
     def get_model_styling_func(self):
         return self.model_collection.model_styling
-
-    def get_global_filters_func(self):
-        # Define the function that returns the global filters
-        return self.model_collection.global_filters
-
     def get_html_report_func(self, report_name, user):
         # Define the function that returns the HTML report
         return self.html_reports[report_name].get_html(user)
@@ -152,11 +139,12 @@ class ProcessAdminSite:
         return self.processes[process_name]()
         pass
 
+    # TODO: Put urls definitions in the correct place (e.g. in a urls.py file)
     def _get_urls(self):
         register_converter(converters.create_model_converter(self.model_collection), 'model')
 
         urlpatterns = [
-            path('api/model-structure', ModelStructureObtainView.as_view(model_collection=self.model_collection),
+            path('api/model-structure', ModelStructureObtainView.as_view(get_container_func=self.get_container_func, get_model_structure_func=self.get_model_structure_func),
                  name='model-structure'),
             path('api/auth/token/', TokenObtainPairWithUserView.as_view(), name='token'),
             path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='refresh_token'),
@@ -215,7 +203,7 @@ class ProcessAdminSite:
         # TODO: remove tree induction
         if not self.initialized:
             self.model_collection = ModelCollection(self.registered_models, self.model_structure,
-                                                    self.model_styling, self.global_filter_structure)
+                                                    self.model_styling)
             self.initialized = True
 
         return self._get_urls(), 'process_admin', self.name  # TODO: what is the name exactly for??
