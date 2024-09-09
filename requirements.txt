@@ -41,3 +41,4 @@ django-storages[google]
 pillow
 DjangoSharepointStorage==1.0.9
 click
+django-lifecycle

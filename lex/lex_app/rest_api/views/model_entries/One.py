@@ -14,6 +14,7 @@ from lex.lex_app.rest_api.views.utils import get_user_name, get_user_email
 
 from django.core.cache import cache
 from django.db import transaction
+from lex.lex_app.rest_api.signals import update_calculation_status
 
 user_name = None
 user_email = None
@@ -55,18 +56,17 @@ class OneModelEntry(ModelEntryProviderMixin, DestroyOneWithPayloadMixin, Retriev
     def update(self, request, *args, **kwargs):
         from lex.lex_app.logging.UserChangeLog import UserChangeLog
         from lex.lex_app.logging.CalculationIDs import CalculationIDs
-        from lex.lex_app.models import update_handler
 
         model_container = self.kwargs['model_container']
         global user_name
         global user_email
         calculationId = self.kwargs['calculationId']
 
-        with OperationContext() as context_id:
+        with OperationContext(request) as context_id:
 
             if "calculate" in request.data and request.data["calculate"] == "true":
                 CalculationIDs.objects.update_or_create(calculation_record=f"{model_container.id}_{self.kwargs['pk']}",
-                                                        context_id=context_id,
+                                                        context_id=context_id['context_id'],
                                                         defaults={'calculation_id': calculationId})
 
             if "edited_file" not in request.data:
@@ -85,12 +85,14 @@ class OneModelEntry(ModelEntryProviderMixin, DestroyOneWithPayloadMixin, Retriev
                     response = UpdateModelMixin.update(self, request, *args, **kwargs)
                 else:
                     if "calculate" in request.data and request.data["calculate"] == "true":
-                        post_save.disconnect(update_handler)
+                        # post_save.disconnect(update_handler)
                         instance.calculate = True
-                        instance.save()
+                        instance.is_calculated = 'IN_PROGRESS'
+                        instance.save(skip_hooks=True)
+                        # update_calculation_status(instance)
 
                     with transaction.atomic():
-                        post_save.connect(update_handler)
+                        # post_save.connect(update_handler)
                         response = UpdateModelMixin.update(self, request, *args, **kwargs)
 
             except Exception as e:
@@ -98,11 +100,11 @@ class OneModelEntry(ModelEntryProviderMixin, DestroyOneWithPayloadMixin, Retriev
                                                 timestamp=datetime.now(), user_name=get_user_name(request),
                                                 traceback=traceback.format_exc())
                 user_change_log.save()
-                if not hasattr(instance, 'is_atomic') or instance.is_atomic:
-                    if "calculate" in request.data:
-                        instance.calculate = False
-                        instance.save()
-                print(e)
+                # if not hasattr(instance, 'is_atomic') or instance.is_atomic:
+                #     if "calculate" in request.data:
+                #         instance.calculate = False
+                #         instance.save()
+                # print(e)
                 raise APIException({"error": f"{e} ", "traceback": traceback.format_exc()})
 
             if "edited_file" in request.data:

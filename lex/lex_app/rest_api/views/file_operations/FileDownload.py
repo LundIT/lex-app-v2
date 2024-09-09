@@ -22,7 +22,7 @@ class FileDownloadView(APIView):
 
         if os.getenv("KUBERNETES_ENGINE", "NONE") == "NONE":
             # TODO, not compatible with production environment
-            file_url = file.url if not file.url.startswith('/') else file.url[1:]
+            file_url = file.url if not file.url.startswith('/') else file.url
         else:
             file_url = file.url
 

@@ -11,6 +11,7 @@ class ModelRegistration:
         from lex.lex_app.ProcessAdminSettings import processAdminSite, adminSite
         from lex.lex_app.lex_models.Process import Process
         from lex.lex_app.lex_models.html_report import HTMLReport
+        from lex.lex_app.lex_models.CalculationModel import CalculationModel
 
         for model in models:
             if issubclass(model, HTMLReport):
@@ -24,7 +25,7 @@ class ModelRegistration:
                 adminSite.register([model])
 
                 from lex.lex_app.lex_models.upload_model import UploadModelMixin, ConditionalUpdateMixin
-                if issubclass(model, ConditionalUpdateMixin):
+                if issubclass(model, ConditionalUpdateMixin) or issubclass(model, CalculationModel):
                     if os.getenv("CALLED_FROM_START_COMMAND"):
                         @sync_to_async
                         def reset_instances_with_aborted_calculations():

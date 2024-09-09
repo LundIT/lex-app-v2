@@ -249,18 +249,18 @@ from django.dispatch import receiver
 #         print(traceback.print_exc())
 #
 # TODO: Move it Somewhere and delete this file
-@receiver(post_save)
-def update_handler(sender, **kwargs):
-    if issubclass(sender, UploadModelMixin):
-        update_method = kwargs["instance"].update
-        if (hasattr(update_method, 'delay') and
-                os.getenv("DEPLOYMENT_ENVIRONMENT") and
-                os.getenv("ARCHITECTURE") == "MQ/Worker"):
-            # @custom_shared_task decorator is used
-            update_method.delay(kwargs["instance"])
-        else:
-            # @custom_shared_task decorator is not used
-            sender.update(kwargs["instance"])
+# @receiver(post_save)
+# def update_handler(sender, **kwargs):
+#     if issubclass(sender, UploadModelMixin):
+#         update_method = kwargs["instance"].update
+#         if (hasattr(update_method, 'delay') and
+#                 os.getenv("DEPLOYMENT_ENVIRONMENT") and
+#                 os.getenv("ARCHITECTURE") == "MQ/Worker"):
+#             # @custom_shared_task decorator is used
+#             update_method.delay(kwargs["instance"])
+#         else:
+#             # @custom_shared_task decorator is not used
+#             sender.update(kwargs["instance"])
 #
 # # @receiver(post_delete)
 # # def delete_file(sender, instance, **kwargs):

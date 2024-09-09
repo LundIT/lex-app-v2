@@ -51,7 +51,7 @@ class Log(CalculatedModelMixin, models.Model):
                 if (hasattr(function, 'delay') and
                     os.getenv("DEPLOYMENT_ENVIRONMENT")
                         and os.getenv("ARCHITECTURE") == "MQ/Worker"):
-                    obj = CalculationIDs.objects.filter(context_id=context_id.get()).first()
+                    obj = CalculationIDs.objects.filter(context_id=context_id.get()['context_id']).first()
                     calculation_id = getattr(obj, "calculation_id", "test_id")
                     return_value = function.apply_async(args=args, kwargs=kwargs,
                                                         task_id=str(calculation_id))

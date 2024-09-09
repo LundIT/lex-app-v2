@@ -63,9 +63,9 @@ class CalculationLog(models.Model):
             calculation_id = getattr(obj, "calculation_id", "test_id")
         else:
             obj, created = CalculationIDs.objects.get_or_create(calculation_record=calculation_record if calculation_record else "init_upload",
-                                                                context_id=context_id.get() if context_id.get() else "test_id",
+                                                                context_id=context_id.get()['context_id'] if context_id.get() else "test_id",
                                                                 defaults={
-                                                                    'calculation_id': getattr(CalculationIDs.objects.filter(context_id=context_id.get()).first(), "calculation_id", "test_id")})
+                                                                    'calculation_id': getattr(CalculationIDs.objects.filter(context_id=context_id.get()['context_id']).first(), "calculation_id", "test_id")})
             calculation_id = getattr(obj, "calculation_id", "test_id")
 
         calc_log = CalculationLog(timestamp=datetime.now(), method=str(trace_objects),
