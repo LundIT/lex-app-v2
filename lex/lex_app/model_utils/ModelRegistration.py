@@ -25,13 +25,13 @@ class ModelRegistration:
                 adminSite.register([model])
 
                 from lex.lex_app.lex_models.upload_model import UploadModelMixin, ConditionalUpdateMixin
-                if issubclass(model, ConditionalUpdateMixin) or issubclass(model, CalculationModel):
+                if issubclass(model, CalculationModel):
                     if os.getenv("CALLED_FROM_START_COMMAND"):
                         @sync_to_async
                         def reset_instances_with_aborted_calculations():
                             if not os.getenv("CELERY_ACTIVE"):
-                                aborted_calc_instances = model.objects.filter(calculate=True)
-                                aborted_calc_instances.update(calculate=False)
+                                aborted_calc_instances = model.objects.filter(is_calculated=CalculationModel.IN_PROGRESS)
+                                aborted_calc_instances.update(is_calculated=CalculationModel.ABORTED)
 
                         nest_asyncio.apply()
                         loop = asyncio.get_event_loop()

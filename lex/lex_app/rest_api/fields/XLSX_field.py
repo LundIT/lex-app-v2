@@ -127,5 +127,6 @@ class XLSXField(FileField):
         writer.save()
         writer.close()
         excel_file.seek(0)
-        self.save(path, content=File(excel_file))
+        self.save(path, content=File(excel_file), save=False)
+        
         return excel_file

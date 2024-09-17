@@ -2,7 +2,7 @@ import contextvars
 from uuid import uuid4
 
 # Define a context variable
-context_id = contextvars.ContextVar('context_id', default=None)
+context_id = contextvars.ContextVar('context_id', default={'context_id': '', 'request_obj': ''})
 
 # Context manager to set operation id
 class OperationContext:
