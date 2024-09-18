@@ -5,6 +5,7 @@ from django.db import transaction
 from django_lifecycle import hook, AFTER_UPDATE, AFTER_CREATE
 from lex.lex_app.lex_models.LexModel import LexModel
 from lex.lex_app.rest_api.signals import update_calculation_status
+from lex_app.LexLogger.LexLogger import LexLogger
 
 
 class CalculationModel(LexModel):
@@ -37,6 +38,9 @@ class CalculationModel(LexModel):
     @hook(AFTER_CREATE, on_commit=True)
     def calculate_hook(self):
         try:
+            logger = LexLogger()
+            logger.info("Hey melih")
+            logger.error("HEYY MELIIHHH")
             if hasattr(self, 'is_atomic') and not self.is_atomic:
                 self.calculate()
                 self.is_calculated = self.SUCCESS

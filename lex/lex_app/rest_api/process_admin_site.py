@@ -30,6 +30,7 @@ from lex.lex_app.rest_api.views.calculations.InitCalculationLogs import InitCalc
 
 from lex.lex_app.rest_api import converters
 from lex.lex_app.rest_api.views.global_search_for_models.Search import Search
+from lex_app.rest_api.views.LexLoggerView.LexLoggerView import LexLoggerView
 
 
 @LexSingleton
@@ -180,6 +181,7 @@ class ProcessAdminSite:
                  name='init-calculation-logs'),
             path('api/clean-calculations', CleanCalculations.as_view(),
                  name='clean-calculations'),
+            path('api/logs', LexLoggerView.as_view(), name='log'),
         ]
 
         url_patterns_for_model_info = [

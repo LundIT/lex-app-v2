@@ -21,6 +21,7 @@ from lex.lex_app.rest_api.consumers.BackendHealthConsumer import BackendHealthCo
 from lex.lex_app.rest_api.consumers.CalculationsConsumer import CalculationsConsumer
 from lex.lex_app.rest_api.consumers.UpdateCalculationStatusConsumer import UpdateCalculationStatusConsumer
 from lex.lex_app.rest_api.consumers.CalculationLogConsumer import CalculationLogConsumer
+from lex_app.rest_api.consumers.LogConsumer import LogConsumer
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lex_app.settings")
 django_asgi_app = get_asgi_application()
@@ -38,5 +39,6 @@ def on_server_shutdown(*args, **kwargs):
     loop.run_until_complete(CalculationLogConsumer.disconnect_all())
     loop.run_until_complete(CalculationsConsumer.disconnect_all())
     loop.run_until_complete(UpdateCalculationStatusConsumer.disconnect_all())
+    # loop.run_until_complete(LogConsumer.disconnect_all())
 
 atexit.register(on_server_shutdown)
