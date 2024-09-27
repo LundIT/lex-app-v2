@@ -13,11 +13,13 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.urls import path, include, re_path
+import os
+
+from django.urls import path, re_path
+
+from react.views import serve_react
 from . import settings, views
 from .ProcessAdminSettings import processAdminSite, adminSite
-import os
-from react.views import serve_react
 
 url_prefix = os.getenv("DJANGO_BASE_PATH") if os.getenv("DJANGO_BASE_PATH") is not None else ""
 

@@ -1,5 +1,6 @@
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
+
 import lex.lex_app.rest_api.routing
 
 application = ProtocolTypeRouter({

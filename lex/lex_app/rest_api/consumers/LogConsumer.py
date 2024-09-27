@@ -1,14 +1,18 @@
-from channels.generic.websocket import AsyncWebsocketConsumer
+
 import json
 
-from lex_app.LexLogger.LexLogger import LexLogger
-from lex_app.decorators.LexSingleton import LexSingleton
+from channels.generic.websocket import AsyncWebsocketConsumer
+# from lex_app.LexLogger.LexLogger import LexLogger
 
 
 class LogConsumer(AsyncWebsocketConsumer):
-    logger = LexLogger()
+    # logger = LexLogger()
+    socket = None
 
     async def connect(self):
+        if self.socket is not None:
+            await self.socket.disconnect(None)
+        self.socket = self
         await self.channel_layer.group_add("log_group", self.channel_name)
         await self.accept()
 
@@ -19,8 +23,14 @@ class LogConsumer(AsyncWebsocketConsumer):
 
     async def log_message(self, event):
         await self.send(text_data=json.dumps({
+            'id': event.get('id', 'N/A'),
+            'logId': event.get('logId', 'N/A'),
             'level': event['level'],
             'message': event['message'],
+            'timestamp': event['timestamp'],
+            'logName': event.get('logName', 'N/A'),
+            'triggerName': event.get('triggerName', 'N/A'),
+            'logDetails': event.get('logDetails', 'N/A'),
         }))
     async def receive(self, text_data):
         await self.send(text_data=json.dumps({

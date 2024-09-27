@@ -1,20 +1,15 @@
-import threading
 import traceback
 from datetime import datetime
 
-from lex.lex_app.rest_api.context import OperationContext
-from django.db.models.signals import post_save
+from django.db import transaction
 from rest_framework.exceptions import APIException
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, CreateAPIView
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin
 
+from lex.lex_app.rest_api.context import OperationContext
 from lex.lex_app.rest_api.views.model_entries.mixins.DestroyOneWithPayloadMixin import DestroyOneWithPayloadMixin
 from lex.lex_app.rest_api.views.model_entries.mixins.ModelEntryProviderMixin import ModelEntryProviderMixin
 from lex.lex_app.rest_api.views.utils import get_user_name, get_user_email
-
-from django.core.cache import cache
-from django.db import transaction
-from lex.lex_app.rest_api.signals import update_calculation_status
 
 user_name = None
 user_email = None

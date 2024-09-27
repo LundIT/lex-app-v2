@@ -1,4 +1,4 @@
-from django.db.models import TextField, FileField
+from django.db.models import FileField
 
 
 class PDFField(FileField):

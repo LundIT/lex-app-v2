@@ -1,5 +1,7 @@
 import json
+
 from channels.generic.websocket import AsyncWebsocketConsumer
+
 
 class CalculationsConsumer(AsyncWebsocketConsumer):
     active_consumers = set()

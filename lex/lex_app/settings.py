@@ -1,12 +1,12 @@
 from __future__ import absolute_import
+
 import sys
+import warnings
 from pathlib import Path
 
+from django.core.cache import CacheKeyWarning
 from google.oauth2 import service_account
 
-import warnings
-
-from django.core.cache import CacheKeyWarning
 """
 Django settings for lex_app project.
 

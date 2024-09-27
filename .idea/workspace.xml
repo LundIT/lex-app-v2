@@ -5,19 +5,72 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b53ec7f8-3c2d-4a83-8edf-9b5d77c49a3b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/lex/lex_app/LexLogger/LexLogger.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lex/lex_app/LexLogger/WebSockerHandler.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lex/lex_app/LexLogger/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/consumers/LogConsumer.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/views/LexLoggerView/LexLoggerView.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/views/LexLoggerView/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lex/lex_app/context_middleware.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/bin/lex.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/bin/lex.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/CustomDefaultStorage.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/CustomDefaultStorage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/LexLogger/LexLogger.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/LexLogger/LexLogger.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/LexLogger/WebSockerHandler.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/LexLogger/WebSockerHandler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/ProcessAdminSettings.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/ProcessAdminSettings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/apps.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/apps.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lex/lex_app/asgi.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/asgi.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/celery.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/celery.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lex/lex_app/lex_models/CalculationModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/lex_models/CalculationModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/lex_models/LexModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/lex_models/LexModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/lex_models/ModelModificationRestriction.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/lex_models/ModelModificationRestriction.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/lex_models/ModificationRestrictedModelExample.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/lex_models/ModificationRestrictedModelExample.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/lex_models/calculated_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/lex_models/calculated_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/lex_models/upload_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/lex_models/upload_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/logging/CalculationIDs.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/logging/CalculationIDs.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/logging/CalculationLog.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/logging/CalculationLog.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/logging/Log.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/logging/Log.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/logging/UserChangeLog.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/logging/UserChangeLog.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lex/lex_app/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lex/lex_app/migrations/0002_log_userchangelog_log_defining_fields_log.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/model_utils/ModelRegistration.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/model_utils/ModelRegistration.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/model_utils/ModelStructureBuilder.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/model_utils/ModelStructureBuilder.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/consumers/BackendHealthConsumer.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/consumers/BackendHealthConsumer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/consumers/CalculationLogConsumer.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/consumers/CalculationLogConsumer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/consumers/CalculationsConsumer.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/consumers/CalculationsConsumer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/consumers/LogConsumer.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/consumers/LogConsumer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/consumers/UpdateCalculationStatusConsumer.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/consumers/UpdateCalculationStatusConsumer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/context.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/context.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/fields/PDF_field.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/fields/PDF_field.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/fields/XLSX_field.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/fields/XLSX_field.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/model_collection/model_container.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/model_collection/model_container.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/model_collection/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/model_collection/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/process_admin_site.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/process_admin_site.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/routing.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/routing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/signals.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/signals.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/views/LexLoggerView/LexLoggerView.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/views/LexLoggerView/LexLoggerView.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/views/calculations/CleanCalculations.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/views/calculations/CleanCalculations.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/views/calculations/InitCalculationLogs.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/views/calculations/InitCalculationLogs.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/views/file_operations/FileDownload.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/views/file_operations/FileDownload.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/views/model_entries/List.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/views/model_entries/List.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/views/model_entries/One.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/views/model_entries/One.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/views/model_entries/filter_backends.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/views/model_entries/filter_backends.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/views/model_info/Fields.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/views/model_info/Fields.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/views/model_info/Widgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/views/model_info/Widgets.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/views/model_relation_views.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/views/model_relation_views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/views/permissions/UserPermission.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/views/permissions/UserPermission.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/views/process_flow/CreateOrUpdate.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/views/process_flow/CreateOrUpdate.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/views/project_info/ProjectInfo.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/views/project_info/ProjectInfo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/views/sharepoint/SharePointFileDownload.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/views/sharepoint/SharePointFileDownload.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/views/sharepoint/SharePointPreview.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/views/sharepoint/SharePointPreview.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/rest_api/views/sharepoint/SharePointShareLink.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/rest_api/views/sharepoint/SharePointShareLink.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/routing.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/routing.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lex/lex_app/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/streamlit/Streamlit.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/streamlit/Streamlit.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/tests/ProcessAdminTestCase.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/tests/ProcessAdminTestCase.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/tests/SubmodelTestCase.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/tests/SubmodelTestCase.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/lex_app/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/lex_app/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/react/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/react/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/react/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/react/tests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/react/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/react/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lex/streamlit_app.py" beforeDir="false" afterPath="$PROJECT_DIR$/lex/streamlit_app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,22 +110,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.pycharm.django.structure.promotion.once.per.project": "true",
-    "com.codeium.enabled": "true",
-    "git-widget-placeholder": "proof-of-concept-comb-reg",
-    "last_opened_file_path": "/home/hazem/LUND_IT/lex_app_submodels/ArmiraCashflowDB/venv/src/lex-app",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.pycharm.django.structure.promotion.once.per.project&quot;: &quot;true&quot;,
+    &quot;com.codeium.enabled&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;proof-of-concept-comb-reg-logging&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/hazem/LUND_IT/metagpt-doc&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/lex/lex_app/rest_api/consumers" />
@@ -156,6 +209,15 @@
       <workItem from="1726476017995" duration="21689000" />
       <workItem from="1726559737497" duration="3710000" />
       <workItem from="1726573861309" duration="14399000" />
+      <workItem from="1726774943978" duration="2335000" />
+      <workItem from="1726817412395" duration="24368000" />
+      <workItem from="1726908170107" duration="3383000" />
+      <workItem from="1727078378448" duration="11766000" />
+      <workItem from="1727096234958" duration="2659000" />
+      <workItem from="1727251638051" duration="3141000" />
+      <workItem from="1727258884355" duration="17103000" />
+      <workItem from="1727337089363" duration="1564000" />
+      <workItem from="1727339602767" duration="23709000" />
     </task>
     <servers />
   </component>
@@ -178,37 +240,48 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/lex/lex_app/lex_models/upload_model.py</url>
-          <line>30</line>
+          <line>27</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/lex/lex_app/lex_models/upload_model.py</url>
-          <line>41</line>
+          <line>38</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/lex/lex_app/lex_models/upload_model.py</url>
-          <line>55</line>
+          <line>52</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/lex/lex_app/lex_models/LexModel.py</url>
-          <line>15</line>
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/lex/lex_app/LexLogger/LexLogger.py</url>
-          <line>27</line>
+          <line>32</line>
           <option name="timeStamp" value="11" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/lex/lex_app/LexLogger/WebSockerHandler.py</url>
-          <option name="timeStamp" value="12" />
+          <url>file://$PROJECT_DIR$/lex/lex_app/lex_models/CalculationModel.py</url>
+          <line>39</line>
+          <option name="timeStamp" value="13" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/lex/lex_app/lex_models/CalculationModel.py</url>
-          <line>40</line>
-          <option name="timeStamp" value="13" />
+          <url>file://$PROJECT_DIR$/lex/lex_app/logging/CalculationLog.py</url>
+          <line>67</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/lex/lex_app/rest_api/consumers/LogConsumer.py</url>
+          <line>24</line>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/lex/lex_app/LexLogger/LexLogger.py</url>
+          <line>167</line>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/lex/lex_app/lex_models/LexModel.py</url>
+          <line>17</line>
+          <option name="timeStamp" value="17" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

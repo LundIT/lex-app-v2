@@ -1,10 +1,11 @@
-from django_sharepoint_storage.SharePointContext import SharePointContext
+import os
+
+from django.http import JsonResponse
 from django_sharepoint_storage.SharePointCloudStorageUtils import get_server_relative_path
+from django_sharepoint_storage.SharePointContext import SharePointContext
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework_api_key.permissions import HasAPIKey
-import os
-from django.http import JsonResponse
 
 
 class SharePointPreview(APIView):

@@ -1,18 +1,17 @@
+import inspect
 import os
-import threading
+import time
 import traceback
 from datetime import datetime
 
 from celery import current_task
-
-from lex.lex_app.lex_models.ModificationRestrictedModelExample import AdminReportsModificationRestriction
-from lex.lex_app.rest_api.context import context_id
 from django.db import models
-import inspect
-from django.core.cache import cache
-from lex.lex_app import settings
 
+from lex.lex_app import settings
+from lex.lex_app.lex_models.ModificationRestrictedModelExample import AdminReportsModificationRestriction
 from lex.lex_app.logging.CalculationIDs import CalculationIDs
+from lex.lex_app.rest_api.context import context_id
+
 
 #### Note: Messages shall be delivered in the following format: "Severity: Message" The colon and the whitespace after are required for the code to work correctly ####
 # Severity could be something like 'Error', 'Warning', 'Caution', etc. (See Static variables below!)
@@ -24,11 +23,13 @@ class CalculationLog(models.Model):
     timestamp = models.DateTimeField()
     trigger_name = models.TextField(null=True)
     message_type = models.TextField(default="")
+    detailed_message = models.TextField("")
     calculationId = models.TextField(default='test_id')
     calculation_record = models.TextField(default="legacy")
     message = models.TextField()
     method = models.TextField()
     is_notification = models.BooleanField(default=False)
+
 
     # Severities, to be concatenated with message in create statement
     SUCCESS = 'Success: '
@@ -50,29 +51,54 @@ class CalculationLog(models.Model):
         if self.id is None:
             super(CalculationLog, self).save(*args, **kwargs)
 
+
+    # Run the calculation
+
+    def to_dict(self):
+        return {
+            'id': self.calculationId,
+            'logId': self.id,
+            'logName': self.calculation_record,
+            'message': self.message,
+            'timestamp': self.timestamp,
+            'triggerName': self.trigger_name
+        }
+
     @classmethod
-    def create(cls, message, message_type="Progress", trigger_name=None, is_notification=False):
+    def create(cls, message, details="", message_type="Progress", trigger_name=None, is_notification=False, dont_save=False):
         trace_objects = cls.get_trace_objects()["trace_objects"]
         calculation_record = cls.get_trace_objects()["first_model_info"]
-
         if current_task and os.getenv("CELERY_ACTIVE"):
-            obj, created = CalculationIDs.objects.get_or_create(calculation_record=calculation_record if calculation_record else "init_upload",
-                                                                calculation_id=str(current_task.request.id),
-                                                                defaults={
-                                                                    'context_id': getattr(CalculationIDs.objects.filter(calculation_id=str(current_task.request.id)).first(), "context_id", "test_id")})
+            print(current_task.request.id)
+            obj, created = CalculationIDs.objects.get_or_create(
+                calculation_record=calculation_record if calculation_record else "init_upload",
+                calculation_id=str(current_task.request.id),
+                defaults={
+                    'context_id': getattr(
+                        CalculationIDs.objects.filter(calculation_id=str(current_task.request.id)).first(),
+                        "context_id", "test_id")})
             calculation_id = getattr(obj, "calculation_id", "test_id")
         else:
-            obj, created = CalculationIDs.objects.get_or_create(calculation_record=calculation_record if calculation_record else "init_upload",
-                                                                context_id=context_id.get()['context_id'] if context_id.get() else "test_id",
-                                                                defaults={
-                                                                    'calculation_id': getattr(CalculationIDs.objects.filter(context_id=context_id.get()['context_id']).first(), "calculation_id", "test_id")})
+            obj, created = CalculationIDs.objects.get_or_create(
+                calculation_record=calculation_record if calculation_record else "init_upload",
+                context_id=context_id.get()['context_id'] if context_id.get() else "test_id",
+                defaults={
+                    'calculation_id': getattr(
+                        CalculationIDs.objects.filter(context_id=context_id.get()['context_id']).first(),
+                        "calculation_id", "test_id")})
             calculation_id = getattr(obj, "calculation_id", "test_id")
 
         calc_log = CalculationLog(timestamp=datetime.now(), method=str(trace_objects),
-                                  calculation_record=calculation_record if calculation_record else "init_upload", message=message, calculationId=calculation_id,
+                                  calculation_record=calculation_record if calculation_record else "init_upload",
+                                  message=message, calculationId=calculation_id,
                                   message_type=message_type,
-                                  trigger_name=trigger_name, is_notification=is_notification)
-        calc_log.save()
+                                  trigger_name=trigger_name, is_notification=is_notification,
+                                  detailed_message=details
+                                  )
+
+        if not dont_save:
+            calc_log.save()
+        return calc_log
 
     @classmethod
     def get_calculation_id(cls, calculation_model):

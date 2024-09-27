@@ -1,19 +1,19 @@
-import io
-import os
 import inspect
-import pathlib
+import io
+import json
+import os
 import threading
+from pathlib import Path
+from unittest import TestCase
+
 import dateutil.parser
+from django.apps import apps
 from django.core.cache import cache
 from django.core.files import File
 from django.core.files.storage import default_storage
-from django.test import TestCase
-from unittest import TestCase
-import json
-from lex.lex_app.lex_models import *
-from pathlib import Path
+
 from lex.lex_app import settings
-from django.apps import apps
+
 
 class ProcessAdminTestCase(TestCase):
 
@@ -116,8 +116,6 @@ class ProcessAdminTestCase(TestCase):
                 klass.objects.filter(**object['filter_parameters']).delete()
 
     def tearDown(self) -> None:
-        import pandas as pd
-        from datetime import datetime
         pass
         # logs = pd.DataFrame.from_records(CalculationLog.objects.filter(message_type__in=["Test: Success", "Test: Error"], timestamp__gt=self.t0).values())
         # if len(logs) > 0:

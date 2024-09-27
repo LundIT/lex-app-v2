@@ -1,5 +1,6 @@
-from lex.lex_app.lex_models.ModificationRestrictedModelExample import AdminReportsModificationRestriction
 from django.db import models
+
+from lex.lex_app.lex_models.ModificationRestrictedModelExample import AdminReportsModificationRestriction
 
 
 class CalculationIDs(models.Model):

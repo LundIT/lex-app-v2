@@ -2,34 +2,32 @@ from django.db.models.base import ModelBase
 from django.db.models.signals import post_save
 from django.http import HttpResponse
 from django.urls import path, register_converter
-from lex_app.decorators.LexSingleton import LexSingleton
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from lex.lex_app.rest_api.auth import TokenObtainPairWithUserView
-from lex.lex_app.rest_api.model_collection.model_collection import ModelCollection
 from lex.lex_app.lex_models.calculated_model import CalculatedModelMixin
 from lex.lex_app.lex_models.model_process_admin import ModelProcessAdmin
+from lex.lex_app.rest_api import converters
+from lex.lex_app.rest_api.auth import TokenObtainPairWithUserView
+from lex.lex_app.rest_api.model_collection.model_collection import ModelCollection
+from lex.lex_app.rest_api.signals import do_post_save
 from lex.lex_app.rest_api.views.calculations.CleanCalculations import CleanCalculations
+from lex.lex_app.rest_api.views.calculations.InitCalculationLogs import InitCalculationLogs
 from lex.lex_app.rest_api.views.file_operations.FileDownload import FileDownloadView
 from lex.lex_app.rest_api.views.file_operations.ModelExport import ModelExportView
-from lex.lex_app.rest_api.views.sharepoint.SharePointFileDownload import SharePointFileDownload
-from lex.lex_app.rest_api.views.sharepoint.SharePointPreview import SharePointPreview
-from lex.lex_app.rest_api.views.sharepoint.SharePointShareLink import SharePointShareLink
-from lex.lex_app.rest_api.signals import do_post_save
-
-from lex.lex_app.rest_api.views.model_info.Fields import Fields
-from lex.lex_app.rest_api.views.model_info.Widgets import Widgets
-from lex.lex_app.rest_api.views.model_relation_views import ModelStructureObtainView, Overview, ProcessStructure
+from lex.lex_app.rest_api.views.global_search_for_models.Search import Search
 from lex.lex_app.rest_api.views.model_entries.List import ListModelEntries
 from lex.lex_app.rest_api.views.model_entries.Many import ManyModelEntries
 from lex.lex_app.rest_api.views.model_entries.One import OneModelEntry
+from lex.lex_app.rest_api.views.model_info.Fields import Fields
+from lex.lex_app.rest_api.views.model_info.Widgets import Widgets
+from lex.lex_app.rest_api.views.model_relation_views import ModelStructureObtainView, Overview, ProcessStructure
 from lex.lex_app.rest_api.views.permissions.ModelPermissions import ModelPermissions
 from lex.lex_app.rest_api.views.process_flow.CreateOrUpdate import CreateOrUpdate
 from lex.lex_app.rest_api.views.project_info.ProjectInfo import ProjectInfo
-from lex.lex_app.rest_api.views.calculations.InitCalculationLogs import InitCalculationLogs
-
-from lex.lex_app.rest_api import converters
-from lex.lex_app.rest_api.views.global_search_for_models.Search import Search
+from lex.lex_app.rest_api.views.sharepoint.SharePointFileDownload import SharePointFileDownload
+from lex.lex_app.rest_api.views.sharepoint.SharePointPreview import SharePointPreview
+from lex.lex_app.rest_api.views.sharepoint.SharePointShareLink import SharePointShareLink
+from lex_app.decorators.LexSingleton import LexSingleton
 from lex_app.rest_api.views.LexLoggerView.LexLoggerView import LexLoggerView
 
 
