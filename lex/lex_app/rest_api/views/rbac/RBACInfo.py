@@ -15,31 +15,31 @@ class RBACInfo(APIView):
     def get(self, request, *args, **kwargs):
         from lex.lex_app.ProcessAdminSettings import processAdminSite
 
-        # Replace with the actual base URL of your server
-        base_url = 'https://melihsunbul.excellence-cloud.dev'
-
-        # Replace with the actual keycloak_internal_client_id you want to use
-        keycloak_internal_client_id = '<keycloak_internal_client_id>'
-
-        # Construct the full URL
-        url = f"{base_url}/api/clients/{keycloak_internal_client_id}/roles"
-
-
-        headers = {
-            'Authorization': f'Api-Key <Api-Key>',
-        }
-
-        # Send the GET request
-        response = requests.get(url, headers=headers)
-
-        # Check if the request was successful
-        if response.status_code == 200:
-            # Parse and print the response (assuming it's in JSON format)
-            roles = response.json()
-            print(roles)
-        else:
-            print(f"Failed to retrieve roles. Status code: {response.status_code}")
-            print(response.text)
+        # # Replace with the actual base URL of your server
+        # base_url = 'https://melihsunbul.excellence-cloud.dev'
+        #
+        # # Replace with the actual keycloak_internal_client_id you want to use
+        # keycloak_internal_client_id = '<keycloak_internal_client_id>'
+        #
+        # # Construct the full URL
+        # url = f"{base_url}/api/clients/{keycloak_internal_client_id}/roles"
+        #
+        #
+        # headers = {
+        #     'Authorization': f'Api-Key <Api-Key>',
+        # }
+        #
+        # # Send the GET request
+        # response = requests.get(url, headers=headers)
+        #
+        # # Check if the request was successful
+        # if response.status_code == 200:
+        #     # Parse and print the response (assuming it's in JSON format)
+        #     roles = response.json()
+        #     print(roles)
+        # else:
+        #     print(f"Failed to retrieve roles. Status code: {response.status_code}")
+        #     print(response.text)
 
         role_definitions = {
             "admin": [{"action": "*", "resource": "*"}],

@@ -43,3 +43,5 @@ DjangoSharepointStorage==1.0.9
 click
 django-lifecycle
 python-keycloak==3.9.1
+markdown
+mistune
