@@ -1,5 +1,3 @@
-from django.db.models import Model
-
 from lex.lex_app.lex_models.ModelModificationRestriction import ModelModificationRestriction
 
 

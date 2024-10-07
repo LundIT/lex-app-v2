@@ -1,12 +1,11 @@
 import importlib
 import os
-import sys
 from pathlib import Path
 
 from django.apps import AppConfig
-from django.core.exceptions import ImproperlyConfigured
-from django.db import models
 from django.contrib import admin
+from django.db import models
+
 from lex.lex_app.model_utils.ModelRegistration import ModelRegistration
 from lex.lex_app.model_utils.ModelStructureBuilder import ModelStructureBuilder
 from lex_app.model_utils.LexAuthentication import LexAuthentication
@@ -120,7 +119,7 @@ class GenericAppConfig(AppConfig):
                             and hasattr(obj, '_meta')
                             and not obj._meta.abstract):
                         self.add_model(name, obj)
-        except (AttributeError, ImportError) as e:
+        except (RuntimeError, AttributeError, ImportError) as e:
             print(f"Error importing {full_module_name}: {e}")
             raise
 

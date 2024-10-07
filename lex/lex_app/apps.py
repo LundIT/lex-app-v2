@@ -1,16 +1,16 @@
+import asyncio
 import os
 import sys
 import threading
 import traceback
-import asyncio
+
+import nest_asyncio
+from asgiref.sync import sync_to_async
 from celery import shared_task
 from django.apps import apps
 
 from lex_app.model_utils.LexAuthentication import LexAuthentication
 from lex_app.settings import repo_name
-from asgiref.sync import sync_to_async
-import nest_asyncio
-
 from lex_app.utils import GenericAppConfig
 
 

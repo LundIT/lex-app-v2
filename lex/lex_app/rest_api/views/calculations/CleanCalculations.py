@@ -1,9 +1,12 @@
 from django.apps import apps
+from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework_api_key.permissions import HasAPIKey
-from django.http import JsonResponse
+
+from lex_app.lex_models.CalculationModel import CalculationModel
 from lex_app.settings import repo_name
+
 
 class CleanCalculations(APIView):
     http_method_names = ['post']
@@ -19,7 +22,7 @@ class CleanCalculations(APIView):
             try:
                 obj = model_class.objects.get(pk=entry['record_id'])
 
-                if hasattr(obj, 'calculate') and not obj.calculate:
+                if hasattr(obj, 'is_calculated') and obj.is_calculated != CalculationModel.IN_PROGRESS:
                     will_be_cleaned.append(f"{entry['model']}_{entry['record_id']}")
 
             except Exception as e:

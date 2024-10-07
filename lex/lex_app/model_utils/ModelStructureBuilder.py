@@ -1,8 +1,6 @@
-from pathlib import Path
-from typing import Dict, Type, List
-from django.db import models
-import os
 import importlib
+import os
+from typing import Dict
 
 from lex_app.model_utils.parse_utils import ModelStructure
 

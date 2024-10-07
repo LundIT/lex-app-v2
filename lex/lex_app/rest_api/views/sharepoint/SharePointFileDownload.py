@@ -1,8 +1,8 @@
 from django.core.files.storage import default_storage
+from django.http import FileResponse
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework_api_key.permissions import HasAPIKey
-from django.http import FileResponse
 
 
 class SharePointFileDownload(APIView):

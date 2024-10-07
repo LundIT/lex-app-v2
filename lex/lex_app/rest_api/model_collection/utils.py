@@ -4,6 +4,7 @@ from lex_app.lex_models.Process import Process
 from lex_app.lex_models.html_report import HTMLReport
 from lex_app.rest_api.model_collection.constants import RELATION_FIELD_TYPES
 
+
 # TODO: 2
 def get_relation_fields(model: Model):
     """Get relation fields of a model."""

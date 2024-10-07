@@ -1,8 +1,9 @@
 
 import asyncio
+import os
+
 import nest_asyncio
 from asgiref.sync import sync_to_async
-import os
 
 
 class ModelRegistration:
@@ -24,7 +25,6 @@ class ModelRegistration:
                 processAdminSite.register([model])
                 adminSite.register([model])
 
-                from lex.lex_app.lex_models.upload_model import UploadModelMixin, ConditionalUpdateMixin
                 if issubclass(model, CalculationModel):
                     if os.getenv("CALLED_FROM_START_COMMAND"):
                         @sync_to_async
@@ -39,15 +39,15 @@ class ModelRegistration:
 
     @classmethod
     def register_model_structure(cls, structure: dict):
-        from lex.lex_app.ProcessAdminSettings import processAdminSite, adminSite
+        from lex.lex_app.ProcessAdminSettings import processAdminSite
         if structure: processAdminSite.register_model_structure(structure)
 
     @classmethod
     def register_model_styling(cls, styling: dict):
-        from lex.lex_app.ProcessAdminSettings import processAdminSite, adminSite
+        from lex.lex_app.ProcessAdminSettings import processAdminSite
         if styling: processAdminSite.register_model_styling(styling)
 
     @classmethod
     def register_widget_structure(cls, structure):
-        from lex.lex_app.ProcessAdminSettings import processAdminSite, adminSite
+        from lex.lex_app.ProcessAdminSettings import processAdminSite
         if structure: processAdminSite.register_widget_structure(structure)

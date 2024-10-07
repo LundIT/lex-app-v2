@@ -1,11 +1,9 @@
-import os
-
-from lex.lex_app.rest_api.calculated_model_updates.update_handler import CalculatedModelUpdateHandler
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from django.db.models.signals import post_save
-from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
+from lex.lex_app.rest_api.calculated_model_updates.update_handler import CalculatedModelUpdateHandler
 
 
 @receiver(post_save)
@@ -43,7 +41,6 @@ def calculation_logs(sender, instance, created, **kwargs):
 @receiver(post_save)
 def send_calculation_notification(sender, instance, created, **kwargs):
     from lex.lex_app.logging.CalculationLog import CalculationLog
-
     if created and sender == CalculationLog and instance.is_notification:
         channel_layer = get_channel_layer()
         message = {

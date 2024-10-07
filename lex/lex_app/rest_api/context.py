@@ -12,7 +12,7 @@ class OperationContext:
     
     def __enter__(self):
         # Set a new operation id if one doesn't already exist
-        if context_id.get() is None:
+        if not context_id.get()['context_id']:
             context_id.set({'context_id': str(uuid4()),
                             'request_obj': self.request})
         return context_id.get()
