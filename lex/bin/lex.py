@@ -1,17 +1,14 @@
 """lex-app Command Line Interface."""
-import sys
 import os
-import subprocess
-
+import sys
 from pathlib import Path
-import site
-import django
-import argparse
-import uvicorn
+
 import click
-from streamlit.web.cli import main as streamlit_main
+import django
+import uvicorn
 from celery.bin.celery import celery as celery_main
-from django.core.management import get_commands, call_command, load_command_class
+from django.core.management import get_commands, call_command
+from streamlit.web.cli import main as streamlit_main
 
 LEX_APP_PACKAGE_ROOT = Path(__file__).resolve().parent.parent.as_posix()
 PROJECT_ROOT_DIR = Path(os.getcwd()).resolve()

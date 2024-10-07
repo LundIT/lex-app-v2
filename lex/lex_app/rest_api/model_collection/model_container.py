@@ -1,9 +1,10 @@
 from typing import Dict, Set, Optional
+
 from django.db.models import Model
-from .constants import RELATION_FIELD_TYPES, MANY_TO_MANY_NAME
-from .utils import get_relation_fields, title_for_model
+
 from lex.lex_app.lex_models.ModelModificationRestriction import ModelModificationRestriction
 from lex.lex_app.rest_api.serializers import model2serializer
+from .utils import title_for_model
 
 
 class ModelContainer:

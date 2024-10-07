@@ -1,11 +1,10 @@
 import traceback
-from math import inf
 
 from django.db.models import FloatField, IntegerField, DateField, DateTimeField, TextField, AutoField
 from django_filters import FilterSet
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.exceptions import APIException
-from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.filters import OrderingFilter
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
 

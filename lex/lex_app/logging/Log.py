@@ -1,26 +1,22 @@
+import datetime
 import io
 import os
-import threading
-import uuid
 from functools import wraps
 
 import pandas as pd
-import datetime
-
 from celery import current_task
-from django.core.cache import cache
 from django.core.files import File
 from django.core.files.storage import default_storage
+from django.db import models
 
 from lex.lex_app.lex_models.ModificationRestrictedModelExample import AdminReportsModificationRestriction
-from lex.lex_app.rest_api.fields.XLSX_field import XLSXField
-from lex.lex_app.rest_api.helpers import convert_dfs_in_excel
-from django.db import models
+from lex.lex_app.lex_models.calculated_model import CalculatedModelMixin
+from lex.lex_app.logging.CalculationIDs import CalculationIDs
 from lex.lex_app.logging.CalculationLog import CalculationLog
 from lex.lex_app.rest_api.context import context_id
-from lex.lex_app.logging.CalculationIDs import CalculationIDs
-from lex.lex_app.lex_models.calculated_model import CalculatedModelMixin
 from lex.lex_app.rest_api.fields.XLSX_field import XLSXField
+from lex.lex_app.rest_api.helpers import convert_dfs_in_excel
+
 
 class Log(CalculatedModelMixin, models.Model):
     modification_restriction = AdminReportsModificationRestriction()

@@ -1,8 +1,5 @@
-from enum import Enum
-
-import pandas as pd
-
 from datetime import datetime
+from enum import Enum
 from secrets import randbelow
 
 

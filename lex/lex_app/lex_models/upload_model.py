@@ -1,17 +1,14 @@
 import os
-import threading
-import uuid
 from functools import wraps
 
 from celery import shared_task, Task
 from celery.app.control import Control
-from celery.signals import task_failure, task_success, task_postrun
-
+from celery.signals import task_postrun
 from django.db.models import Model, BooleanField
 
-from lex.lex_app.rest_api.signals import update_calculation_status
 from lex.lex_app.logging.CalculationIDs import CalculationIDs
 from lex.lex_app.rest_api.context import context_id
+from lex.lex_app.rest_api.signals import update_calculation_status
 
 
 def custom_shared_task(function):

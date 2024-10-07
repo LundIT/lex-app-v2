@@ -9,7 +9,6 @@ from lex.lex_app.rest_api.fields.Bokeh_field import BokehField
 from lex.lex_app.rest_api.fields.HTML_field import HTMLField
 from lex.lex_app.rest_api.fields.PDF_field import PDFField
 from lex.lex_app.rest_api.fields.XLSX_field import XLSXField
-from lex.lex_app.lex_models.upload_model import IsCalculatedField
 from lex.lex_app.rest_api.views.permissions.UserPermission import UserPermission
 
 DJANGO_FIELD2TYPE_NAME = {

@@ -1,9 +1,59 @@
+import os
+import requests
+from keycloak.keycloak_openid import KeycloakOpenID
 from django.contrib.auth.models import User, Group
 from sentry_sdk import set_user
 
 ADMIN = 'admin'
 STANDARD = 'standard'
 VIEW_ONLY = 'view-only'
+
+def get_tokens_and_permissions(request):
+    access_token = request.headers["Authorization"].split("Bearer ")[-1]
+
+    keycloak_url = f"{os.getenv('KEYCLOAK_URL')}/realms/{os.getenv('KEYCLOAK_REALM')}/protocol/openid-connect/token"
+
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+
+    data = {
+        "client_id": os.getenv('KEYCLOAK_CLIENT_ID'),
+        "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
+        "subject_token": access_token,
+        "requested_token_type": "urn:ietf:params:oauth:token-type:access_token",
+        "audience": os.getenv('KEYCLOAK_CONFIDENTIAL_CLIENT_ID', 'LEX_LOCAL_ENV_CONFIDENTIAL')
+    }
+
+    response = requests.post(keycloak_url, headers=headers, data=data)
+    print(response.json())
+    confidential_access_token = response.json()["access_token"]
+
+    keycloak_openid = KeycloakOpenID(server_url=os.getenv('KEYCLOAK_URL') + "/",
+                                     realm_name=os.getenv('KEYCLOAK_REALM'),
+                                     client_id=os.getenv('KEYCLOAK_CONFIDENTIAL_CLIENT_ID', 'LEX_LOCAL_ENV_CONFIDENTIAL'),
+                                     client_secret_key=os.getenv('KEYCLOAK_CONFIDENTIAL_CLIENT_SECRET', '6jriqnnNsKPoJgzXOAU9TbwVwAkVlDJn'),
+                                     verify=True)
+    for item in keycloak_openid.uma_permissions(token=confidential_access_token):
+        print(item)
+    permissions = {item['rsid']: item.get('scopes', []) for item in
+                   keycloak_openid.uma_permissions(token=confidential_access_token)}
+    print(request.user.__dict__)
+    return {
+            "access_token": access_token,
+            "confidential_access_token": confidential_access_token,
+            "roles": request.user.roles,
+            "permissions": permissions,
+            "token": response.json()}
+
+def get_user_info(request):
+    return {"user":
+                {
+                    "name": request.user.name,
+                    "email": request.user.email
+                 },
+            "roles": request.user.roles,
+            "permissions": get_tokens_and_permissions(request)["permissions"]}
 
 
 def resolve_user(request, id_token, rbac=True):

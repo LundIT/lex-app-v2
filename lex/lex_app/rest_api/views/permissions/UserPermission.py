@@ -1,5 +1,7 @@
-from rest_framework.permissions import BasePermission
 import inspect
+
+from rest_framework.permissions import BasePermission
+
 READ_METHODS = {'GET'}
 CREATE_METHODS = {'POST'}
 MODIFY_METHODS = {'PUT', 'PATCH'}

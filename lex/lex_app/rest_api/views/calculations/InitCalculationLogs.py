@@ -1,33 +1,46 @@
-import os
+import time
 
-from django_sharepoint_storage.SharePointContext import SharePointContext
-from django_sharepoint_storage.SharePointCloudStorageUtils import get_server_relative_path
+from django.db.models import Max
+from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework_api_key.permissions import HasAPIKey
-from django.http import JsonResponse
-
 from lex.lex_app.logging.CalculationLog import CalculationLog
-from lex.lex_app.logging.UserChangeLog import UserChangeLog
-
+from lex_app.LexLogger.LexLogger import LexLogLevel, LexLogger
 
 class InitCalculationLogs(APIView):
     http_method_names = ['get']
     permission_classes = [HasAPIKey | IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
-        calculation_record = request.query_params['calculation_record']
-        calculation_id = request.query_params['calculation_id']
+        try:
+            calculation_record = request.query_params['calculation_record']
+            calculation_id = request.query_params['calculation_id']
+            if ("get_size" in request.query_params and request.query_params["get_size"]):
+                queryset_calc = CalculationLog.objects.filter(
+                    calculationId=calculation_id,
+                    calculation_record=calculation_record,
+                ).order_by("-timestamp").all()
+                return JsonResponse({"size": len(queryset_calc)})
 
-        messages = []
 
-        # Fetch messages from UserChangeLog
-        queryset_ucl = UserChangeLog.objects.filter(calculation_record=calculation_record,
-                                                    calculationId=calculation_id).only('timestamp', 'message')
-        messages.extend(f"{message.timestamp} {message.message}" for message in queryset_ucl)
 
-        # Fetch messages from CalculationLog
-        queryset_calc = CalculationLog.objects.filter(calculation_record=calculation_record,
-                                                      calculationId=calculation_id).only('timestamp', 'message')
-        messages.extend(f"{message.timestamp} {message.message}" for message in queryset_calc)
+            offset = int(request.query_params['offset'])
 
-        return JsonResponse({"logs": "\n".join(messages)})
+            queryset_calc = CalculationLog.objects.filter(
+                                                          calculationId=calculation_id,
+                                                          ).order_by("-timestamp").all()
+            logs = [log.to_dict() for log in queryset_calc]
+
+            if offset < 0:
+                pass
+            elif offset < len(logs):
+                logs = logs[offset:min(offset + 7, len(logs))]
+            else:
+                logs = []
+
+
+            return JsonResponse({"logs": list(reversed(logs))})
+        except Exception as e:
+            print(e)
+            return JsonResponse({"logs": ""})
