@@ -1,8 +1,10 @@
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
+from lex.lex_app.auth_helpers import get_tokens_and_permissions
 
 from lex.lex_app.rest_api.views.model_entries.filter_backends import PrimaryKeyListFilterBackend
 from lex.lex_app.rest_api.views.model_entries.mixins.ModelEntryProviderMixin import ModelEntryProviderMixin
+from django.apps import apps
 
 
 class ManyModelEntries(ModelEntryProviderMixin, GenericAPIView):
