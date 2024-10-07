@@ -39,10 +39,11 @@ class CalculationModel(LexModel):
     def calculate_hook(self):
         try:
             if hasattr(self, 'is_atomic') and not self.is_atomic:
+                # TODO: To fix with the correct type
+                # update_calculation_status(self)
                 self.calculate()
                 self.is_calculated = self.SUCCESS
             else:
-                update_calculation_status(self)
                 with transaction.atomic():
                     self.calculate()
                     self.is_calculated = self.SUCCESS

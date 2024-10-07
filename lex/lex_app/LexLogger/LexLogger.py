@@ -244,10 +244,8 @@ class LexLogger:
             message_type=kwargs.get('message_type', "Progress"),
             trigger_name=kwargs.get('trigger_name', None),
             is_notification=kwargs.get('is_notification', False),
-            dont_save=True
         )
-        self.logger.log(level, message, extra={**kwargs, 'log_id': obj.id, 'calculation_id': obj.calculationId, 'class_name': obj.calculation_record })
-        obj.save()
+        self.logger.log(level, message, extra={**kwargs, 'log_id': obj.id, 'calculation_id': obj.calculationId, 'class_name': obj.calculation_record, "trigger_name": obj.trigger_name, "method": obj.method})
 
     def builder(self, level=LexLogLevel.INFO, flushing=True, **kwargs):
         return self.MarkdownBuilder(level=level, flushing=flushing, **kwargs)

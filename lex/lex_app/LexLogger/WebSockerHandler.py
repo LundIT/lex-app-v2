@@ -15,6 +15,7 @@ class WebSocketHandler(logging.Handler):
         'level': 'level',
         'log_message': 'type',
         'timestamp': 'timestamp',
+        'method': 'method',
     }
 
     def __init__(self):

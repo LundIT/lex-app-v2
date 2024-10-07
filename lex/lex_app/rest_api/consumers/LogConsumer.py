@@ -30,6 +30,7 @@ class LogConsumer(AsyncWebsocketConsumer):
             'timestamp': event['timestamp'],
             'logName': event.get('logName', 'N/A'),
             'triggerName': event.get('triggerName', 'N/A'),
+            'method': event.get('method', 'N/A'),
             'logDetails': event.get('logDetails', 'N/A'),
         }))
     async def receive(self, text_data):

@@ -65,7 +65,7 @@ class CalculationLog(models.Model):
         }
 
     @classmethod
-    def create(cls, message, details="", message_type="Progress", trigger_name=None, is_notification=False, dont_save=False):
+    def create(cls, message, details="", message_type="Progress", trigger_name=None, is_notification=False):
         trace_objects = cls.get_trace_objects()["trace_objects"]
         calculation_record = cls.get_trace_objects()["first_model_info"]
         if current_task and os.getenv("CELERY_ACTIVE"):
@@ -96,8 +96,7 @@ class CalculationLog(models.Model):
                                   detailed_message=details
                                   )
 
-        if not dont_save:
-            calc_log.save()
+        calc_log.save()
         return calc_log
 
     @classmethod
