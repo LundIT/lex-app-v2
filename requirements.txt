@@ -1,7 +1,6 @@
 setuptools
 wheel
 django
-django-rest-framework
 django-cors-headers
 djangorestframework-simplejwt
 djangorestframework-api-key @ git+https://github.com/LundIT/djangorestframework-api-key
@@ -19,7 +18,7 @@ pdfkit~=0.6.1
 django-allow-cidr
 django-cprofile-middleware
 pretty_html_table
-djangorestframework
+djangorestframework>=3.12
 requests
 django-sendgrid-v5
 redis
