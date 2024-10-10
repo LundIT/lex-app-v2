@@ -1,6 +1,6 @@
 setuptools
 wheel
-django~=4.1.10
+django
 django-rest-framework
 django-cors-headers
 djangorestframework-simplejwt
@@ -19,8 +19,8 @@ pdfkit~=0.6.1
 django-allow-cidr
 django-cprofile-middleware
 pretty_html_table
-djangorestframework~=3.13.1
-requests~=2.31.0
+djangorestframework
+requests
 django-sendgrid-v5
 redis
 celery
@@ -45,3 +45,4 @@ django-lifecycle
 python-keycloak==3.9.1
 markdown
 mistune
+django-simple-history
