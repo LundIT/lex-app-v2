@@ -182,7 +182,7 @@ LOGGING = {
 INSTALLED_APPS = [
     'channels',
     'lex.lex_app.apps.LexAppConfig',
-    # f'{repo_name}.apps.ArmiraCashflowConfig',
+    'lex_ai',
     repo_name,
     'celery',
     'react',
@@ -268,7 +268,6 @@ DATABASES = {
             'NAME': f'db_{repo_name}',
         }
     },
-
     'GCP': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.getenv("DATABASE_NAME", "envvar_not_existing"),
