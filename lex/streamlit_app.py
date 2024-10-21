@@ -1,11 +1,10 @@
-import os
-import streamlit as st
-
-from streamlit_keycloak_lex import login
-import traceback
 import base64
+import os
+import traceback
 from urllib.parse import urlencode
-from PIL import Image
+
+import streamlit as st
+from streamlit_keycloak_lex import login
 
 LUND_LOGO = f"{os.getenv('LEX_APP_PACKAGE_ROOT')}/assets/lex-logo.png"
 LUND_BG = f"{os.getenv('LEX_APP_PACKAGE_ROOT')}/assets/lex-bg.jpg"
