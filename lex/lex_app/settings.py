@@ -1,12 +1,12 @@
 from __future__ import absolute_import
+
 import sys
+import warnings
 from pathlib import Path
 
+from django.core.cache import CacheKeyWarning
 from google.oauth2 import service_account
 
-import warnings
-
-from django.core.cache import CacheKeyWarning
 """
 Django settings for lex_app project.
 
@@ -27,6 +27,8 @@ from datetime import timedelta
 
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
+
+
 
 def traces_sampler(sampling_context):
     if sampling_context == "/health":
@@ -133,14 +135,58 @@ CSRF_TRUSTED_ORIGINS = ['https://*.' + os.getenv("DOMAIN_HOSTED", "localhost")]
 REACT_APP_BUILD_PATH = (Path(__file__).resolve().parent.parent / Path("react/build")).as_posix()
 repo_name = os.getenv("PROJECT_ROOT").split("/")[-1]
 LEGACY_MEDIA_ROOT = os.path.join(NEW_BASE_DIR, f"{repo_name}/")
+LOG_FILE_PATH = os.path.join(NEW_BASE_DIR, f"{repo_name}/{repo_name}.log")
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': LOG_FILE_PATH,
+            'formatter': 'verbose',
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+
+        'websocket': {
+            'level': 'DEBUG',
+            'class': 'lex.lex_app.LexLogger.WebSockerHandler',
+        },
+
+    },
+    'loggers': {
+        'LexLogger': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+
 # Application definition
+
+
 
 INSTALLED_APPS = [
     'channels',
-    'generic_app',
+    'lex.lex_app.apps.LexAppConfig',
+    'lex_ai',
     repo_name,
     'celery',
     'react',
+    'markdown',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -222,7 +268,6 @@ DATABASES = {
             'NAME': f'db_{repo_name}',
         }
     },
-
     'GCP': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.getenv("DATABASE_NAME", "envvar_not_existing"),
