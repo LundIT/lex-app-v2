@@ -7,23 +7,24 @@ djangorestframework-api-key @ git+https://github.com/LundIT/djangorestframework-
 django-filter
 django-extensions
 drf-oidc-auth @ git+https://github.com/LundIT/drf-oidc-auth
+metagpt @ git+https://github.com/LundIT/MetaGPT-lex
 mozilla-django-oidc
-XlsxWriter==1.3.9
+XlsxWriter
 scipy
-numpy==1.26.4
-pandas==1.4.3
+numpy
+pandas
 openpyxl
 psycopg2-binary
-pdfkit~=0.6.1
+pdfkit
 django-allow-cidr
 django-cprofile-middleware
 pretty_html_table
-djangorestframework
+djangorestframework~=3.13.1
 requests
 django-sendgrid-v5
 redis
 celery
-webdriver-manager==3.8.6
+webdriver-manager
 sentry_sdk
 channels
 asyncio
@@ -44,4 +45,3 @@ django-lifecycle
 python-keycloak==3.9.1
 markdown
 mistune
-django-simple-history
