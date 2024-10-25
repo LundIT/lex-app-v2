@@ -3,7 +3,6 @@ from rest_framework_api_key.permissions import HasAPIKey
 
 from lex.lex_app.rest_api.views.permissions.UserPermission import UserPermission
 
-
 class ModelEntryProviderMixin:
     permission_classes = [HasAPIKey | IsAuthenticated, UserPermission]
 
