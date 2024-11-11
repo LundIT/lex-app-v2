@@ -21,7 +21,7 @@ django-cprofile-middleware
 pretty_html_table
 djangorestframework~=3.13.1
 setuptools~=65.5.1
-requests~=2.31.0
+requests~=2.32.3
 django-sendgrid-v5
 redis
 celery
