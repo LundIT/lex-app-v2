@@ -87,7 +87,11 @@ else:
             },
     }
 
-DEFAULT_FILE_STORAGE = 'lex_app.CustomDefaultStorage.CustomDefaultStorage'
+STORAGES = {
+    "default": {
+        "BACKEND": 'lex_app.CustomDefaultStorage.CustomDefaultStorage',
+    }
+}
 
 SHAREPOINT_APP_CLIENT_ID = os.getenv("SHAREPOINT_APP_CLIENT_ID")
 SHAREPOINT_APP_CLIENT_SECRET = os.getenv("SHAREPOINT_APP_CLIENT_SECRET")
@@ -96,11 +100,19 @@ SHAREPOINT_STATIC_DIR = "static"
 SHAREPOINT_MEDIA_DIR = "uploads"
 
 if os.getenv("STORAGE_TYPE") == "SHAREPOINT":
-    DEFAULT_FILE_STORAGE = 'django_sharepoint_storage.SharePointCloudStorageUtils.Media'
+    STORAGES = {
+    "default": {
+        "BACKEND": 'django_sharepoint_storage.SharePointCloudStorageUtils.Media',
+    }
+}
     MEDIA_ROOT = "uploads/"
 
 if os.getenv("STORAGE_TYPE") == "GCS":
-    DEFAULT_FILE_STORAGE = 'lex_app.gcsUtils.Media'
+    STORAGES = {
+        "default": {
+            "BACKEND": 'lex_app.gcsUtils.Media',
+        }
+    }
     GS_BUCKET_NAME = os.getenv("GS_BUCKET_NAME")
     GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
         os.path.join(NEW_BASE_DIR, 'django-storages', 'gcpCredentials.json'),

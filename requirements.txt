@@ -1,6 +1,6 @@
-generic_app @ git+https://github.com/LundIT/lex-generic-app@v1.0.2
+generic_app @ git+https://github.com/LundIT/lex-generic-app@v1.0.3
 wheel
-django
+django==5.0.9
 django-rest-framework
 django-cors-headers
 djangorestframework-simplejwt
