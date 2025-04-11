@@ -14,7 +14,6 @@ class ModelRegistration:
         from lex.lex_app.lex_models.html_report import HTMLReport
         from lex.lex_app.lex_models.CalculationModel import CalculationModel
         from django.contrib.auth.models import User
-        from auditlog.models import LogEntry
 
         def get_username(self):
             return f"{self.first_name} {self.last_name}"
@@ -22,7 +21,6 @@ class ModelRegistration:
         User.add_to_class("__str__", get_username)
 
         processAdminSite.register([User])
-        processAdminSite.register([LogEntry])
 
         for model in models:
             if issubclass(model, HTMLReport):
