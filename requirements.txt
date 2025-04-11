@@ -46,4 +46,3 @@ python-keycloak==3.9.1
 markdown
 mistune
 django-simple-history
-django-auditlog
