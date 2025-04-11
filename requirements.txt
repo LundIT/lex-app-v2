@@ -19,7 +19,7 @@ pdfkit
 django-allow-cidr
 django-cprofile-middleware
 pretty_html_table
-djangorestframework~=-3.15.2
+djangorestframework==3.15.2
 requests
 django-sendgrid-v5
 redis
