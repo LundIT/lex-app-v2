@@ -16,12 +16,12 @@ class CalculationLogTreeSerializer(serializers.ModelSerializer):
 
     def get_isRoot(self, obj):
         # A node is considered root if it has no parent_calculation_log
-        return obj.parent_calculation_log is None
+        return obj.calculationlog is None
 
     def get_children(self, obj):
         # Retrieve the immediate children for the same calculation (returning just their IDs)
         children_qs = CalculationLog.objects.filter(
-            parent_calculation_log=obj,
+            calculationlog=obj,
             calculationId=obj.calculationId
         )
         return list(children_qs.values_list('id', flat=True))

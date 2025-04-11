@@ -15,7 +15,7 @@ class AuditLogMixin:
             payload=payload,
             calculation_id=self.kwargs.get('calculationId')
         )
-        AuditLogStatus.objects.create(audit_log=audit_log, status='pending')
+        AuditLogStatus.objects.create(auditlog=audit_log, status='pending')
         return audit_log
 
     def perform_create(self, serializer):
@@ -23,11 +23,11 @@ class AuditLogMixin:
         audit_log = self.log_change("create", serializer.Meta.model, payload=payload)
         try:
             instance = serializer.save()
-            AuditLogStatus.objects.filter(audit_log=audit_log).update(status='success')
+            AuditLogStatus.objects.filter(auditlog=audit_log).update(status='success')
             return instance
         except Exception as e:
             error_msg = traceback.format_exc()
-            AuditLogStatus.objects.filter(audit_log=audit_log) \
+            AuditLogStatus.objects.filter(auditlog=audit_log) \
                 .update(status='failure', error_traceback=error_msg)
             raise e
 
@@ -39,11 +39,11 @@ class AuditLogMixin:
             updated_payload = _serialize_payload(self.get_serializer(instance).data)
             audit_log.payload = updated_payload
             audit_log.save(update_fields=["payload"])
-            AuditLogStatus.objects.filter(audit_log=audit_log).update(status='success')
+            AuditLogStatus.objects.filter(auditlog=audit_log).update(status='success')
             return instance
         except Exception as e:
             error_msg = traceback.format_exc()
-            AuditLogStatus.objects.filter(audit_log=audit_log) \
+            AuditLogStatus.objects.filter(auditlog=audit_log) \
                 .update(status='failure', error_traceback=error_msg)
             raise e
 
@@ -53,9 +53,9 @@ class AuditLogMixin:
         audit_log = self.log_change("delete", instance, payload=payload)
         try:
             instance.delete()
-            AuditLogStatus.objects.filter(audit_log=audit_log).update(status='success')
+            AuditLogStatus.objects.filter(auditlog=audit_log).update(status='success')
         except Exception as e:
             error_msg = traceback.format_exc()
-            AuditLogStatus.objects.filter(audit_log=audit_log) \
+            AuditLogStatus.objects.filter(auditlog=audit_log) \
                 .update(status='failure', error_traceback=error_msg)
             raise e

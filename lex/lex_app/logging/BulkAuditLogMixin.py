@@ -22,7 +22,7 @@ class BulkAuditLogMixin:
             payload=payload,
             calculation_id=self.kwargs.get('calculationId') if hasattr(self, 'kwargs') else None
         )
-        AuditLogStatus.objects.create(audit_log=audit_log, status='pending')
+        AuditLogStatus.objects.create(auditlog=audit_log, status='pending')
         return audit_log
 
     def perform_bulk_update(self, serializer):
@@ -46,12 +46,12 @@ class BulkAuditLogMixin:
                 updated_payload = _serialize_payload(self.get_serializer(instance).data)
                 audit_log.payload = updated_payload
                 audit_log.save(update_fields=["payload"])
-                AuditLogStatus.objects.filter(audit_log=audit_log).update(status='success')
+                AuditLogStatus.objects.filter(auditlog=audit_log).update(status='success')
             return updated_instances
         except Exception as e:
             error_msg = traceback.format_exc()
             for audit_log, _ in audit_logs:
-                AuditLogStatus.objects.filter(audit_log=audit_log) \
+                AuditLogStatus.objects.filter(auditlog=audit_log) \
                     .update(status='failure', error_traceback=error_msg)
             raise e
 
@@ -73,11 +73,11 @@ class BulkAuditLogMixin:
             deleted_ids = [instance.pk for instance in queryset]
             queryset.delete()
             for audit_log in audit_logs:
-                AuditLogStatus.objects.filter(audit_log=audit_log).update(status='success')
+                AuditLogStatus.objects.filter(auditlog=audit_log).update(status='success')
             return deleted_ids
         except Exception as e:
             error_msg = traceback.format_exc()
             for audit_log in audit_logs:
-                AuditLogStatus.objects.filter(audit_log=audit_log) \
+                AuditLogStatus.objects.filter(auditlog=audit_log) \
                     .update(status='failure', error_traceback=error_msg)
             raise e
