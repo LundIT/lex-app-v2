@@ -28,7 +28,7 @@ def model2serializer(model, fields=None):
     serialized_pk_name = serializers.ReadOnlyField(default=model._meta.pk.name)
     fields.append(ID_FIELD_NAME)
     fields.append(SHORT_DESCR_NAME)
-
+    fields.append("id")
     return type(
         model._meta.model_name + 'Serializer',
         (RestApiModelSerializerTemplate,),

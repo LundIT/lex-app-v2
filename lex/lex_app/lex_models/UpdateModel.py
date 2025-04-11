@@ -6,33 +6,20 @@ from django.db import models
 from django.db import transaction
 from django.forms import model_to_dict
 from django_lifecycle import hook, AFTER_UPDATE, AFTER_CREATE, BEFORE_UPDATE, BEFORE_CREATE, BEFORE_SAVE
-from django_lifecycle.conditions import WhenFieldValueChangesTo, WhenFieldValueIs
+# import CalculationModel
+from lex.lex_app.lex_models.CalculationModel import CalculationModel
+
 from lex.lex_app.lex_models.LexModel import LexModel
 from lex.lex_app.lex_models.Revisions import Revisions
 
 
-class CalculationModel(LexModel):
-
-    IN_PROGRESS = 'IN_PROGRESS'
-    ERROR = 'ERROR'
-    SUCCESS = 'SUCCESS'
-    NOT_CALCULATED = 'NOT_CALCULATED'
-    ABORTED = 'ABORTED'
-    STATUSES = [
-        (IN_PROGRESS, 'IN_PROGRESS'),
-        (ERROR, 'ERROR'),
-        (SUCCESS, 'SUCCESS'),
-        (NOT_CALCULATED, 'NOT_CALCULATED'),
-        (ABORTED, 'ABORTED')
-    ]
-
-    is_calculated =  models.CharField(max_length=50, choices=STATUSES, default=NOT_CALCULATED, editable=False)
+class UpdateModel(LexModel):
 
     class Meta:
         abstract = True
 
     @abstractmethod
-    def calculate(self):
+    def update(self):
         pass
 
     # TODO: For the Celery task cases, this hook should be updated
@@ -45,21 +32,25 @@ class CalculationModel(LexModel):
             self.is_creation = True
         else:
             self.is_creation = False
+        self.is_calculated = CalculationModel.IN_PROGRESS
+        self.save(skip_hooks=True)
+        update_calculation_status(self)
 
-    @hook(AFTER_UPDATE, on_commit=True, condition=WhenFieldValueIs('is_calculated', IN_PROGRESS))
-    @hook(AFTER_CREATE, on_commit=True, condition=WhenFieldValueIs('is_calculated', IN_PROGRESS))
+    @hook(AFTER_UPDATE, on_commit=True)
+    @hook(AFTER_CREATE, on_commit=True)
     def calculate_hook(self):
         from lex.lex_app.rest_api.signals import update_calculation_status
+        # update_calculation_status(self)
         try:
             if hasattr(self, 'is_atomic') and not self.is_atomic:
                 self.update()
-                self.is_calculated = self.SUCCESS
+                self.is_calculated = CalculationModel.SUCCESS
             else:
                 with transaction.atomic():
                     self.update()
-                    self.is_calculated = self.SUCCESS
+                    self.is_calculated = CalculationModel.SUCCESS
         except Exception as e:
-            self.is_calculated = self.ERROR
+            self.is_calculated = CalculationModel.ERROR
             raise e
         finally:
             self.save(skip_hooks=True)

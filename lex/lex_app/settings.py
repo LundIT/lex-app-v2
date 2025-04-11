@@ -183,6 +183,8 @@ INSTALLED_APPS = [
     'channels',
     'lex.lex_app.apps.LexAppConfig',
     'lex_ai',
+    "simple_history",
+    "auditlog",
     repo_name,
     'celery',
     'react',
@@ -200,6 +202,8 @@ INSTALLED_APPS = [
     "django.contrib.postgres",
 ]
 
+AUDITLOG_INCLUDE_ALL_MODELS=True
+
 CRISPY_FAIL_SILENTLY = not DEBUG
 
 MIDDLEWARE = [
@@ -213,6 +217,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "django_cprofile_middleware.middleware.ProfilerMiddleware",
+    "simple_history.middleware.HistoryRequestMiddleware",
+    'lex.lex_app.custom_middlewares.AuditLogMiddleware.AuditlogMiddleware',
+
 ]
 
 DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF = False

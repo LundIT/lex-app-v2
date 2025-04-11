@@ -4,7 +4,7 @@ import os
 
 import nest_asyncio
 from asgiref.sync import sync_to_async
-
+from simple_history import register
 
 class ModelRegistration:
     @classmethod
@@ -13,6 +13,16 @@ class ModelRegistration:
         from lex.lex_app.lex_models.Process import Process
         from lex.lex_app.lex_models.html_report import HTMLReport
         from lex.lex_app.lex_models.CalculationModel import CalculationModel
+        from django.contrib.auth.models import User
+        from auditlog.models import LogEntry
+
+        def get_username(self):
+            return f"{self.first_name} {self.last_name}"
+
+        User.add_to_class("__str__", get_username)
+
+        processAdminSite.register([User])
+        processAdminSite.register([LogEntry])
 
         for model in models:
             if issubclass(model, HTMLReport):
@@ -23,6 +33,8 @@ class ModelRegistration:
                 processAdminSite.register([model])
             elif not issubclass(model, type) and not model._meta.abstract:
                 processAdminSite.register([model])
+                register(model)
+                processAdminSite.register([model.history.model])
                 adminSite.register([model])
 
                 if issubclass(model, CalculationModel):

@@ -1,6 +1,6 @@
 import traceback
 
-from django.db.models import FloatField, IntegerField, DateField, DateTimeField, TextField, AutoField
+from django.db.models import FloatField, IntegerField, DateField, DateTimeField, TextField, AutoField, JSONField
 from django_filters import FilterSet
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.exceptions import APIException
@@ -36,7 +36,7 @@ class ListModelEntries(ModelEntryProviderMixin, ListAPIView):
             if field_type in [DateField, DateTimeField]:
                 return ['exact', 'lte', 'gte', 'year', 'month', 'day']
             return ['exact', 'lte', 'gte']
-        if field_type in [TextField, AutoField]:
+        if field_type in [TextField, AutoField, JSONField]:
             return ['exact', 'icontains']
         return ['exact']
 

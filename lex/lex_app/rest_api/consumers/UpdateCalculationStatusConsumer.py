@@ -14,10 +14,24 @@ class UpdateCalculationStatusConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_discard(f'update_calculation_status', self.channel_name)
         await super().disconnect(close_code)
 
-    async def calculation_is_completed(self, event):
+    async def calculation_success(self, event):
         payload = event['payload']
         await self.send(text_data=json.dumps({
-            'type': 'calculation_is_completed',
+            'type': 'calculation_success',
+            'payload': payload
+        }))
+
+    async def calculation_error(self, event):
+        payload = event['payload']
+        await self.send(text_data=json.dumps({
+            'type': 'calculation_error',
+            'payload': payload
+        }))
+
+    async def calculation_in_progress(self, event):
+        payload = event['payload']
+        await self.send(text_data=json.dumps({
+            'type': 'calculation_in_progress',
             'payload': payload
         }))
     @classmethod

@@ -5,7 +5,11 @@ from django.db import transaction
 from rest_framework.exceptions import APIException
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, CreateAPIView
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin
-
+# import CalculationModel
+from lex.lex_app.lex_models.CalculationModel import CalculationModel
+# import update_calculation_status
+from lex.lex_app.rest_api.signals import update_calculation_status
+from lex.lex_app.logging.AuditLogMixin import AuditLogMixin
 from lex.lex_app.rest_api.context import OperationContext
 from lex.lex_app.rest_api.views.model_entries.mixins.DestroyOneWithPayloadMixin import DestroyOneWithPayloadMixin
 from lex.lex_app.rest_api.views.model_entries.mixins.ModelEntryProviderMixin import ModelEntryProviderMixin
@@ -15,7 +19,7 @@ user_name = None
 user_email = None
 
 
-class OneModelEntry(ModelEntryProviderMixin, DestroyOneWithPayloadMixin, RetrieveUpdateDestroyAPIView, CreateAPIView):
+class OneModelEntry(AuditLogMixin, ModelEntryProviderMixin, DestroyOneWithPayloadMixin, RetrieveUpdateDestroyAPIView, CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         from lex.lex_app.logging.UserChangeLog import UserChangeLog
@@ -23,7 +27,7 @@ class OneModelEntry(ModelEntryProviderMixin, DestroyOneWithPayloadMixin, Retriev
 
         calculationId = self.kwargs['calculationId']
 
-        with OperationContext(request) as context_id:
+        with OperationContext(request, calculationId) as context_id:
             user_change_log = UserChangeLog(calculationId=calculationId, calculation_record=f"{model_container.id}", message=f"Update of a {model_container.id} started", timestamp=datetime.now(), user_name=get_user_name(request))
             user_change_log.save()
             user_name = get_user_name(request)
@@ -52,9 +56,13 @@ class OneModelEntry(ModelEntryProviderMixin, DestroyOneWithPayloadMixin, Retriev
         model_container = self.kwargs['model_container']
         calculationId = self.kwargs['calculationId']
 
-        with OperationContext(request) as context_id:
+        with OperationContext(request, calculationId) as context_id:
 
             if "calculate" in request.data and request.data["calculate"] == "true":
+                instance = model_container.model_class.objects.filter(pk=self.kwargs["pk"]).first()
+                instance.is_calculated = CalculationModel.IN_PROGRESS
+                instance.save(skip_hooks=True)
+                update_calculation_status(instance)
                 CalculationIDs.objects.update_or_create(calculation_record=f"{model_container.id}_{self.kwargs['pk']}",
                                                         context_id=context_id['context_id'],
                                                         defaults={'calculation_id': calculationId})

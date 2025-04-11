@@ -44,7 +44,6 @@ class ModelExportView(GenericAPIView):
 
         df.to_excel(writer, sheet_name=model.__name__, merge_cells=False, freeze_panes=(1, 1), index=True)
 
-        writer.save()
         writer.close()
         excel_file.seek(0)
 
