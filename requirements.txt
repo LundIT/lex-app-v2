@@ -7,7 +7,6 @@ djangorestframework-api-key @ git+https://github.com/LundIT/djangorestframework-
 django-filter
 django-extensions
 drf-oidc-auth @ git+https://github.com/LundIT/drf-oidc-auth
-metagpt @ git+https://github.com/LundIT/MetaGPT-lex
 mozilla-django-oidc
 XlsxWriter
 scipy
@@ -32,7 +31,7 @@ channels-redis
 uvicorn[standard]
 nest_asyncio
 Office365-REST-Python-Client
-streamlit
+streamlit==1.44.0
 streamlit-keycloak-lex
 amqp
 sqlalchemy
