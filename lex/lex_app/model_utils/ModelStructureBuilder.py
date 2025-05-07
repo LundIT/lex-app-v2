@@ -81,6 +81,6 @@ class ModelStructureBuilder:
 
 
     def _add_reports_to_structure(self):
-        self.model_structure['Z_Reports'] = {'userchangelog': None, 'calculationlog': None, 'log': None}
+        self.model_structure['Z_Reports'] = {'calculationlog': None}
         if os.getenv("IS_STREAMLIT_ENABLED") == "true":
             self.model_structure['Streamlit'] = {'streamlit': None}

@@ -10,8 +10,8 @@ drf-oidc-auth @ git+https://github.com/LundIT/drf-oidc-auth
 mozilla-django-oidc
 XlsxWriter
 scipy
-numpy
-pandas
+numpy==1.26.4
+pandas==1.4.3
 openpyxl
 psycopg2-binary
 pdfkit

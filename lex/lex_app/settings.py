@@ -184,6 +184,7 @@ INSTALLED_APPS = [
     'lex.lex_app.apps.LexAppConfig',
     'lex_ai',
     "simple_history",
+    # "django_rq",
     repo_name,
     'celery',
     'react',
@@ -221,6 +222,16 @@ MIDDLEWARE = [
 
 DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF = False
 
+# RQ_QUEUES = {
+#     'default': {
+#         'HOST': 'localhost',
+#         'PORT': 6379,
+#         'DB': 0,
+#         'DEFAULT_TIMEOUT': 360,
+#         'DEFAULT_RESULT_TTL': 800,
+#     },
+# }
+
 ROOT_URLCONF = 'lex_app.urls'
 
 TEMPLATES = [
@@ -256,6 +267,15 @@ CACHES = {
     "oidc": {
         "BACKEND": "django.core.cache.backends.db.DatabaseCache",
         "LOCATION": "oidc_cache",
+    },
+    "redis": {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',      # adjust host/port/db as needed
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            # Optional: silently ignore redis down-time
+            'IGNORE_EXCEPTIONS': True,
+        }
     }
 }
 
@@ -514,25 +534,51 @@ if os.getenv("STORAGE_TYPE") == "LEGACY" or not os.getenv("STORAGE_TYPE"):
 
         USER_REPORT_ROOT = '/app/storage/reports/'
 
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+
     'formatters': {
-        'verbose': {
+        # Console stays plain
+        'default': {
             'format': '{levelname} {asctime} {message}',
-            'style': '{'
-        }
+            'style': '{',
+        },
+        # Markdown formatter for WS – header in Markdown, message as-is
+        'ws_md': {
+            'format': (
+                '\n{message}'
+            ),
+            'style': '{',
+        },
     },
+
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
+            'formatter': 'default',
+        },
+        'ws': {
+            '()': 'lex.lex_app.LexLogger.WebSocketHandler.WebSocketHandler',
+            'level': 'DEBUG',
+            'formatter': 'ws_md',
         },
     },
+
+    'loggers': {
+        'lex.calclog': {
+            'handlers': ['ws'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+
     'root': {
         'handlers': ['console'],
-        'level': os.getenv("LOG_LEVEL", "DEBUG"),
-    }
+        'level': os.getenv('LOG_LEVEL', 'DEBUG'),
+    },
 }
+
+
+
 DATA_UPLOAD_MAX_MEMORY_SIZE=None

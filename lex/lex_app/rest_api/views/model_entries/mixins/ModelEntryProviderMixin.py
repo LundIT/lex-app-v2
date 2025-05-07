@@ -8,27 +8,25 @@ from lex.lex_app.rest_api.views.permissions.UserPermission import UserPermission
 # --- CalculationLog Serializer ---
 class CalculationLogSerializer(serializers.ModelSerializer):
     # Changed the field name to "calculated_status"
-    calculation = serializers.SerializerMethodField()
+    calculation_record = serializers.SerializerMethodField()
+    id_field = serializers.ReadOnlyField(default=CalculationLog._meta.pk.name)
+    short_description = serializers.SerializerMethodField()
 
     class Meta:
         model = CalculationLog
         fields = [
-            'calculationId',
             'id',
-            'calculation_record',
-            'message',
+            'id_field',
+            'short_description',
+            'calculationId',
+            'calculation_log',
             'timestamp',
-            'trigger_name',
-            'calculation',  # renamed field now appears in the output
-            'method',
-            'is_notification',
-            'message_type',
-            'detailed_message',
+            'calculation_record',  # renamed field now appears in the output
             'auditlog',
             'calculationlog'
         ]
 
-    def get_calculation(self, obj):
+    def get_calculation_record(self, obj):
         """
         Return a JSON-serializable representation (for example, a flag) derived from the generically related object.
         In this case, we're using a property named 'is_calculated' from the linked object.
@@ -37,6 +35,8 @@ class CalculationLogSerializer(serializers.ModelSerializer):
             return str(obj.calculatable_object)
             # return obj.calculatable_object.is_calculated
         return None
+    def get_short_description(self, obj):
+        return str(obj)
 
 # --- ModelEntryProviderMixin ---
 class ModelEntryProviderMixin:

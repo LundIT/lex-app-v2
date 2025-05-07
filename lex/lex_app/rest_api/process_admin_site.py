@@ -31,10 +31,7 @@ from lex.lex_app.rest_api.views.sharepoint.SharePointShareLink import SharePoint
 from lex_app.decorators.LexSingleton import LexSingleton
 from lex_app.rest_api.views.LexLoggerView.LexLoggerView import LexLoggerView
 from lex.lex_app.rest_api.views.model_entries.CalculationLogTreeView import CalculationLogTreeView
-from lex.lex_app.rest_api.views.model_entries.CalculationLogParentView import CalculationLogParentView
-from lex.lex_app.rest_api.views.model_entries.CalculationLogRootNodesView import CalculationLogRootNodesView
-from lex.lex_app.rest_api.views.model_entries.CalculationLogChildrenView import CalculationLogChildrenView
-
+from lex.lex_app.rest_api.views.calculations.DownloadMarkdownPdf import DownloadMarkdownPdf
 @LexSingleton
 class ProcessAdminSite:
     """
@@ -173,10 +170,6 @@ class ProcessAdminSite:
             path('api/model_entries/<model:model_container>/many', ManyModelEntries.as_view(),
                  name='model-many-entries'),
             path('api/calculationlog/tree/', CalculationLogTreeView.as_view(), name='calculationlog-tree'),
-            path('api/calculationlog/tree/root/', CalculationLogRootNodesView.as_view(), name='calculationlog-root'),
-            path('api/calculationlog/tree/parent/', CalculationLogParentView.as_view(), name='calculationlog-parent'),
-            path('api/calculationlog/tree/children/', CalculationLogChildrenView.as_view(),
-                 name='calculationlog-children'),
             path('api/global-search/<str:query>', Search.as_view(model_collection=self.model_collection),
                  name='global-search'),
             path('api/<model:model_container>/model-permissions', ModelPermissions.as_view(),
@@ -191,6 +184,7 @@ class ProcessAdminSite:
             path('api/clean-calculations', CleanCalculations.as_view(),
                  name='clean-calculations'),
             path('api/logs', LexLoggerView.as_view(), name='log'),
+            path('api/download-pdf/<int:pk>/', DownloadMarkdownPdf.as_view(), name='download-markdown-pdf'),
         ]
 
         url_patterns_for_model_info = [

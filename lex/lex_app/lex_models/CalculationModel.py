@@ -9,7 +9,9 @@ from django_lifecycle import hook, AFTER_UPDATE, AFTER_CREATE, BEFORE_UPDATE, BE
 from django_lifecycle.conditions import WhenFieldValueChangesTo, WhenFieldValueIs
 from lex.lex_app.lex_models.LexModel import LexModel
 from lex.lex_app.lex_models.Revisions import Revisions
-
+from lex.lex_app.logging.model_context import _model_stack
+from django.core.cache import caches
+from lex.lex_app.rest_api.context import context_id
 
 class CalculationModel(LexModel):
 
@@ -46,8 +48,8 @@ class CalculationModel(LexModel):
         else:
             self.is_creation = False
 
-    @hook(AFTER_UPDATE, on_commit=True, condition=WhenFieldValueIs('is_calculated', IN_PROGRESS))
-    @hook(AFTER_CREATE, on_commit=True, condition=WhenFieldValueIs('is_calculated', IN_PROGRESS))
+    @hook(AFTER_UPDATE, condition=WhenFieldValueIs('is_calculated', IN_PROGRESS))
+    @hook(AFTER_CREATE, condition=WhenFieldValueIs('is_calculated', IN_PROGRESS))
     def calculate_hook(self):
         from lex.lex_app.rest_api.signals import update_calculation_status
         try:
@@ -58,10 +60,15 @@ class CalculationModel(LexModel):
                 with transaction.atomic():
                     self.update()
                     self.is_calculated = self.SUCCESS
+
         except Exception as e:
             self.is_calculated = self.ERROR
             raise e
         finally:
+            redis_cache = caches['redis']
+            calc_id = context_id.get()['calculation_id']
+            cache_key = f"calculation_log_{calc_id}"
+            redis_cache.delete(cache_key)
             self.save(skip_hooks=True)
             # TODO: Fix the bad code below
             # if self.is_creation:

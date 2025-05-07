@@ -73,12 +73,12 @@ class Fields(APIView):
         # If the model is CalculationLog (or a subclass), remove unwanted fields and add a virtual field.
         if issubclass(model, CalculationLog):
             # Remove the fields 'content_type' and 'object_id'
-            fields_info = [f for f in fields_info if f['name'] not in ['content_type', 'object_id', "id"]]
+            fields_info = [f for f in fields_info if f['name'] not in ['content_type', 'object_id']]
 
             # Add the virtual GenericForeignKey field "calculatable_object"
             virtual_field = {
-                'name': 'calculation',
-                'readable_name': 'Calculation',
+                'name': 'calculation_record',
+                'readable_name': 'Calculation Record',
                 'type': 'string',  # You can use a custom type if needed
                 'editable': False,  # Typically not editable directly
                 'required': False,
