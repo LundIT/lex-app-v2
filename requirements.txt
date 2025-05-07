@@ -47,3 +47,4 @@ mistune
 django-simple-history
 markdown2
 xhtml2pdf
+tabulate
