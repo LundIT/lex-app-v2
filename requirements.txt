@@ -48,3 +48,4 @@ django-simple-history
 markdown2
 xhtml2pdf
 tabulate
+django-db-views
