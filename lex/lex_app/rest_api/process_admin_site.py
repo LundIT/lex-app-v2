@@ -24,7 +24,6 @@ from lex.lex_app.rest_api.views.model_relation_views import ModelStructureObtain
 from lex.lex_app.rest_api.views.permissions.ModelPermissions import ModelPermissions
 from lex.lex_app.rest_api.views.process_flow.CreateOrUpdate import CreateOrUpdate
 from lex.lex_app.rest_api.views.project_info.ProjectInfo import ProjectInfo
-from lex.lex_app.rest_api.views.rbac.RBACInfo import RBACInfo
 from lex.lex_app.rest_api.views.sharepoint.SharePointFileDownload import SharePointFileDownload
 from lex.lex_app.rest_api.views.sharepoint.SharePointPreview import SharePointPreview
 from lex.lex_app.rest_api.views.sharepoint.SharePointShareLink import SharePointShareLink
@@ -176,8 +175,6 @@ class ProcessAdminSite:
                  name='model-restrictions'),
             path('api/project-info', ProjectInfo.as_view(),
                  name='project-info'),
-            path('api/user-info', RBACInfo.as_view(),
-                 name='user-info'),
             path('api/widget_structure', Widgets.as_view(), name='widget-structure'),
             path('api/init-calculation-logs', InitCalculationLogs.as_view(),
                  name='init-calculation-logs'),
