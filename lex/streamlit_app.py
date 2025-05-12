@@ -119,7 +119,21 @@ if __name__ == '__main__':
                         st.session_state.user_info = keycloak.user_info
                         st.session_state.id_token = keycloak.id_token
                         container.empty()  # Clear the container after authentication
-                        streamlit_structure.main(user=keycloak.user_info)
+
+                        # TODO: Add error handling
+                        params = st.query_params  # new, dict-like API
+                        model = params.get("model")
+                        pk = params.get("pk")
+                        if model and pk:
+
+                            from django.apps import apps
+                            from lex_app.settings import repo_name
+
+                            model_class = apps.get_model(repo_name, model)
+                            model_obj = model_class.objects.filter(pk=pk).first()
+                            model_obj.streamlit_main(user=keycloak.user_info)
+                        else:
+                            streamlit_structure.main(user=keycloak.user_info)
 
                     else:
                         st.error("You are not authorized to use this app.")
