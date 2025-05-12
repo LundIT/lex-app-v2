@@ -7,28 +7,32 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('lex_app', '0008_calculationlog_message_and_more'),
+        ("lex_app", "0008_calculationlog_message_and_more"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='calculationlog',
-            old_name='message',
-            new_name='calculation_log',
+            model_name="calculationlog",
+            old_name="message",
+            new_name="calculation_log",
         ),
         migrations.RenameField(
-            model_name='historicalcalculationlog',
-            old_name='message',
-            new_name='calculation_log',
+            model_name="historicalcalculationlog",
+            old_name="message",
+            new_name="calculation_log",
         ),
         migrations.AlterField(
-            model_name='calculationlog',
-            name='timestamp',
-            field=models.DateTimeField(default=datetime.datetime(2025, 4, 23, 11, 14, 41, 905628)),
+            model_name="calculationlog",
+            name="timestamp",
+            field=models.DateTimeField(
+                default=datetime.datetime(2025, 4, 23, 11, 14, 41, 905628)
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalcalculationlog',
-            name='timestamp',
-            field=models.DateTimeField(default=datetime.datetime(2025, 4, 23, 11, 14, 41, 905628)),
+            model_name="historicalcalculationlog",
+            name="timestamp",
+            field=models.DateTimeField(
+                default=datetime.datetime(2025, 4, 23, 11, 14, 41, 905628)
+            ),
         ),
     ]

@@ -1,9 +1,13 @@
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from lex.lex_app.rest_api.views.model_entries.filter_backends import PrimaryKeyListFilterBackend
-from lex.lex_app.rest_api.views.model_entries.mixins.ModelEntryProviderMixin import ModelEntryProviderMixin
+from lex.lex_app.rest_api.views.model_entries.filter_backends import (
+    PrimaryKeyListFilterBackend,
+)
+from lex.lex_app.rest_api.views.model_entries.mixins.ModelEntryProviderMixin import (
+    ModelEntryProviderMixin,
+)
 from lex.lex_app.logging.BulkAuditLogMixin import BulkAuditLogMixin
-from django.apps import apps
+
 
 class ManyModelEntries(BulkAuditLogMixin, ModelEntryProviderMixin, GenericAPIView):
     filter_backends = [PrimaryKeyListFilterBackend]
@@ -22,11 +26,13 @@ class ManyModelEntries(BulkAuditLogMixin, ModelEntryProviderMixin, GenericAPIVie
 
     def patch(self, request, *args, **kwargs):
         queryset = self.get_filtered_query_set()
-        serializer = self.get_serializer(queryset, data=request.data, partial=True, many=True)
+        serializer = self.get_serializer(
+            queryset, data=request.data, partial=True, many=True
+        )
         serializer.is_valid(raise_exception=True)
         # Perform bulk update and log each updated instance.
         self.perform_bulk_update(serializer)
-        pk_name = self.kwargs['model_container'].pk_name
+        pk_name = self.kwargs["model_container"].pk_name
         return Response([d[pk_name] for d in serializer.data])
 
     def delete(self, request, *args, **kwargs):

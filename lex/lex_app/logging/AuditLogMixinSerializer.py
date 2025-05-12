@@ -6,6 +6,7 @@ from django.db.models.fields.files import FieldFile
 from django.utils.functional import Promise  # Lazy translation objects
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
+
 def _serialize_payload(data):
     """
     Recursively process the data so it becomes JSON serializable.
@@ -34,19 +35,15 @@ def _serialize_payload(data):
     elif isinstance(data, UUID):
         return str(data)
     elif isinstance(data, FieldFile):
-        return {'name': data.name, 'url': data.url if hasattr(data, 'url') else None}
+        return {"name": data.name, "url": data.url if hasattr(data, "url") else None}
     elif isinstance(data, InMemoryUploadedFile):
         # Serialize in-memory files by recording key metadata
-        return {
-            'name': data.name,
-            'size': data.size,
-            'content_type': data.content_type
-        }
+        return {"name": data.name, "size": data.size, "content_type": data.content_type}
     elif isinstance(data, Model):
-        return {'id': data.pk, 'display': str(data)}
+        return {"id": data.pk, "display": str(data)}
     elif isinstance(data, Promise):
         return str(data)
-    elif hasattr(data, 'all') and callable(data.all):
+    elif hasattr(data, "all") and callable(data.all):
         # Possibly a QuerySet or related manager, return a serialized list.
         return [_serialize_payload(item) for item in data.all()]
     elif isinstance(data, set):

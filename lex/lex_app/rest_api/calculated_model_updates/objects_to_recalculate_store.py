@@ -9,7 +9,9 @@ class ObjectsToRecalculateStore:
     @staticmethod
     def insert(obj):
         model_id = obj._meta.model_name
-        defining_fields = tuple(map(lambda field: obj.__getattribute__(field.name), obj.defining_fields))
+        defining_fields = tuple(
+            map(lambda field: obj.__getattribute__(field.name), obj.defining_fields)
+        )
         o2r = ObjectsToRecalculateStore.instance.objects_to_recalculate
 
         if model_id not in o2r:

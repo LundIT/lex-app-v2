@@ -1,8 +1,9 @@
-from lex.lex_app.lex_models.ModelModificationRestriction import ModelModificationRestriction
+from lex.lex_app.lex_models.ModelModificationRestriction import (
+    ModelModificationRestriction,
+)
 
 
 class AdminReportsModificationRestriction(ModelModificationRestriction):
-
     def can_read_in_general(self, user, violations):
         return True
 
@@ -29,7 +30,6 @@ class AdminReportsModificationRestriction(ModelModificationRestriction):
 
 
 class ExampleModelModificationRestriction(ModelModificationRestriction):
-
     def can_read_in_general(self, user, violations):
         pass
 

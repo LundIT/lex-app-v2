@@ -22,13 +22,19 @@ class DependencyAnalysisMixin(Model):
     def get_dependent_entries(self):
         dependent_entries = dict.fromkeys(self.directly_dependent_entries())
         if self.do_cascading_updates:
-            cascading_dependent_entries_list = list(map(
-                lambda entry: entry.get_dependent_entries(),
-                list(filter(
-                    lambda entry: issubclass(type(entry), DependencyAnalysisMixin),
-                    dependent_entries
-                ))
-            ))
+            cascading_dependent_entries_list = list(
+                map(
+                    lambda entry: entry.get_dependent_entries(),
+                    list(
+                        filter(
+                            lambda entry: issubclass(
+                                type(entry), DependencyAnalysisMixin
+                            ),
+                            dependent_entries,
+                        )
+                    ),
+                )
+            )
 
             for dependent_entry_dict in cascading_dependent_entries_list:
                 dependent_entries.update(dependent_entry_dict)

@@ -2,7 +2,10 @@ import contextvars
 from contextlib import contextmanager
 
 # holds a list of model instances, from “root” → “current”
-_model_stack: contextvars.ContextVar[list] = contextvars.ContextVar('model_stack', default=[])
+_model_stack: contextvars.ContextVar[list] = contextvars.ContextVar(
+    "model_stack", default=[]
+)
+
 
 @contextmanager
 def model_logging_context(instance):

@@ -1,12 +1,6 @@
 # custom_logger.py
-import ast
-import logging
-import time
-import uuid
 
-import mistune
 import pandas as pd
-from django.conf import settings
 
 from lex.lex_app.decorators.LexSingleton import LexSingleton
 from lex.lex_app.logging.CalculationLog import CalculationLog
@@ -119,7 +113,10 @@ class LexLogger:
         except Exception:
             # Fall back to using tabulate if to_markdown fails
             from tabulate import tabulate
-            markdown_table = tabulate(df, headers='keys', tablefmt='pipe', showindex=False)
+
+            markdown_table = tabulate(
+                df, headers="keys", tablefmt="pipe", showindex=False
+            )
 
         self.content.append(markdown_table)
         self.content.append("")

@@ -19,7 +19,9 @@ import lex.lex_app.rest_api.routing
 from lex.lex_app.rest_api.consumers.BackendHealthConsumer import BackendHealthConsumer
 from lex.lex_app.rest_api.consumers.CalculationLogConsumer import CalculationLogConsumer
 from lex.lex_app.rest_api.consumers.CalculationsConsumer import CalculationsConsumer
-from lex.lex_app.rest_api.consumers.UpdateCalculationStatusConsumer import UpdateCalculationStatusConsumer
+from lex.lex_app.rest_api.consumers.UpdateCalculationStatusConsumer import (
+    UpdateCalculationStatusConsumer,
+)
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lex_app.settings")
 django_asgi_app = get_asgi_application()
@@ -27,10 +29,14 @@ application = ProtocolTypeRouter(
     {
         "http": django_asgi_app,
         "websocket": AllowedHostsOriginValidator(
-            AuthMiddlewareStack(URLRouter(lex.lex_app.rest_api.routing.websocket_urlpatterns))
+            AuthMiddlewareStack(
+                URLRouter(lex.lex_app.rest_api.routing.websocket_urlpatterns)
+            )
         ),
     }
 )
+
+
 def on_server_shutdown(*args, **kwargs):
     loop = asyncio.get_event_loop()
     loop.run_until_complete(BackendHealthConsumer.disconnect_all())
@@ -38,5 +44,6 @@ def on_server_shutdown(*args, **kwargs):
     loop.run_until_complete(CalculationsConsumer.disconnect_all())
     loop.run_until_complete(UpdateCalculationStatusConsumer.disconnect_all())
     # loop.run_until_complete(LogConsumer.disconnect_all())
+
 
 atexit.register(on_server_shutdown)

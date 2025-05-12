@@ -7,18 +7,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('lex_app', '0013_remove_historicaluserchangelog_history_user_and_more'),
+        ("lex_app", "0013_remove_historicaluserchangelog_history_user_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='calculationlog',
-            name='timestamp',
-            field=models.DateTimeField(default=datetime.datetime(2025, 5, 9, 13, 33, 59, 299515)),
+            model_name="calculationlog",
+            name="timestamp",
+            field=models.DateTimeField(
+                default=datetime.datetime(2025, 5, 9, 13, 33, 59, 299515)
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalcalculationlog',
-            name='timestamp',
-            field=models.DateTimeField(default=datetime.datetime(2025, 5, 9, 13, 33, 59, 299515)),
+            model_name="historicalcalculationlog",
+            name="timestamp",
+            field=models.DateTimeField(
+                default=datetime.datetime(2025, 5, 9, 13, 33, 59, 299515)
+            ),
         ),
     ]
