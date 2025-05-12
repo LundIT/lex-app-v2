@@ -49,3 +49,4 @@ markdown2
 xhtml2pdf
 tabulate
 django-db-views
+requirements.txt
