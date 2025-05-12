@@ -28,7 +28,7 @@ class CustomInstallCommand(install):
 
 setup(
     name="lex-app",
-    version="1.0.0",
+    version="1.0.6",
     author="Melih Sünbül",
     author_email="m.sunbul@lund-it.com",
     description="A Python / Django library to create business applications easily with complex logic",
