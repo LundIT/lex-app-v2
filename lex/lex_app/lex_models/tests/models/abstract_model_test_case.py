@@ -21,3 +21,8 @@ class AbstractModelTestCase(TestCase):
             schema_editor.delete_model(cls.test_model.history.model)
             schema_editor.delete_model(cls.test_model)
         super().tearDownClass()
+
+
+class FakeRequest:
+    def __init__(self, name, sub):
+        self.auth = {"name": name, "sub": sub}

@@ -5,7 +5,9 @@ from lex.lex_app.lex_models.tests.factories.LexModel_factory import (
 
 from lex.lex_app.lex_models.tests.models.abstract_model_test_case import (
     AbstractModelTestCase,
+    FakeRequest,
 )
+from lex.lex_app.rest_api.context import context_id
 
 
 class TestLexModel(AbstractModelTestCase):
@@ -22,3 +24,12 @@ class TestLexModel(AbstractModelTestCase):
         model.save()
         self.assertEqual(model.created_by, "Initial Data Upload")
         self.assertEqual(model.edited_by, "Initial Data Upload")
+
+    def test_initial_instantiation_from_user(self):
+        request = FakeRequest(name="John Doe", sub="1234")
+        context_id.set(
+            {"context_id": "abc", "request_obj": request, "calculation_id": "xyz"}
+        )
+        model = LexModelFactory.create()
+        self.assertEqual(model.created_by, "John Doe (1234)")
+        self.assertEqual(model.edited_by, None)
