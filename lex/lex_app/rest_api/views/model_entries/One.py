@@ -47,9 +47,6 @@ class OneModelEntry(AuditLogMixin, ModelEntryProviderMixin, DestroyOneWithPayloa
                     instance.is_calculated = CalculationModel.IN_PROGRESS
                     instance.save(skip_hooks=True)
                     update_calculation_status(instance)
-                    CalculationIDs.objects.update_or_create(calculation_record=f"{model_container.id}_{self.kwargs['pk']}",
-                                                            context_id=context_id['context_id'],
-                                                            defaults={'calculation_id': calculationId})
 
                 # TODO: For sharepoint preview, find a new way to create an audit log with the new structure
                 # if "edited_file" not in request.data:

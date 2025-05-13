@@ -28,7 +28,7 @@ class CalculationLog(models.Model):
     timestamp = models.DateTimeField(default=datetime.now())
     calculationId = models.TextField(default='test_id')
     calculation_log = models.TextField(default="")
-    calculationlog = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True) # parent calculation log
+    calculationlog = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name="parent_logs") # parent calculation log
     auditlog = models.ForeignKey("AuditLog", on_delete=models.CASCADE, null=True, blank=True)
     # Generic fields to reference any calculatable object:
     # If you want to allow CalculationLog entries without a related instance,

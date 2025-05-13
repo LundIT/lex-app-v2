@@ -10,7 +10,6 @@ from django_lifecycle import hook, AFTER_UPDATE, AFTER_CREATE, BEFORE_UPDATE, BE
 from lex.lex_app.lex_models.CalculationModel import CalculationModel
 
 from lex.lex_app.lex_models.LexModel import LexModel
-from lex.lex_app.lex_models.Revisions import Revisions
 
 
 class UpdateModel(LexModel):

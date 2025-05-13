@@ -8,7 +8,6 @@ from django.forms import model_to_dict
 from django_lifecycle import hook, AFTER_UPDATE, AFTER_CREATE, BEFORE_UPDATE, BEFORE_CREATE, BEFORE_SAVE
 from django_lifecycle.conditions import WhenFieldValueChangesTo, WhenFieldValueIs
 from lex.lex_app.lex_models.LexModel import LexModel
-from lex.lex_app.lex_models.Revisions import Revisions
 from lex.lex_app.logging.model_context import _model_stack
 from django.core.cache import caches
 from lex.lex_app.rest_api.context import context_id
@@ -34,7 +33,7 @@ class CalculationModel(LexModel):
         abstract = True
 
     @abstractmethod
-    def calculate(self):
+    def update(self):
         pass
 
     # TODO: For the Celery task cases, this hook should be updated

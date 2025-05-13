@@ -50,14 +50,15 @@ class LexAppConfig(GenericAppConfig):
 
     def ready(self):
         super().ready()
-        super().start(
-            repo=repo_name
-        )
-        generic_app_models = {f"{model.__name__}": model for model in
-                              set(list(apps.get_app_config(repo_name).models.values())
-                                  + list(apps.get_app_config(repo_name).models.values()))}
-        nest_asyncio.apply()
-        asyncio.run(self.async_ready(generic_app_models))
+        if repo_name != "lex":
+            super().start(
+                repo=repo_name
+            )
+            generic_app_models = {f"{model.__name__}": model for model in
+                                  set(list(apps.get_app_config(repo_name).models.values())
+                                      + list(apps.get_app_config(repo_name).models.values()))}
+            nest_asyncio.apply()
+            asyncio.run(self.async_ready(generic_app_models))
 
     async def async_ready(self, generic_app_models):
         """

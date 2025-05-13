@@ -59,7 +59,7 @@ if os.getenv("DEPLOYMENT_ENVIRONMENT") != 'DEV'  and os.getenv("DEPLOYMENT_ENVIR
 warnings.simplefilter("ignore", CacheKeyWarning)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-NEW_BASE_DIR = Path(os.getenv("PROJECT_ROOT")).parent.as_posix()
+NEW_BASE_DIR = Path(os.getenv("PROJECT_ROOT", os.getcwd())).parent.as_posix()
 sys.path.append(NEW_BASE_DIR)
 
 GRAPH_MODELS = {
@@ -147,7 +147,7 @@ LOGIN_REDIRECT_URL = '/process_admin/all'
 CSRF_TRUSTED_ORIGINS = ['https://*.' + os.getenv("DOMAIN_HOSTED", "localhost")]
 
 REACT_APP_BUILD_PATH = (Path(__file__).resolve().parent.parent / Path("react/build")).as_posix()
-repo_name = os.getenv("PROJECT_ROOT").split("/")[-1]
+repo_name = os.getenv("PROJECT_ROOT", Path(os.getcwd()).resolve().as_posix()).split("/")[-1]
 LEGACY_MEDIA_ROOT = os.path.join(NEW_BASE_DIR, f"{repo_name}/")
 LOG_FILE_PATH = os.path.join(NEW_BASE_DIR, f"{repo_name}/{repo_name}.log")
 
@@ -191,15 +191,12 @@ LOGGING = {
 
 # Application definition
 
-
-
 INSTALLED_APPS = [
     'channels',
     'lex.lex_app.apps.LexAppConfig',
     'lex_ai',
     "simple_history",
     # "django_rq",
-    repo_name,
     'celery',
     'react',
     'markdown',
@@ -216,6 +213,9 @@ INSTALLED_APPS = [
     "django.contrib.postgres",
     "django_db_views"
 ]
+
+if repo_name != "lex":
+    INSTALLED_APPS.append(repo_name)
 
 
 CRISPY_FAIL_SILENTLY = not DEBUG

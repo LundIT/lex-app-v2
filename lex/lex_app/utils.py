@@ -53,7 +53,7 @@ class GenericAppConfig(AppConfig):
         self.discovered_models = {}
         self.model_structure_builder = ModelStructureBuilder(repo=repo)
         self.project_path = os.path.dirname(self.module.__file__) if subdir else Path(
-            os.getenv("PROJECT_ROOT")).resolve()
+            os.getenv("PROJECT_ROOT", os.getcwd())).resolve()
         self.subdir = f"" if not subdir else subdir
 
         self.discover_models(self.project_path, repo=repo)
