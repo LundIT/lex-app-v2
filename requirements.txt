@@ -50,3 +50,4 @@ xhtml2pdf
 tabulate
 django-db-views
 pre-commit
+factory-boy
