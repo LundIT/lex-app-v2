@@ -1,27 +1,17 @@
-from django.test import TestCase
-
 from lex.lex_app.lex_models.tests.factories.LexModel_factory import (
     DummyLexModel,
     LexModelFactory,
 )
-from django.db import connection
+
+from lex.lex_app.lex_models.tests.models.abstract_model_test_case import (
+    AbstractModelTestCase,
+)
 
 
-class TestLexModel(TestCase):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        with connection.schema_editor() as schema_editor:
-            schema_editor.create_model(DummyLexModel)
-            # Also create the historical model's table
-            schema_editor.create_model(DummyLexModel.history.model)
-
-    @classmethod
-    def tearDownClass(cls):
-        with connection.schema_editor() as schema_editor:
-            schema_editor.delete_model(DummyLexModel.history.model)
-            schema_editor.delete_model(DummyLexModel)
-        super().tearDownClass()
+class TestLexModel(AbstractModelTestCase):
+    test_model = DummyLexModel
 
     def test_default_fields(self):
         model = LexModelFactory.create()
+        self.assertEqual(model.created_by, "Initial Data Upload")
+        self.assertEqual(model.edited_by, None)
