@@ -136,4 +136,3 @@ generic_app/submodels/*/migrations/
 uploads/
 
 gha-creds-*.json
-

@@ -4,8 +4,9 @@ import shutil
 from setuptools import setup, find_packages
 from setuptools.command.install import install
 
-with open('requirements.txt') as f:
+with open("requirements.txt") as f:
     install_requires = f.read().splitlines()
+
 
 class CustomInstallCommand(install):
     def run(self):
@@ -17,14 +18,15 @@ class CustomInstallCommand(install):
 
     def move_other_directory(self):
         # Define the source and target paths
-        source = os.path.join(os.path.dirname(__file__), 'lex', 'generic_app')
-        target = os.path.join(os.path.dirname(self.install_lib), 'generic_app')
+        source = os.path.join(os.path.dirname(__file__), "lex", "generic_app")
+        target = os.path.join(os.path.dirname(self.install_lib), "generic_app")
 
         # Ensure the package_data entry points to the correct location
         if os.path.exists(target):
             shutil.rmtree(target)  # Remove the existing directory if it exists
         shutil.move(source, target)
-        print(f'Moved other_directory to {target}')
+        print(f"Moved other_directory to {target}")
+
 
 setup(
     name="lex-app",
@@ -37,8 +39,8 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     entry_points={
-        'console_scripts': [
-            'lex = lex.__main__:main',
+        "console_scripts": [
+            "lex = lex.__main__:main",
         ]
     },
     classifiers=[
@@ -47,5 +49,5 @@ setup(
         "Operating System :: OS Independent",
     ],
     install_requires=install_requires,
-    python_requires='>=3.6',
+    python_requires=">=3.6",
 )

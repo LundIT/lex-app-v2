@@ -20,6 +20,7 @@ def custom_shared_task(function):
 
     return wrap
 
+
 ##################
 # CELERY SIGNALS #
 ##################
@@ -28,14 +29,15 @@ def task_done(sender=None, task_id=None, task=None, args=None, kwargs=None, **kw
     control = Control(app=task.app)
     control.shutdown()
 
+
 class CallbackTask(Task):
     def on_success(self, retval, task_id, args, kwargs):
-        '''
+        """
         retval – The return value of the task.
         task_id – Unique id of the executed task.
         args – Original arguments for the executed task.
         kwargs – Original keyword arguments for the executed task.
-        '''
+        """
         if self.name != "initial_data_upload":
             record = retval[1][0]
             record.is_calculated = True
@@ -44,12 +46,12 @@ class CallbackTask(Task):
             update_calculation_status(self)
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
-        '''
+        """
         exc – The exception raised by the task.
         task_id – Unique id of the failed task.
         args – Original arguments for the task that failed.
         kwargs – Original keyword arguments for the task that failed.
-        '''
+        """
         if self.name != "initial_data_upload":
             record = args[0]
             record.is_calculated = False
@@ -59,13 +61,11 @@ class CallbackTask(Task):
             record.dont_update = False
             update_calculation_status(record)
 
-class UploadModelMixin(Model):
 
-    class Meta():
+class UploadModelMixin(Model):
+    class Meta:
         abstract = True
         # app_label = "ACP_PFE"
-
-        
 
     def update(self):
         pass
@@ -74,13 +74,16 @@ class UploadModelMixin(Model):
 class IsCalculatedField(BooleanField):
     pass
 
+
 class CalculateField(BooleanField):
     pass
+
 
 class ConditionalUpdateMixin(Model):
 
     celery_result = None
-    class Meta():
+
+    class Meta:
         abstract = True
 
     is_calculated = IsCalculatedField(default=False)
@@ -91,7 +94,7 @@ class ConditionalUpdateMixin(Model):
         def wrap(*args, **kwargs):
             self = args[0]
 
-            if getattr(self, 'dont_update', False):
+            if getattr(self, "dont_update", False):
                 return None
 
             if not self.calculate:
@@ -106,17 +109,25 @@ class ConditionalUpdateMixin(Model):
                 self.dont_update = True
                 self.save()
 
-                if (hasattr(function, 'delay') and
-                    os.getenv("DEPLOYMENT_ENVIRONMENT")
-                        and os.getenv("ARCHITECTURE") == "MQ/Worker"):
-                    obj = CalculationIDs.objects.filter(context_id=context_id.get()['context_id']).first()
+                if (
+                    hasattr(function, "delay")
+                    and os.getenv("DEPLOYMENT_ENVIRONMENT")
+                    and os.getenv("ARCHITECTURE") == "MQ/Worker"
+                ):
+                    obj = CalculationIDs.objects.filter(
+                        context_id=context_id.get()["context_id"]
+                    ).first()
                     calculation_id = getattr(obj, "calculation_id", "test_id")
-                    return_value = function.apply_async(args=args, kwargs=kwargs, task_id=str(calculation_id))
+                    return_value = function.apply_async(
+                        args=args, kwargs=kwargs, task_id=str(calculation_id)
+                    )
                     self.celery_result = return_value
                 else:
                     return_value = function(*args, **kwargs)
-                    if (not hasattr(self, 'is_inner_calculation') or
-                            not self.is_inner_calculation):
+                    if (
+                        not hasattr(self, "is_inner_calculation")
+                        or not self.is_inner_calculation
+                    ):
                         self.is_calculated = True
                         self.calculate = False
                         self.dont_update = True

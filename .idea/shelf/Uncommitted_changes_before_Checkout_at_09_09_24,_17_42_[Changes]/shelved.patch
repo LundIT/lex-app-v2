@@ -6,8 +6,8 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
 diff --git a/lex_app.egg-info/SOURCES.txt b/lex_app.egg-info/SOURCES.txt
---- a/lex_app.egg-info/SOURCES.txt	
-+++ b/lex_app.egg-info/SOURCES.txt	
+--- a/lex_app.egg-info/SOURCES.txt
++++ b/lex_app.egg-info/SOURCES.txt
 @@ -31,7 +31,9 @@
  lex/lex_app/decorators/LexInjector.py
  lex/lex_app/decorators/LexSingleton.py
@@ -34,8 +34,8 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
 diff --git a/lex_app.egg-info/PKG-INFO b/lex_app.egg-info/PKG-INFO
---- a/lex_app.egg-info/PKG-INFO	
-+++ b/lex_app.egg-info/PKG-INFO	
+--- a/lex_app.egg-info/PKG-INFO
++++ b/lex_app.egg-info/PKG-INFO
 @@ -11,3 +11,47 @@
  Requires-Python: >=3.6
  Description-Content-Type: text/markdown
@@ -92,8 +92,8 @@ Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
 <+>UTF-8
 ===================================================================
 diff --git a/lex_app.egg-info/requires.txt b/lex_app.egg-info/requires.txt
---- a/lex_app.egg-info/requires.txt	
-+++ b/lex_app.egg-info/requires.txt	
+--- a/lex_app.egg-info/requires.txt
++++ b/lex_app.egg-info/requires.txt
 @@ -41,3 +41,4 @@
  pillow
  DjangoSharepointStorage==1.0.9

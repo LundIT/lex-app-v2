@@ -11,4 +11,3 @@ def LexSingleton(cls):
         return instances[cls]
 
     return get_instance
-

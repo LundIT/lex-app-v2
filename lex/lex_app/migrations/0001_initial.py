@@ -10,58 +10,69 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='CalculationIDs',
+            name="CalculationIDs",
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('context_id', models.TextField(default='test_id')),
-                ('calculation_record', models.TextField()),
-                ('calculation_id', models.TextField(default='test_id')),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                ("context_id", models.TextField(default="test_id")),
+                ("calculation_record", models.TextField()),
+                ("calculation_id", models.TextField(default="test_id")),
             ],
         ),
         migrations.CreateModel(
-            name='CalculationLog',
+            name="CalculationLog",
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('timestamp', models.DateTimeField()),
-                ('trigger_name', models.TextField(null=True)),
-                ('message_type', models.TextField(default='')),
-                ('detailed_message', models.TextField(verbose_name='')),
-                ('calculationId', models.TextField(default='test_id')),
-                ('calculation_record', models.TextField(default='legacy')),
-                ('message', models.TextField()),
-                ('method', models.TextField()),
-                ('is_notification', models.BooleanField(default=False)),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                ("timestamp", models.DateTimeField()),
+                ("trigger_name", models.TextField(null=True)),
+                ("message_type", models.TextField(default="")),
+                ("detailed_message", models.TextField(verbose_name="")),
+                ("calculationId", models.TextField(default="test_id")),
+                ("calculation_record", models.TextField(default="legacy")),
+                ("message", models.TextField()),
+                ("method", models.TextField()),
+                ("is_notification", models.BooleanField(default=False)),
             ],
         ),
         migrations.CreateModel(
-            name='Log',
+            name="Log",
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('group', models.TextField(null=True)),
-                ('logfile', lex.lex_app.rest_api.fields.XLSX_field.XLSXField(default='', max_length=300, upload_to='')),
-                ('input_validation', lex.lex_app.rest_api.fields.XLSX_field.XLSXField(default='', max_length=300, upload_to='')),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                ("group", models.TextField(null=True)),
+                (
+                    "logfile",
+                    lex.lex_app.rest_api.fields.XLSX_field.XLSXField(
+                        default="", max_length=300, upload_to=""
+                    ),
+                ),
+                (
+                    "input_validation",
+                    lex.lex_app.rest_api.fields.XLSX_field.XLSXField(
+                        default="", max_length=300, upload_to=""
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='UserChangeLog',
+            name="UserChangeLog",
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('user_name', models.TextField()),
-                ('timestamp', models.DateTimeField()),
-                ('message', models.TextField()),
-                ('traceback', models.TextField(default='', null=True)),
-                ('calculationId', models.TextField(default='-1')),
-                ('calculation_record', models.TextField(default='legacy')),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                ("user_name", models.TextField()),
+                ("timestamp", models.DateTimeField()),
+                ("message", models.TextField()),
+                ("traceback", models.TextField(default="", null=True)),
+                ("calculationId", models.TextField(default="-1")),
+                ("calculation_record", models.TextField(default="legacy")),
             ],
             bases=(django_lifecycle.mixins.LifecycleModelMixin, models.Model),
         ),
         migrations.AddConstraint(
-            model_name='log',
-            constraint=models.UniqueConstraint(fields=('group',), name='defining_fields_Log'),
+            model_name="log",
+            constraint=models.UniqueConstraint(
+                fields=("group",), name="defining_fields_Log"
+            ),
         ),
     ]

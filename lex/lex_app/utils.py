@@ -28,14 +28,14 @@ def _is_structure_yaml_file(file):
 
 
 def _is_structure_file(file):
-    return file.endswith('_structure.py')
+    return file.endswith("_structure.py")
 
 
 class GenericAppConfig(AppConfig):
-    _EXCLUDED_FILES = ("asgi", "wsgi", "settings", "urls", 'setup')
-    _EXCLUDED_DIRS = ('venv', '.venv', 'build', 'migrations')
-    _EXCLUDED_PREFIXES = ('_', '.')
-    _EXCLUDED_POSTFIXES = ('_', '.', 'create_db', 'CalculationIDs', '_test')
+    _EXCLUDED_FILES = ("asgi", "wsgi", "settings", "urls", "setup")
+    _EXCLUDED_DIRS = ("venv", ".venv", "build", "migrations")
+    _EXCLUDED_PREFIXES = ("_", ".")
+    _EXCLUDED_POSTFIXES = ("_", ".", "create_db", "CalculationIDs", "_test")
 
     def __init__(self, app_name, app_module):
         super().__init__(app_name, app_module)
@@ -52,8 +52,11 @@ class GenericAppConfig(AppConfig):
         self.pending_relationships = {}
         self.discovered_models = {}
         self.model_structure_builder = ModelStructureBuilder(repo=repo)
-        self.project_path = os.path.dirname(self.module.__file__) if subdir else Path(
-            os.getenv("PROJECT_ROOT")).resolve()
+        self.project_path = (
+            os.path.dirname(self.module.__file__)
+            if subdir
+            else Path(os.getenv("PROJECT_ROOT")).resolve()
+        )
         self.subdir = f"" if not subdir else subdir
 
         self.discover_models(self.project_path, repo=repo)
@@ -77,8 +80,8 @@ class GenericAppConfig(AppConfig):
 
                 absolute_path = os.path.join(root, file)
                 module_name = os.path.relpath(absolute_path, self.project_path)
-                rel_module_name = module_name.replace(os.path.sep, '.')[:-3]
-                module_name = rel_module_name.split('.')[-1]
+                rel_module_name = module_name.replace(os.path.sep, ".")[:-3]
+                module_name = rel_module_name.split(".")[-1]
                 full_module_name = f"{self.subdir}{rel_module_name}"
 
                 if _is_structure_yaml_file(file):
@@ -90,13 +93,16 @@ class GenericAppConfig(AppConfig):
         return directory not in self._EXCLUDED_DIRS
 
     def _is_valid_module(self, module_name, file):
-        return (file.endswith('.py') and
-                # not module_name.startswith(self._EXCLUDED_PREFIXES) and
-                not module_name.endswith(self._EXCLUDED_POSTFIXES) and
-                module_name not in self._EXCLUDED_FILES)
+        return (
+            file.endswith(".py")
+            and
+            # not module_name.startswith(self._EXCLUDED_PREFIXES) and
+            not module_name.endswith(self._EXCLUDED_POSTFIXES)
+            and module_name not in self._EXCLUDED_FILES
+        )
 
     def _process_module(self, full_module_name, file):
-        if file.endswith('_authentication_settings.py'):
+        if file.endswith("_authentication_settings.py"):
             try:
                 module = importlib.import_module(full_module_name)
                 LexAuthentication().load_settings(module)
@@ -111,13 +117,15 @@ class GenericAppConfig(AppConfig):
 
     def load_models_from_module(self, full_module_name):
         try:
-            if not full_module_name.startswith('.'):
+            if not full_module_name.startswith("."):
                 module = importlib.import_module(full_module_name)
                 for name, obj in module.__dict__.items():
-                    if (isinstance(obj, type)
-                            and issubclass(obj, models.Model)
-                            and hasattr(obj, '_meta')
-                            and not obj._meta.abstract):
+                    if (
+                        isinstance(obj, type)
+                        and issubclass(obj, models.Model)
+                        and hasattr(obj, "_meta")
+                        and not obj._meta.abstract
+                    ):
                         self.add_model(name, obj)
         except (RuntimeError, AttributeError, ImportError) as e:
             print(f"Error importing {full_module_name}: {e}")
@@ -132,9 +140,20 @@ class GenericAppConfig(AppConfig):
         from lex_app.streamlit.Streamlit import Streamlit
 
         ModelRegistration.register_models(
-            [o for o in self.discovered_models.values() if not admin.site.is_registered(o)])
+            [
+                o
+                for o in self.discovered_models.values()
+                if not admin.site.is_registered(o)
+            ]
+        )
 
-        ModelRegistration.register_model_structure(self.model_structure_builder.model_structure)
-        ModelRegistration.register_model_styling(self.model_structure_builder.model_styling)
-        ModelRegistration.register_widget_structure(self.model_structure_builder.widget_structure)
+        ModelRegistration.register_model_structure(
+            self.model_structure_builder.model_structure
+        )
+        ModelRegistration.register_model_styling(
+            self.model_structure_builder.model_styling
+        )
+        ModelRegistration.register_widget_structure(
+            self.model_structure_builder.widget_structure
+        )
         ModelRegistration.register_models([Streamlit])

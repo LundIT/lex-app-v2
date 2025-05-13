@@ -1,9 +1,8 @@
-
 from django.contrib.auth.models import Group
 
-ADMIN = 'admin'
-STANDARD = 'standard'
-VIEW_ONLY = 'view-only'
+ADMIN = "admin"
+STANDARD = "standard"
+VIEW_ONLY = "view-only"
 
 
 def create_groups():

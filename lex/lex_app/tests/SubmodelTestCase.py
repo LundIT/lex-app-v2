@@ -4,10 +4,10 @@ from secrets import randbelow
 
 
 class TestType(Enum):
-    EXACT = 'Exact'
-    DUPLICATE = 'Duplicate'
-    RANDOM = 'Random'
-    SUM = 'Sum'
+    EXACT = "Exact"
+    DUPLICATE = "Duplicate"
+    RANDOM = "Random"
+    SUM = "Sum"
 
 
 def compare_dfs(df_list, dic, column_names_check=False, format_check=False):
@@ -37,15 +37,15 @@ def compare_dfs(df_list, dic, column_names_check=False, format_check=False):
             # Dictionary passed
             if isinstance(test_definition, dict):
                 if "accuracy" in test_definition:
-                    accuracy = test_definition['accuracy']
+                    accuracy = test_definition["accuracy"]
                     accuracy = len(accuracy.split(",")[1])
                 else:
                     accuracy = None
                 if "grouped_by" in test_definition:
-                    grouped_by = test_definition['grouped_by']
+                    grouped_by = test_definition["grouped_by"]
                 else:
                     grouped_by = None
-                test_type = test_definition['method']
+                test_type = test_definition["method"]
                 check_values(col_name, df1, df2, test_type, accuracy, grouped_by)
 
             # List passed
@@ -61,28 +61,33 @@ def compare_dfs(df_list, dic, column_names_check=False, format_check=False):
                     # Dictionary in List
                     if isinstance(test_definition, dict):
                         if "accuracy" in test_definition:
-                            accuracy = test_definition['accuracy']
+                            accuracy = test_definition["accuracy"]
                             accuracy = len(accuracy.split(",")[1])
                         else:
                             accuracy = None
                         if "grouped_by" in test_definition:
-                            grouped_by = test_definition['grouped_by']
+                            grouped_by = test_definition["grouped_by"]
                         else:
                             grouped_by = None
-                        test_type = test_definition['method']
+                        test_type = test_definition["method"]
                     check_values(col_name, df1, df2, test_type, accuracy, grouped_by)
         else:
             print(
-                f'Can not compare the values in column {col_name} because it is missing in one of the two DataFrames.')
+                f"Can not compare the values in column {col_name} because it is missing in one of the two DataFrames."
+            )
 
     # Step 4: Check names of columns (optional)
     if column_names_check:
         for column in df1.columns:
             if column not in df2.columns:
-                print(f'WARNING: {column}, which is in DataFrame 1 is not in DataFrame 2!')
+                print(
+                    f"WARNING: {column}, which is in DataFrame 1 is not in DataFrame 2!"
+                )
         for column in df2.columns:
             if column not in df1.columns:
-                print(f'WARNING: {column}, which is in DataFrame 2 is not in DataFrame 1!')
+                print(
+                    f"WARNING: {column}, which is in DataFrame 2 is not in DataFrame 1!"
+                )
 
     # Step 5: Check format (optional)
     if format_check:
@@ -93,27 +98,27 @@ def check_number_of_lines(df1, df2):
     rows_df1 = len(df1.axes[0])
     rows_df2 = len(df2.axes[0])
     if rows_df1 == rows_df2:
-        print('Both DataFrames have the same number of entries.')
+        print("Both DataFrames have the same number of entries.")
     else:
-        print('The DataFrames have a different number of entries!')
+        print("The DataFrames have a different number of entries!")
 
 
 def get_dtypes_in_column(series):
     dtypes_list = []
     for entry in series:
         if isinstance(entry, float):
-            dtypes_list.append('Float')
+            dtypes_list.append("Float")
         elif isinstance(entry, str):
-            dtypes_list.append('String')
+            dtypes_list.append("String")
         elif isinstance(entry, datetime):
-            dtypes_list.append('Date')
+            dtypes_list.append("Date")
         elif isinstance(entry, int):
-            dtypes_list.append('Integer')
+            dtypes_list.append("Integer")
     are_identical = all(element == dtypes_list[0] for element in dtypes_list)
     if are_identical:
         return dtypes_list[0]
     else:
-        return 'inconsistent typed'
+        return "inconsistent typed"
 
 
 def check_values_test(df1, df2, col_name, accuracy, action):
@@ -129,34 +134,47 @@ def check_values_test(df1, df2, col_name, accuracy, action):
             val_df1 = ent[1]
             if index in list(df2.index):
                 val_df2 = series_df2[index]
-                if accuracy is not None and isinstance(val_df1, float) and isinstance(val_df2, float):
+                if (
+                    accuracy is not None
+                    and isinstance(val_df1, float)
+                    and isinstance(val_df2, float)
+                ):
                     val_df1 = round(val_df1, accuracy)
                     val_df2 = round(val_df2, accuracy)
                 if val_df1 != val_df2:
                     exact_test_successful = False
-                    print(f'{col_name} - Values are not equal for entry with index {index} for column {col_name}! {val_df1} in DataFrame 1 and {val_df2} in DataFrame 2.')
+                    print(
+                        f"{col_name} - Values are not equal for entry with index {index} for column {col_name}! {val_df1} in DataFrame 1 and {val_df2} in DataFrame 2."
+                    )
             else:
                 exact_test_successful = False
-                print(
-                    f'{col_name} - Index {index} does not exist in Dataframe 2')
+                print(f"{col_name} - Index {index} does not exist in Dataframe 2")
         if exact_test_successful:
-            print(f'{col_name} - Exact Test was successful.')
+            print(f"{col_name} - Exact Test was successful.")
         else:
-            print(f'{col_name} - Exact Test failed.')
+            print(f"{col_name} - Exact Test failed.")
 
     elif action == TestType.SUM:
-        if dtype_series_df1 == 'Float' and dtype_series_df2 == 'Float':
+        if dtype_series_df1 == "Float" and dtype_series_df2 == "Float":
             sum_df1 = series_df1.sum()
             sum_df2 = series_df2.sum()
-            if accuracy is not None and isinstance(sum_df1, float) and isinstance(sum_df2, float):
+            if (
+                accuracy is not None
+                and isinstance(sum_df1, float)
+                and isinstance(sum_df2, float)
+            ):
                 sum_df1 = round(sum_df1, accuracy)
                 sum_df2 = round(sum_df2, accuracy)
             if sum_df1 == sum_df2:
-                print(f'{col_name} - Checksum correct! - {sum_df1}')
+                print(f"{col_name} - Checksum correct! - {sum_df1}")
             else:
-                print(f'{col_name} - Checksum not correct for column {col_name}! - DF1: {sum_df1}; DF2: {sum_df2}')
+                print(
+                    f"{col_name} - Checksum not correct for column {col_name}! - DF1: {sum_df1}; DF2: {sum_df2}"
+                )
         else:
-            print(f'{col_name} - WARNING: You can not sum up a column of {dtype_series_df1} values.')
+            print(
+                f"{col_name} - WARNING: You can not sum up a column of {dtype_series_df1} values."
+            )
 
     elif action == TestType.RANDOM:
         ran = len(series_df1)
@@ -167,31 +185,43 @@ def check_values_test(df1, df2, col_name, accuracy, action):
 
             if index in list(df2.index):
                 val_df2 = df2.loc[index][col_name]
-                if accuracy is not None and isinstance(val_df1, float) and isinstance(val_df2, float):
+                if (
+                    accuracy is not None
+                    and isinstance(val_df1, float)
+                    and isinstance(val_df2, float)
+                ):
                     val_df1 = round(val_df1, accuracy)
                     val_df2 = round(val_df2, accuracy)
                 if val_df1 == val_df2:
                     print(
-                        f'{col_name} - Random value check {i + 1} of 5 for index {index} completed: Compared values are equal.')
+                        f"{col_name} - Random value check {i + 1} of 5 for index {index} completed: Compared values are equal."
+                    )
                 else:
                     print(
-                        f'{col_name} - Random value check {i + 1} of 5 for index {index} completed: Compared values are not equal.')
+                        f"{col_name} - Random value check {i + 1} of 5 for index {index} completed: Compared values are not equal."
+                    )
             else:
-                print(f'{col_name} - Random value check {i + 1} of 5 for index {index} completed: Index not found in Dataframe 2.')
+                print(
+                    f"{col_name} - Random value check {i + 1} of 5 for index {index} completed: Index not found in Dataframe 2."
+                )
 
     elif action == TestType.DUPLICATE:
         duplicates_df1 = df1[df1.duplicated(subset=[col_name], keep=False)]
         duplicates_df2 = df2[df2.duplicated(subset=[col_name], keep=False)]
         if duplicates_df1.empty:
-            print(f'DF1 - {col_name} - No duplicates.')
+            print(f"DF1 - {col_name} - No duplicates.")
         else:
             for index, row in duplicates_df1.iterrows():
-                print(f'DF1 - {col_name} - Value: {row[col_name]} is duplicated. Index: {index}')
+                print(
+                    f"DF1 - {col_name} - Value: {row[col_name]} is duplicated. Index: {index}"
+                )
         if duplicates_df2.empty:
-            print(f'DF2 - {col_name} - No duplicates.')
+            print(f"DF2 - {col_name} - No duplicates.")
         else:
             for index, row in duplicates_df2.iterrows():
-                print(f'DF2 - {col_name} - Value: {row[col_name]} is duplicated. Index: {index}')
+                print(
+                    f"DF2 - {col_name} - Value: {row[col_name]} is duplicated. Index: {index}"
+                )
 
 
 def check_values(col_name, df1, df2, action, accuracy=None, grouped_by=None):
@@ -215,27 +245,31 @@ def check_format(df1, df2):
         if column in df2.columns:
             count_total += 1
             if isinstance(df1[column][0], str):
-                type_df1 = 'String'
+                type_df1 = "String"
             elif isinstance(df1[column][0], datetime):
-                type_df1 = 'Datetime'
+                type_df1 = "Datetime"
             elif isinstance(df1[column][0], float):
-                type_df1 = 'Float'
+                type_df1 = "Float"
             else:
-                type_df1 = 'None'
+                type_df1 = "None"
 
             if isinstance(df2[column][0], str):
-                type_df2 = 'String'
+                type_df2 = "String"
             elif isinstance(df2[column][0], datetime):
-                type_df2 = 'Datetime'
+                type_df2 = "Datetime"
             elif isinstance(df2[column][0], float):
-                type_df2 = 'Float'
+                type_df2 = "Float"
             else:
-                type_df2 = 'None'
+                type_df2 = "None"
 
             if type_df1 != type_df2:
-                print(f'Data type different for {column}!')
+                print(f"Data type different for {column}!")
                 count_errors += 1
         else:
-            print(f'{column} - Column {column} is not in both DataFrames, can not compare data type.')
+            print(
+                f"{column} - Column {column} is not in both DataFrames, can not compare data type."
+            )
 
-    print(f'Format Check: {count_total - count_errors} of {count_total} column checks successful.')
+    print(
+        f"Format Check: {count_total - count_errors} of {count_total} column checks successful."
+    )

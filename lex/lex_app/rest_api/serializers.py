@@ -17,8 +17,8 @@ class RestApiModelViewSetTemplate(viewsets.ModelViewSet):
     serializer_class = None
 
 
-ID_FIELD_NAME = 'id_field'
-SHORT_DESCR_NAME = 'short_description'
+ID_FIELD_NAME = "id_field"
+SHORT_DESCR_NAME = "short_description"
 
 
 def model2serializer(model, fields=None):
@@ -30,18 +30,15 @@ def model2serializer(model, fields=None):
     fields.append(SHORT_DESCR_NAME)
     fields.append("id")
     return type(
-        model._meta.model_name + 'Serializer',
+        model._meta.model_name + "Serializer",
         (RestApiModelSerializerTemplate,),
         {
             # the primary-key field is always mapped to a field with name id, as the frontend requires it
             ID_FIELD_NAME: serialized_pk_name,
-            'Meta': type(
-                'Meta',
+            "Meta": type(
+                "Meta",
                 (RestApiModelSerializerTemplate.Meta,),
-                {
-                    'model': model,
-                    'fields': fields
-                }
-            )
-        }
+                {"model": model, "fields": fields},
+            ),
+        },
     )

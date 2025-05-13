@@ -1,5 +1,4 @@
 import traceback
-from datetime import datetime
 
 from django.db import transaction
 from django.db.models.signals import post_save
@@ -7,16 +6,28 @@ from rest_framework.exceptions import APIException
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, CreateAPIView
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin
 
-from lex.lex_app.rest_api.views.model_entries.mixins.DestroyOneWithPayloadMixin import DestroyOneWithPayloadMixin
-from lex.lex_app.rest_api.views.model_entries.mixins.ModelEntryProviderMixin import ModelEntryProviderMixin
+from lex.lex_app.rest_api.views.model_entries.mixins.DestroyOneWithPayloadMixin import (
+    DestroyOneWithPayloadMixin,
+)
+from lex.lex_app.rest_api.views.model_entries.mixins.ModelEntryProviderMixin import (
+    ModelEntryProviderMixin,
+)
 
 
-class CreateOrUpdate(ModelEntryProviderMixin, DestroyOneWithPayloadMixin, RetrieveUpdateDestroyAPIView, CreateAPIView):
+class CreateOrUpdate(
+    ModelEntryProviderMixin,
+    DestroyOneWithPayloadMixin,
+    RetrieveUpdateDestroyAPIView,
+    CreateAPIView,
+):
     def update(self, request, *args, **kwargs):
 
         from lex.lex_app.lex_models import update_handler
-        model_container = self.kwargs['model_container']
-        instance = model_container.model_class.objects.filter(pk=self.kwargs["pk"]).first()
+
+        model_container = self.kwargs["model_container"]
+        instance = model_container.model_class.objects.filter(
+            pk=self.kwargs["pk"]
+        ).first()
         try:
             if "next_step" in request.data:
                 post_save.disconnect(update_handler)

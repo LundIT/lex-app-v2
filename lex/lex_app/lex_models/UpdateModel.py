@@ -1,20 +1,20 @@
-import json
 from abc import abstractmethod
-from datetime import datetime
 
-from django.db import models
 from django.db import transaction
-from django.forms import model_to_dict
-from django_lifecycle import hook, AFTER_UPDATE, AFTER_CREATE, BEFORE_UPDATE, BEFORE_CREATE, BEFORE_SAVE
+from django_lifecycle import (
+    hook,
+    AFTER_UPDATE,
+    AFTER_CREATE,
+    BEFORE_SAVE,
+)
+
 # import CalculationModel
 from lex.lex_app.lex_models.CalculationModel import CalculationModel
 
 from lex.lex_app.lex_models.LexModel import LexModel
-from lex.lex_app.lex_models.Revisions import Revisions
 
 
 class UpdateModel(LexModel):
-
     class Meta:
         abstract = True
 
@@ -27,6 +27,7 @@ class UpdateModel(LexModel):
     @hook(BEFORE_SAVE)
     def before_save(self):
         from lex.lex_app.rest_api.signals import update_calculation_status
+
         # Check if it's a new instance
         if self._state.adding:
             self.is_creation = True
@@ -40,9 +41,10 @@ class UpdateModel(LexModel):
     @hook(AFTER_CREATE, on_commit=True)
     def calculate_hook(self):
         from lex.lex_app.rest_api.signals import update_calculation_status
+
         # update_calculation_status(self)
         try:
-            if hasattr(self, 'is_atomic') and not self.is_atomic:
+            if hasattr(self, "is_atomic") and not self.is_atomic:
                 self.update()
                 self.is_calculated = CalculationModel.SUCCESS
             else:
@@ -82,4 +84,3 @@ class UpdateModel(LexModel):
             #           payload=payload,
             #           action=action).save()
             update_calculation_status(self)
-

@@ -11,6 +11,7 @@ from lex_app import settings
 def _flatten(list_2d):
     return list(itertools.chain.from_iterable(list_2d))
 
+
 def calc_and_save(models, *args):
     for model in models:
         model.calculate(*args)
@@ -24,15 +25,18 @@ def calc_and_save(models, *args):
 
 class CalculatedModelMixinMeta(ModelBase):
     def __new__(cls, name, bases, attrs, **kwargs):
-        if 'Meta' not in attrs:
+        if "Meta" not in attrs:
+
             class Meta:
                 pass
 
-            attrs['Meta'] = Meta
+            attrs["Meta"] = Meta
 
-        if len(attrs['defining_fields']) != 0:
-            attrs['Meta'].constraints = [
-                UniqueConstraint(fields=attrs['defining_fields'], name='defining_fields_' + name)
+        if len(attrs["defining_fields"]) != 0:
+            attrs["Meta"].constraints = [
+                UniqueConstraint(
+                    fields=attrs["defining_fields"], name="defining_fields_" + name
+                )
             ]
 
         return super().__new__(cls, name, bases, attrs, **kwargs)
@@ -52,16 +56,17 @@ class CalculatedModelMixin(Model, metaclass=CalculatedModelMixinMeta):
     def calculate(self):
         pass
 
-
     @classmethod
     def create(cls, *args, **kwargs):
         # define cls as base model
         models = [cls()]
         deleted = False
         # remove all the fields that are in the kwargs
-        ordered_defining_fields = sorted(cls.defining_fields, key=lambda x: 0 if x in kwargs.keys() else 1)
+        ordered_defining_fields = sorted(
+            cls.defining_fields, key=lambda x: 0 if x in kwargs.keys() else 1
+        )
         for field_name in ordered_defining_fields:
-            field_name = field_name.__str__().split('.')[-1]
+            field_name = field_name.__str__().split(".")[-1]
             i_temp_models = []
             # create new models from existing model by applying new selected key list
             for i, model in enumerate(models):
@@ -102,7 +107,11 @@ class CalculatedModelMixin(Model, metaclass=CalculatedModelMixinMeta):
                     local_dict = local_dict[attribute]
                 else:
                     cluster_dict[getattr(model, parallel_cluster, None)] = {}
-            attribute = getattr(model, cls.parallelizable_fields[-1], None) if len(cls.parallelizable_fields)>0 else None
+            attribute = (
+                getattr(model, cls.parallelizable_fields[-1], None)
+                if len(cls.parallelizable_fields) > 0
+                else None
+            )
             if attribute in local_dict.keys():
                 local_dict[attribute].append(model)
             else:

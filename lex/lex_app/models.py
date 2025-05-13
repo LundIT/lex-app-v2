@@ -23,7 +23,7 @@
 # from lex.lex_app.lex_models.calculated_model import CalculatedModelMixin
 # from lex.lex_app.lex_models.html_report import HTMLReport
 
-from lex.lex_app.lex_models.upload_model import UploadModelMixin, ConditionalUpdateMixin
+
 # from django.db.models import Model
 #
 # from lex_app.ProcessAdminSettings import processAdminSite, adminSite

@@ -1,9 +1,4 @@
-import os
-from io import BytesIO
-
-from django.http import FileResponse, JsonResponse
-from django_sharepoint_storage.SharePointCloudStorageUtils import get_server_relative_path
-from django_sharepoint_storage.SharePointContext import SharePointContext
+from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework_api_key.permissions import HasAPIKey
@@ -11,14 +6,16 @@ from rest_framework_api_key.permissions import HasAPIKey
 
 class ProjectOverview(APIView):
     model_collection = None
-    http_method_names = ['get']
+    http_method_names = ["get"]
     permission_classes = [HasAPIKey | IsAuthenticated]
 
     async def main(self, requirement: str):
         from metagpt.roles.di.data_interpreter import DataInterpreter
         from metagpt.utils.recovery_util import save_history
 
-        role = DataInterpreter(max_react_loop=1, tools=["<all>"], react_mode="react")  # integrate the tool
+        role = DataInterpreter(
+            max_react_loop=1, tools=["<all>"], react_mode="react"
+        )  # integrate the tool
         await role.run(requirement)
         save_history(role=role)
 
