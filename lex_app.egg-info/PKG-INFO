@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: lex-app
-Version: 1.0.0
+Version: 1.0.6
 Summary: A Python / Django library to create business applications easily with complex logic
 Home-page: https://github.com/LundIT/lex-app
 Author: Melih Sünbül
@@ -11,3 +11,55 @@ Classifier: Operating System :: OS Independent
 Requires-Python: >=3.6
 Description-Content-Type: text/markdown
 License-File: LICENSE.txt
+Requires-Dist: setuptools
+Requires-Dist: wheel
+Requires-Dist: django~=4.2.20
+Requires-Dist: django-cors-headers
+Requires-Dist: djangorestframework-simplejwt
+Requires-Dist: djangorestframework-api-key@ git+https://github.com/LundIT/djangorestframework-api-key
+Requires-Dist: django-filter
+Requires-Dist: django-extensions
+Requires-Dist: drf-oidc-auth@ git+https://github.com/LundIT/drf-oidc-auth
+Requires-Dist: mozilla-django-oidc
+Requires-Dist: XlsxWriter
+Requires-Dist: scipy
+Requires-Dist: numpy==1.26.4
+Requires-Dist: pandas==1.4.3
+Requires-Dist: openpyxl
+Requires-Dist: psycopg2-binary
+Requires-Dist: pdfkit
+Requires-Dist: django-allow-cidr
+Requires-Dist: django-cprofile-middleware
+Requires-Dist: pretty_html_table
+Requires-Dist: djangorestframework==3.15.2
+Requires-Dist: requests
+Requires-Dist: django-sendgrid-v5
+Requires-Dist: redis
+Requires-Dist: celery
+Requires-Dist: webdriver-manager
+Requires-Dist: sentry_sdk
+Requires-Dist: channels
+Requires-Dist: asyncio
+Requires-Dist: channels-redis
+Requires-Dist: uvicorn[standard]
+Requires-Dist: nest_asyncio
+Requires-Dist: Office365-REST-Python-Client
+Requires-Dist: streamlit==1.44.0
+Requires-Dist: streamlit-keycloak-lex
+Requires-Dist: amqp
+Requires-Dist: sqlalchemy
+Requires-Dist: django_redis
+Requires-Dist: django-storages[google]
+Requires-Dist: pillow
+Requires-Dist: DjangoSharepointStorage==1.1.3
+Requires-Dist: click
+Requires-Dist: django-lifecycle
+Requires-Dist: python-keycloak==3.9.1
+Requires-Dist: markdown
+Requires-Dist: mistune
+Requires-Dist: django-simple-history
+Requires-Dist: markdown2
+Requires-Dist: xhtml2pdf
+Requires-Dist: tabulate
+Requires-Dist: django-db-views
+Requires-Dist: pre-commit
