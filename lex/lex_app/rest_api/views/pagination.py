@@ -2,9 +2,9 @@ from rest_framework.pagination import PageNumberPagination, LimitOffsetPaginatio
 
 
 class CustomPageNumberPagination(PageNumberPagination):
-    page_size_query_param = 'size'
+    page_size_query_param = "size"
 
 
 class CustomLimitOffsetPagination(LimitOffsetPagination):
-    limit_query_param = 'limit'
-    offset_query_param = 'offset'
+    limit_query_param = "limit"
+    offset_query_param = "offset"

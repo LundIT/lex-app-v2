@@ -1,26 +1,24 @@
-import os
-import requests
-from keycloak.keycloak_openid import KeycloakOpenID
 from django.contrib.auth.models import User, Group
 from sentry_sdk import set_user
 
-ADMIN = 'admin'
-STANDARD = 'standard'
-VIEW_ONLY = 'view-only'
+ADMIN = "admin"
+STANDARD = "standard"
+VIEW_ONLY = "view-only"
+
 
 def resolve_user(request, id_token, rbac=True):
     # ask graph if logged in user is in a group /me/memberOf
     # want to see group 6d558e06-309d-4d6c-bb50-54f37a962e40
     # in http://graph.microsoft.com/v1.0/me/memberOf
     # in request._request.headers._store['authorization'] is auth header
-    set_user({"name": id_token['name'], "email": id_token['email']})
-    user, _ = User.objects.get_or_create(username=id_token['sub'])
-    user.email = id_token['email']
+    set_user({"name": id_token["name"], "email": id_token["email"]})
+    user, _ = User.objects.get_or_create(username=id_token["sub"])
+    user.email = id_token["email"]
     user.first_name = id_token["given_name"]
     user.last_name = id_token["family_name"]
     user.roles = []
     if rbac:
-        user_roles = id_token['client_roles']
+        user_roles = id_token["client_roles"]
         user.roles = user_roles
         user.save()
 
@@ -42,6 +40,7 @@ def resolve_user(request, id_token, rbac=True):
     user.save()
 
     return user
+
 
 # Below part is needed when the Memcached cache framework is used
 # to save OIDC related key/value pairs

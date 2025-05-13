@@ -1,10 +1,12 @@
 import traceback
 from lex.lex_app.logging.AuditLog import AuditLog  # Adjust the import path as needed
-from lex.lex_app.logging.AuditLogStatus import AuditLogStatus  # Adjust the import path as needed
+from lex.lex_app.logging.AuditLogStatus import (
+    AuditLogStatus,
+)  # Adjust the import path as needed
 from lex.lex_app.logging.AuditLogMixinSerializer import _serialize_payload
 
-class BulkAuditLogMixin:
 
+class BulkAuditLogMixin:
     def log_change(self, action, target, payload=None):
         """
         Create an audit log record along with a pending status.
@@ -13,16 +15,22 @@ class BulkAuditLogMixin:
         or the instance’s class name for an instance). The payload is serialized for JSON compatibility.
         """
         payload = _serialize_payload(payload or {})
-        user = self.request.user if hasattr(self.request, 'user') else None
-        resource = target.__name__.lower() if isinstance(target, type) else target.__class__.__name__.lower()
+        user = self.request.user if hasattr(self.request, "user") else None
+        resource = (
+            target.__name__.lower()
+            if isinstance(target, type)
+            else target.__class__.__name__.lower()
+        )
         audit_log = AuditLog.objects.create(
             author=f"{str(user)} ({user.username})" if user else None,
             resource=resource,
             action=action,
             payload=payload,
-            calculation_id=self.kwargs.get('calculationId') if hasattr(self, 'kwargs') else None
+            calculation_id=self.kwargs.get("calculationId")
+            if hasattr(self, "kwargs")
+            else None,
         )
-        AuditLogStatus.objects.create(auditlog=audit_log, status='pending')
+        AuditLogStatus.objects.create(auditlog=audit_log, status="pending")
         return audit_log
 
     def perform_bulk_update(self, serializer):
@@ -46,13 +54,16 @@ class BulkAuditLogMixin:
                 updated_payload = _serialize_payload(self.get_serializer(instance).data)
                 audit_log.payload = updated_payload
                 audit_log.save(update_fields=["payload"])
-                AuditLogStatus.objects.filter(auditlog=audit_log).update(status='success')
+                AuditLogStatus.objects.filter(auditlog=audit_log).update(
+                    status="success"
+                )
             return updated_instances
         except Exception as e:
             error_msg = traceback.format_exc()
             for audit_log, _ in audit_logs:
-                AuditLogStatus.objects.filter(auditlog=audit_log) \
-                    .update(status='failure', error_traceback=error_msg)
+                AuditLogStatus.objects.filter(auditlog=audit_log).update(
+                    status="failure", error_traceback=error_msg
+                )
             raise e
 
     def perform_bulk_destroy(self, queryset):
@@ -73,11 +84,14 @@ class BulkAuditLogMixin:
             deleted_ids = [instance.pk for instance in queryset]
             queryset.delete()
             for audit_log in audit_logs:
-                AuditLogStatus.objects.filter(auditlog=audit_log).update(status='success')
+                AuditLogStatus.objects.filter(auditlog=audit_log).update(
+                    status="success"
+                )
             return deleted_ids
         except Exception as e:
             error_msg = traceback.format_exc()
             for audit_log in audit_logs:
-                AuditLogStatus.objects.filter(auditlog=audit_log) \
-                    .update(status='failure', error_traceback=error_msg)
+                AuditLogStatus.objects.filter(auditlog=audit_log).update(
+                    status="failure", error_traceback=error_msg
+                )
             raise e

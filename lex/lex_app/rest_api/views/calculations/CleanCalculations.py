@@ -9,7 +9,7 @@ from lex_app.settings import repo_name
 
 
 class CleanCalculations(APIView):
-    http_method_names = ['post']
+    http_method_names = ["post"]
     permission_classes = [HasAPIKey | IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
@@ -17,12 +17,15 @@ class CleanCalculations(APIView):
 
         for entry in request.data["records"]:
             # Parse JSON and extract the model name and record ID
-            model_class = apps.get_model(repo_name, entry['model'])
+            model_class = apps.get_model(repo_name, entry["model"])
 
             try:
-                obj = model_class.objects.get(pk=entry['record_id'])
+                obj = model_class.objects.get(pk=entry["record_id"])
 
-                if hasattr(obj, 'is_calculated') and obj.is_calculated != CalculationModel.IN_PROGRESS:
+                if (
+                    hasattr(obj, "is_calculated")
+                    and obj.is_calculated != CalculationModel.IN_PROGRESS
+                ):
                     will_be_cleaned.append(f"{entry['model']}_{entry['record_id']}")
 
             except Exception as e:

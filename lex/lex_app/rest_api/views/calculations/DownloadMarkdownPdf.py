@@ -6,6 +6,7 @@ from xhtml2pdf import pisa
 import io
 from lex.lex_app.logging.CalculationLog import CalculationLog
 
+
 class DownloadMarkdownPdf(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -15,8 +16,7 @@ class DownloadMarkdownPdf(APIView):
 
         # Convert Markdown → HTML (with table support)
         html_body = markdown2.markdown(
-            md_text,
-            extras=["tables", "fenced-code-blocks", "code-friendly"]
+            md_text, extras=["tables", "fenced-code-blocks", "code-friendly"]
         )
 
         # Wrap in full HTML + CSS
@@ -54,6 +54,6 @@ class DownloadMarkdownPdf(APIView):
             return HttpResponse("Error generating PDF", status=500)
 
         result.seek(0)
-        resp = HttpResponse(result.read(), content_type='application/pdf')
-        resp['Content-Disposition'] = f'attachment; filename="document_{pk}.pdf"'
+        resp = HttpResponse(result.read(), content_type="application/pdf")
+        resp["Content-Disposition"] = f'attachment; filename="document_{pk}.pdf"'
         return resp

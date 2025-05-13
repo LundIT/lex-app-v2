@@ -7,4 +7,4 @@ def get_user_name(request):
 def get_user_email(request):
     if "JIRA" in request.headers:
         return "jira@mail.com"
-    return request.auth['email']
+    return request.auth["email"]

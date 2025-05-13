@@ -7,66 +7,70 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('lex_app', '0004_alter_calculationlog_timestamp_and_more'),
+        ("lex_app", "0004_alter_calculationlog_timestamp_and_more"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='calculationlog',
-            name='calculation_record',
+            model_name="calculationlog",
+            name="calculation_record",
         ),
         migrations.RemoveField(
-            model_name='calculationlog',
-            name='detailed_message',
+            model_name="calculationlog",
+            name="detailed_message",
         ),
         migrations.RemoveField(
-            model_name='calculationlog',
-            name='is_notification',
+            model_name="calculationlog",
+            name="is_notification",
         ),
         migrations.RemoveField(
-            model_name='calculationlog',
-            name='message_type',
+            model_name="calculationlog",
+            name="message_type",
         ),
         migrations.RemoveField(
-            model_name='calculationlog',
-            name='method',
+            model_name="calculationlog",
+            name="method",
         ),
         migrations.RemoveField(
-            model_name='calculationlog',
-            name='trigger_name',
+            model_name="calculationlog",
+            name="trigger_name",
         ),
         migrations.RemoveField(
-            model_name='historicalcalculationlog',
-            name='calculation_record',
+            model_name="historicalcalculationlog",
+            name="calculation_record",
         ),
         migrations.RemoveField(
-            model_name='historicalcalculationlog',
-            name='detailed_message',
+            model_name="historicalcalculationlog",
+            name="detailed_message",
         ),
         migrations.RemoveField(
-            model_name='historicalcalculationlog',
-            name='is_notification',
+            model_name="historicalcalculationlog",
+            name="is_notification",
         ),
         migrations.RemoveField(
-            model_name='historicalcalculationlog',
-            name='message_type',
+            model_name="historicalcalculationlog",
+            name="message_type",
         ),
         migrations.RemoveField(
-            model_name='historicalcalculationlog',
-            name='method',
+            model_name="historicalcalculationlog",
+            name="method",
         ),
         migrations.RemoveField(
-            model_name='historicalcalculationlog',
-            name='trigger_name',
+            model_name="historicalcalculationlog",
+            name="trigger_name",
         ),
         migrations.AlterField(
-            model_name='calculationlog',
-            name='timestamp',
-            field=models.DateTimeField(default=datetime.datetime(2025, 4, 16, 11, 42, 15, 949533)),
+            model_name="calculationlog",
+            name="timestamp",
+            field=models.DateTimeField(
+                default=datetime.datetime(2025, 4, 16, 11, 42, 15, 949533)
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalcalculationlog',
-            name='timestamp',
-            field=models.DateTimeField(default=datetime.datetime(2025, 4, 16, 11, 42, 15, 949533)),
+            model_name="historicalcalculationlog",
+            name="timestamp",
+            field=models.DateTimeField(
+                default=datetime.datetime(2025, 4, 16, 11, 42, 15, 949533)
+            ),
         ),
     ]

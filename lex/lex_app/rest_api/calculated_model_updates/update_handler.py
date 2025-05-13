@@ -38,7 +38,7 @@ class CalculatedModelUpdateHandler:
         dependent_calculated_entries = list(
             filter(
                 lambda entry: issubclass(type(entry), CalculatedModelMixin),
-                dependent_entries
+                dependent_entries,
             )
         )
 

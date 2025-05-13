@@ -15,12 +15,8 @@ PROJECT_ROOT_DIR = Path(os.getcwd()).resolve()
 sys.path.append(LEX_APP_PACKAGE_ROOT)
 
 # The DJANGO_SETTINGS_MODULE has to be set to allow us to access django imports
-os.environ.setdefault(
-    "DJANGO_SETTINGS_MODULE", "lex_app.settings"
-)
-os.environ.setdefault(
-    "PROJECT_ROOT", PROJECT_ROOT_DIR.as_posix()
-)
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lex_app.settings")
+os.environ.setdefault("PROJECT_ROOT", PROJECT_ROOT_DIR.as_posix())
 os.environ.setdefault("LEX_APP_PACKAGE_ROOT", LEX_APP_PACKAGE_ROOT)
 
 django.setup()
@@ -41,10 +37,13 @@ def add_click_command(command_name):
     Dynamically creates a Click command that wraps a Django management command.
     """
 
-    @lex.command(name=command_name, context_settings=dict(
-        ignore_unknown_options=True,
-        allow_extra_args=True,
-    ))
+    @lex.command(
+        name=command_name,
+        context_settings=dict(
+            ignore_unknown_options=True,
+            allow_extra_args=True,
+        ),
+    )
     @click.pass_context
     def command(ctx):
         # Passing all received arguments and options to the Django command
@@ -58,10 +57,14 @@ commands = get_commands()
 for command_name in commands.keys():
     add_click_command(command_name)
 
-@lex.command(name="celery", context_settings=dict(
-    ignore_unknown_options=True,
-    allow_extra_args=True,
-))
+
+@lex.command(
+    name="celery",
+    context_settings=dict(
+        ignore_unknown_options=True,
+        allow_extra_args=True,
+    ),
+)
 @click.pass_context
 def celery(ctx):
     """Run the ASGI application with Uvicorn."""
@@ -69,38 +72,50 @@ def celery(ctx):
 
     celery_main(celery_args)
 
-@lex.command(name="streamlit", context_settings=dict(
-    ignore_unknown_options=True,
-    allow_extra_args=True,
-))
+
+@lex.command(
+    name="streamlit",
+    context_settings=dict(
+        ignore_unknown_options=True,
+        allow_extra_args=True,
+    ),
+)
 @click.pass_context
 def streamlit(ctx):
     """Run the ASGI application with Uvicorn."""
     streamlit_args = ctx.args
-    file_index = next((i for i, item in enumerate(streamlit_args) if 'streamlit_app.py' in item), None)
+    file_index = next(
+        (i for i, item in enumerate(streamlit_args) if "streamlit_app.py" in item), None
+    )
     if file_index is not None:
-        streamlit_args[file_index] = f"{LEX_APP_PACKAGE_ROOT}/{streamlit_args[file_index]}"
+        streamlit_args[
+            file_index
+        ] = f"{LEX_APP_PACKAGE_ROOT}/{streamlit_args[file_index]}"
 
     streamlit_main(streamlit_args)
 
-@lex.command(name="start", context_settings=dict(
-    ignore_unknown_options=True,
-    allow_extra_args=True,
-))
+
+@lex.command(
+    name="start",
+    context_settings=dict(
+        ignore_unknown_options=True,
+        allow_extra_args=True,
+    ),
+)
 @click.pass_context
 def start(ctx):
     """Run the ASGI application with Uvicorn."""
-    os.environ.setdefault(
-        "CALLED_FROM_START_COMMAND", "True"
-    )
+    os.environ.setdefault("CALLED_FROM_START_COMMAND", "True")
     uvicorn_args = ctx.args
     uvicorn.main(uvicorn_args)
 
 
-@lex.command(context_settings=dict(
+@lex.command(
+    context_settings=dict(
         ignore_unknown_options=True,
         allow_extra_args=True,
-    ))
+    )
+)
 @click.pass_context
 def init(ctx):
     for command in ["createcachetable", "makemigrations", "migrate"]:

@@ -348,22 +348,22 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
           20% {
             opacity: 0.9;
           }
-        
+
           90% {
             opacity: 0.7;
           }
         }
-        
+
         @keyframes joyride-beacon-outer {
           0% {
             transform: scale(1);
           }
-        
+
           45% {
             opacity: 0.7;
             transform: scale(0.75);
           }
-        
+
           100% {
             opacity: 0.9;
             transform: scale(1);
@@ -719,21 +719,21 @@ object-assign
  */var a=o(2),i=o(0),s=o(5),l=o(1),c=typeof Symbol=="function"&&Symbol.for,d=c?Symbol.for("react.element"):60103,f=c?Symbol.for("react.portal"):60106,p=c?Symbol.for("react.fragment"):60107,h=c?Symbol.for("react.strict_mode"):60108,m=c?Symbol.for("react.provider"):60109,g=c?Symbol.for("react.context"):60110,S=c?Symbol.for("react.async_mode"):60111,y=c?Symbol.for("react.forward_ref"):60112,v=typeof Symbol=="function"&&Symbol.iterator;function b(K){for(var G=arguments.length-1,te="http://reactjs.org/docs/error-decoder.html?invariant="+K,ee=0;ee<G;ee++)te+="&args[]="+encodeURIComponent(arguments[ee+1]);i(!1,"Minified React error #"+K+"; visit %s for the full message or use the non-minified dev environment for full errors and additional helpful warnings. ",te)}var x={isMounted:function(){return!1},enqueueForceUpdate:function(){},enqueueReplaceState:function(){},enqueueSetState:function(){}};function C(K,G,te){this.props=K,this.context=G,this.refs=s,this.updater=te||x}C.prototype.isReactComponent={},C.prototype.setState=function(K,G){typeof K!="object"&&typeof K!="function"&&K!=null&&b("85"),this.updater.enqueueSetState(this,K,G,"setState")},C.prototype.forceUpdate=function(K){this.updater.enqueueForceUpdate(this,K,"forceUpdate")};function w(){}w.prototype=C.prototype;function $(K,G,te){this.props=K,this.context=G,this.refs=s,this.updater=te||x}var _=$.prototype=new w;_.constructor=$,a(_,C.prototype),_.isPureReactComponent=!0;var O={current:null},E=Object.prototype.hasOwnProperty,P={key:!0,ref:!0,__self:!0,__source:!0};function T(K,G,te){var ee=void 0,ae={},se=null,pe=null;if(G!=null)for(ee in G.ref!==void 0&&(pe=G.ref),G.key!==void 0&&(se=""+G.key),G)E.call(G,ee)&&!P.hasOwnProperty(ee)&&(ae[ee]=G[ee]);var he=arguments.length-2;if(he===1)ae.children=te;else if(1<he){for(var fe=Array(he),oe=0;oe<he;oe++)fe[oe]=arguments[oe+2];ae.children=fe}if(K&&K.defaultProps)for(ee in he=K.defaultProps,he)ae[ee]===void 0&&(ae[ee]=he[ee]);return{$$typeof:d,type:K,key:se,ref:pe,props:ae,_owner:O.current}}function k(K){return typeof K=="object"&&K!==null&&K.$$typeof===d}function I(K){var G={"=":"=0",":":"=2"};return"$"+(""+K).replace(/[=:]/g,function(te){return G[te]})}var M=/\/+/g,j=[];function A(K,G,te,ee){if(j.length){var ae=j.pop();return ae.result=K,ae.keyPrefix=G,ae.func=te,ae.context=ee,ae.count=0,ae}return{result:K,keyPrefix:G,func:te,context:ee,count:0}}function N(K){K.result=null,K.keyPrefix=null,K.func=null,K.context=null,K.count=0,10>j.length&&j.push(K)}function L(K,G,te,ee){var ae=typeof K;(ae==="undefined"||ae==="boolean")&&(K=null);var se=!1;if(K===null)se=!0;else switch(ae){case"string":case"number":se=!0;break;case"object":switch(K.$$typeof){case d:case f:se=!0}}if(se)return te(ee,K,G===""?"."+z(K,0):G),1;if(se=0,G=G===""?".":G+":",Array.isArray(K))for(var pe=0;pe<K.length;pe++){ae=K[pe];var he=G+z(ae,pe);se+=L(ae,he,te,ee)}else if(K===null||typeof K>"u"?he=null:(he=v&&K[v]||K["@@iterator"],he=typeof he=="function"?he:null),typeof he=="function")for(K=he.call(K),pe=0;!(ae=K.next()).done;)ae=ae.value,he=G+z(ae,pe++),se+=L(ae,he,te,ee);else ae==="object"&&(te=""+K,b("31",te==="[object Object]"?"object with keys {"+Object.keys(K).join(", ")+"}":te,""));return se}function z(K,G){return typeof K=="object"&&K!==null&&K.key!=null?I(K.key):G.toString(36)}function F(K,G){K.func.call(K.context,G,K.count++)}function B(K,G,te){var ee=K.result,ae=K.keyPrefix;K=K.func.call(K.context,G,K.count++),Array.isArray(K)?W(K,ee,te,l.thatReturnsArgument):K!=null&&(k(K)&&(G=ae+(!K.key||G&&G.key===K.key?"":(""+K.key).replace(M,"$&/")+"/")+te,K={$$typeof:d,type:K.type,key:G,ref:K.ref,props:K.props,_owner:K._owner}),ee.push(K))}function W(K,G,te,ee,ae){var se="";te!=null&&(se=(""+te).replace(M,"$&/")+"/"),G=A(G,se,ee,ae),K==null||L(K,"",B,G),N(G)}var Y={Children:{map:function(K,G,te){if(K==null)return K;var ee=[];return W(K,ee,null,G,te),ee},forEach:function(K,G,te){if(K==null)return K;G=A(null,null,G,te),K==null||L(K,"",F,G),N(G)},count:function(K){return K==null?0:L(K,"",l.thatReturnsNull,null)},toArray:function(K){var G=[];return W(K,G,null,l.thatReturnsArgument),G},only:function(K){return k(K)||b("143"),K}},createRef:function(){return{current:null}},Component:C,PureComponent:$,createContext:function(K,G){return G===void 0&&(G=null),K={$$typeof:g,_calculateChangedBits:G,_defaultValue:K,_currentValue:K,_changedBits:0,Provider:null,Consumer:null},K.Provider={$$typeof:m,_context:K},K.Consumer=K},forwardRef:function(K){return{$$typeof:y,render:K}},Fragment:p,StrictMode:h,unstable_AsyncMode:S,createElement:T,cloneElement:function(K,G,te){K==null&&b("267",K);var ee=void 0,ae=a({},K.props),se=K.key,pe=K.ref,he=K._owner;if(G!=null){G.ref!==void 0&&(pe=G.ref,he=O.current),G.key!==void 0&&(se=""+G.key);var fe=void 0;K.type&&K.type.defaultProps&&(fe=K.type.defaultProps);for(ee in G)E.call(G,ee)&&!P.hasOwnProperty(ee)&&(ae[ee]=G[ee]===void 0&&fe!==void 0?fe[ee]:G[ee])}if(ee=arguments.length-2,ee===1)ae.children=te;else if(1<ee){fe=Array(ee);for(var oe=0;oe<ee;oe++)fe[oe]=arguments[oe+2];ae.children=fe}return{$$typeof:d,type:K.type,key:se,ref:pe,props:ae,_owner:he}},createFactory:function(K){var G=T.bind(null,K);return G.type=K,G},isValidElement:k,version:"16.3.2",__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:{ReactCurrentOwner:O,assign:a}},X=Object.freeze({default:Y}),J=X&&Y||X;n.exports=J.default?J.default:J},function(n,r,o){},function(n,r,o){n.exports=o(13)()},function(n,r,o){var a=o(1),i=o(0),s=o(3),l=o(2),c=o(4),d=o(6);n.exports=function(f,p){var h=typeof Symbol=="function"&&Symbol.iterator,m="@@iterator";function g(B){var W=B&&(h&&B[h]||B[m]);if(typeof W=="function")return W}var S="<<anonymous>>",y={array:C("array"),bool:C("boolean"),func:C("function"),number:C("number"),object:C("object"),string:C("string"),symbol:C("symbol"),any:w(),arrayOf:$,element:_(),instanceOf:O,node:k(),objectOf:P,oneOf:E,oneOfType:T,shape:I,exact:M};function v(B,W){return B===W?B!==0||1/B===1/W:B!==B&&W!==W}function b(B){this.message=B,this.stack=""}b.prototype=Error.prototype;function x(B){function W(X,J,K,G,te,ee,ae){return G=G||S,ee=ee||K,ae!==c&&p&&i(!1,"Calling PropTypes validators directly is not supported by the `prop-types` package. Use `PropTypes.checkPropTypes()` to call them. Read more at http://fb.me/use-check-prop-types"),J[K]==null?X?J[K]===null?new b("The "+te+" `"+ee+"` is marked as required "+("in `"+G+"`, but its value is `null`.")):new b("The "+te+" `"+ee+"` is marked as required in "+("`"+G+"`, but its value is `undefined`.")):null:B(J,K,G,te,ee)}var Y=W.bind(null,!1);return Y.isRequired=W.bind(null,!0),Y}function C(B){function W(Y,X,J,K,G,te){var ee=Y[X],ae=N(ee);if(ae!==B){var se=L(ee);return new b("Invalid "+K+" `"+G+"` of type "+("`"+se+"` supplied to `"+J+"`, expected ")+("`"+B+"`."))}return null}return x(W)}function w(){return x(a.thatReturnsNull)}function $(B){function W(Y,X,J,K,G){if(typeof B!="function")return new b("Property `"+G+"` of component `"+J+"` has invalid PropType notation inside arrayOf.");var te=Y[X];if(!Array.isArray(te)){var ee=N(te);return new b("Invalid "+K+" `"+G+"` of type "+("`"+ee+"` supplied to `"+J+"`, expected an array."))}for(var ae=0;ae<te.length;ae++){var se=B(te,ae,J,K,G+"["+ae+"]",c);if(se instanceof Error)return se}return null}return x(W)}function _(){function B(W,Y,X,J,K){var G=W[Y];if(!f(G)){var te=N(G);return new b("Invalid "+J+" `"+K+"` of type "+("`"+te+"` supplied to `"+X+"`, expected a single ReactElement."))}return null}return x(B)}function O(B){function W(Y,X,J,K,G){if(!(Y[X]instanceof B)){var te=B.name||S,ee=F(Y[X]);return new b("Invalid "+K+" `"+G+"` of type "+("`"+ee+"` supplied to `"+J+"`, expected ")+("instance of `"+te+"`."))}return null}return x(W)}function E(B){if(!Array.isArray(B))return a.thatReturnsNull;function W(Y,X,J,K,G){for(var te=Y[X],ee=0;ee<B.length;ee++)if(v(te,B[ee]))return null;var ae=JSON.stringify(B);return new b("Invalid "+K+" `"+G+"` of value `"+te+"` "+("supplied to `"+J+"`, expected one of "+ae+"."))}return x(W)}function P(B){function W(Y,X,J,K,G){if(typeof B!="function")return new b("Property `"+G+"` of component `"+J+"` has invalid PropType notation inside objectOf.");var te=Y[X],ee=N(te);if(ee!=="object")return new b("Invalid "+K+" `"+G+"` of type "+("`"+ee+"` supplied to `"+J+"`, expected an object."));for(var ae in te)if(te.hasOwnProperty(ae)){var se=B(te,ae,J,K,G+"."+ae,c);if(se instanceof Error)return se}return null}return x(W)}function T(B){if(!Array.isArray(B))return a.thatReturnsNull;for(var W=0;W<B.length;W++){var Y=B[W];if(typeof Y!="function")return s(!1,"Invalid argument supplied to oneOfType. Expected an array of check functions, but received %s at index %s.",z(Y),W),a.thatReturnsNull}function X(J,K,G,te,ee){for(var ae=0;ae<B.length;ae++){var se=B[ae];if(se(J,K,G,te,ee,c)==null)return null}return new b("Invalid "+te+" `"+ee+"` supplied to "+("`"+G+"`."))}return x(X)}function k(){function B(W,Y,X,J,K){return j(W[Y])?null:new b("Invalid "+J+" `"+K+"` supplied to "+("`"+X+"`, expected a ReactNode."))}return x(B)}function I(B){function W(Y,X,J,K,G){var te=Y[X],ee=N(te);if(ee!=="object")return new b("Invalid "+K+" `"+G+"` of type `"+ee+"` "+("supplied to `"+J+"`, expected `object`."));for(var ae in B){var se=B[ae];if(se){var pe=se(te,ae,J,K,G+"."+ae,c);if(pe)return pe}}return null}return x(W)}function M(B){function W(Y,X,J,K,G){var te=Y[X],ee=N(te);if(ee!=="object")return new b("Invalid "+K+" `"+G+"` of type `"+ee+"` "+("supplied to `"+J+"`, expected `object`."));var ae=l({},Y[X],B);for(var se in ae){var pe=B[se];if(!pe)return new b("Invalid "+K+" `"+G+"` key `"+se+"` supplied to `"+J+"`.\nBad object: "+JSON.stringify(Y[X],null,"  ")+`
 Valid keys: `+JSON.stringify(Object.keys(B),null,"  "));var he=pe(te,se,J,K,G+"."+se,c);if(he)return he}return null}return x(W)}function j(B){switch(typeof B){case"number":case"string":case"undefined":return!0;case"boolean":return!B;case"object":if(Array.isArray(B))return B.every(j);if(B===null||f(B))return!0;var W=g(B);if(W){var Y=W.call(B),X;if(W!==B.entries){for(;!(X=Y.next()).done;)if(!j(X.value))return!1}else for(;!(X=Y.next()).done;){var J=X.value;if(J&&!j(J[1]))return!1}}else return!1;return!0;default:return!1}}function A(B,W){return B==="symbol"||W["@@toStringTag"]==="Symbol"||typeof Symbol=="function"&&W instanceof Symbol}function N(B){var W=typeof B;return Array.isArray(B)?"array":B instanceof RegExp?"object":A(W,B)?"symbol":W}function L(B){if(typeof B>"u"||B===null)return""+B;var W=N(B);if(W==="object"){if(B instanceof Date)return"date";if(B instanceof RegExp)return"regexp"}return W}function z(B){var W=L(B);switch(W){case"array":case"object":return"an "+W;case"boolean":case"date":case"regexp":return"a "+W;default:return W}}function F(B){return!B.constructor||!B.constructor.name?S:B.constructor.name}return y.checkPropTypes=d,y.PropTypes=y,y}},function(n,r,o){var a=o(1),i=o(0),s=o(4);n.exports=function(){function l(f,p,h,m,g,S){S!==s&&i(!1,"Calling PropTypes validators directly is not supported by the `prop-types` package. Use PropTypes.checkPropTypes() to call them. Read more at http://fb.me/use-check-prop-types")}l.isRequired=l;function c(){return l}var d={array:l,bool:l,func:l,number:l,object:l,string:l,symbol:l,any:l,arrayOf:c,element:l,instanceOf:c,node:l,objectOf:c,oneOf:c,oneOfType:c,shape:c,exact:c};return d.checkPropTypes=a,d.PropTypes=d,d}},function(n,r,o){Object.defineProperty(r,"__esModule",{value:!0});var a=o(15);Object.defineProperty(r,"blank",{enumerable:!0,get:function(){return m(a).default}});var i=o(16);Object.defineProperty(r,"balls",{enumerable:!0,get:function(){return m(i).default}});var s=o(17);Object.defineProperty(r,"bars",{enumerable:!0,get:function(){return m(s).default}});var l=o(18);Object.defineProperty(r,"bubbles",{enumerable:!0,get:function(){return m(l).default}});var c=o(19);Object.defineProperty(r,"cubes",{enumerable:!0,get:function(){return m(c).default}});var d=o(20);Object.defineProperty(r,"cylon",{enumerable:!0,get:function(){return m(d).default}});var f=o(21);Object.defineProperty(r,"spin",{enumerable:!0,get:function(){return m(f).default}});var p=o(22);Object.defineProperty(r,"spinningBubbles",{enumerable:!0,get:function(){return m(p).default}});var h=o(23);Object.defineProperty(r,"spokes",{enumerable:!0,get:function(){return m(h).default}});function m(g){return g&&g.__esModule?g:{default:g}}},function(n,r){n.exports=`<svg class="icon-blank" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"></svg>
 `},function(n,r){n.exports=`<svg class="icon-loading" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <path transform="translate(-8 0)" d="M4 12 A4 4 0 0 0 4 20 A4 4 0 0 0 4 12"> 
+  <path transform="translate(-8 0)" d="M4 12 A4 4 0 0 0 4 20 A4 4 0 0 0 4 12">
     <animateTransform attributeName="transform" type="translate" values="-8 0; 2 0; 2 0;" dur="0.8s" repeatCount="indefinite" begin="0" keytimes="0;.25;1" keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8" calcMode="spline"  />
   </path>
-  <path transform="translate(2 0)" d="M4 12 A4 4 0 0 0 4 20 A4 4 0 0 0 4 12"> 
+  <path transform="translate(2 0)" d="M4 12 A4 4 0 0 0 4 20 A4 4 0 0 0 4 12">
     <animateTransform attributeName="transform" type="translate" values="2 0; 12 0; 12 0;" dur="0.8s" repeatCount="indefinite" begin="0" keytimes="0;.35;1" keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8" calcMode="spline"  />
   </path>
-  <path transform="translate(12 0)" d="M4 12 A4 4 0 0 0 4 20 A4 4 0 0 0 4 12"> 
+  <path transform="translate(12 0)" d="M4 12 A4 4 0 0 0 4 20 A4 4 0 0 0 4 12">
     <animateTransform attributeName="transform" type="translate" values="12 0; 22 0; 22 0;" dur="0.8s" repeatCount="indefinite" begin="0" keytimes="0;.45;1" keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8" calcMode="spline"  />
   </path>
-  <path transform="translate(24 0)" d="M4 12 A4 4 0 0 0 4 20 A4 4 0 0 0 4 12"> 
+  <path transform="translate(24 0)" d="M4 12 A4 4 0 0 0 4 20 A4 4 0 0 0 4 12">
     <animateTransform attributeName="transform" type="translate" values="22 0; 32 0; 32 0;" dur="0.8s" repeatCount="indefinite" begin="0" keytimes="0;.55;1" keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8" calcMode="spline"  />
   </path>
 </svg>
 `},function(n,r){n.exports=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <path transform="translate(2)" d="M0 12 V20 H4 V12z"> 
+  <path transform="translate(2)" d="M0 12 V20 H4 V12z">
     <animate attributeName="d" values="M0 12 V20 H4 V12z; M0 4 V28 H4 V4z; M0 12 V20 H4 V12z; M0 12 V20 H4 V12z" dur="1.2s" repeatCount="indefinite" begin="0" keytimes="0;.2;.5;1" keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8;0.2 0.8 0.4 0.8" calcMode="spline"  />
   </path>
   <path transform="translate(8)" d="M0 12 V20 H4 V12z">
@@ -750,30 +750,30 @@ Valid keys: `+JSON.stringify(Object.keys(B),null,"  "));var he=pe(te,se,J,K,G+".
   </path>
 </svg>
 `},function(n,r){n.exports=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <circle transform="translate(8 0)" cx="0" cy="16" r="0"> 
+  <circle transform="translate(8 0)" cx="0" cy="16" r="0">
     <animate attributeName="r" values="0; 4; 0; 0" dur="1.2s" repeatCount="indefinite" begin="0"
       keytimes="0;0.2;0.7;1" keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8;0.2 0.6 0.4 0.8" calcMode="spline" />
   </circle>
-  <circle transform="translate(16 0)" cx="0" cy="16" r="0"> 
+  <circle transform="translate(16 0)" cx="0" cy="16" r="0">
     <animate attributeName="r" values="0; 4; 0; 0" dur="1.2s" repeatCount="indefinite" begin="0.3"
       keytimes="0;0.2;0.7;1" keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8;0.2 0.6 0.4 0.8" calcMode="spline" />
   </circle>
-  <circle transform="translate(24 0)" cx="0" cy="16" r="0"> 
+  <circle transform="translate(24 0)" cx="0" cy="16" r="0">
     <animate attributeName="r" values="0; 4; 0; 0" dur="1.2s" repeatCount="indefinite" begin="0.6"
       keytimes="0;0.2;0.7;1" keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8;0.2 0.6 0.4 0.8" calcMode="spline" />
   </circle>
 </svg>
 `},function(n,r){n.exports=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <path transform="translate(-8 0)" d="M0 12 V20 H8 V12z"> 
+  <path transform="translate(-8 0)" d="M0 12 V20 H8 V12z">
     <animateTransform attributeName="transform" type="translate" values="-8 0; 2 0; 2 0;" dur="0.8s" repeatCount="indefinite" begin="0" keytimes="0;.25;1" keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8" calcMode="spline"  />
   </path>
-  <path transform="translate(2 0)" d="M0 12 V20 H8 V12z"> 
+  <path transform="translate(2 0)" d="M0 12 V20 H8 V12z">
     <animateTransform attributeName="transform" type="translate" values="2 0; 12 0; 12 0;" dur="0.8s" repeatCount="indefinite" begin="0" keytimes="0;.35;1" keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8" calcMode="spline"  />
   </path>
-  <path transform="translate(12 0)" d="M0 12 V20 H8 V12z"> 
+  <path transform="translate(12 0)" d="M0 12 V20 H8 V12z">
     <animateTransform attributeName="transform" type="translate" values="12 0; 22 0; 22 0;" dur="0.8s" repeatCount="indefinite" begin="0" keytimes="0;.45;1" keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8" calcMode="spline"  />
   </path>
-  <path transform="translate(24 0)" d="M0 12 V20 H8 V12z"> 
+  <path transform="translate(24 0)" d="M0 12 V20 H8 V12z">
     <animateTransform attributeName="transform" type="translate" values="22 0; 32 0; 32 0;" dur="0.8s" repeatCount="indefinite" begin="0" keytimes="0;.55;1" keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8" calcMode="spline"  />
   </path>
 </svg>

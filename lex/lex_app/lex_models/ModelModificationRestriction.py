@@ -36,12 +36,14 @@ class ModelModificationRestriction(ABC):
         determines whether the given user is allowed to update or delete instances of the model in general.
         """
         return True
+
     def can_delete_in_general(self, user, violations):
         """
         determines whether the given user can modify the given instance.
         Important: this method is called on the 'old' instance (i.e. before the modification)!
         """
         return True
+
     def can_be_read(self, instance, user, violations):
         """
         determines whether the given user can read the given instance
@@ -61,4 +63,3 @@ class ModelModificationRestriction(ABC):
         Important: this method is called on the 'old' instance (i.e. before the modification)!
         """
         return True
-

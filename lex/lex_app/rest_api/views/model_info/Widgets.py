@@ -5,7 +5,7 @@ from rest_framework_api_key.permissions import HasAPIKey
 
 
 class Widgets(APIView):
-    http_method_names = ['get']
+    http_method_names = ["get"]
     permission_classes = [HasAPIKey | IsAuthenticated]
 
     def get(self, *args, **kwargs):

@@ -16,7 +16,6 @@ from lex.lex_app import settings
 
 
 class ProcessAdminTestCase(TestCase):
-
     def replace_tagged_parameters(self, object_parameters):
         for key in object_parameters:
             value: str = object_parameters[key]
@@ -34,86 +33,138 @@ class ProcessAdminTestCase(TestCase):
 
     def setUpCloudStorage(self, generic_app_models) -> None:
         from datetime import datetime
+
         self.t0 = datetime.now()
         self.tagged_objects = {}
         test_data = self.get_test_data()
         for object in test_data:
-            klass = generic_app_models[object['class']]
-            action = object['action']
-            tag = object['tag'] if 'tag' in object else 'instance'
-            if action == 'create':
-                object['parameters'] = self.replace_tagged_parameters(object['parameters'])
-                self.tagged_objects[tag] = klass(**object['parameters'])
-                for parameter in object['parameters'].keys():
-                    if (isinstance(self.tagged_objects[tag]._meta.get_field(parameter), (FileField))):
-                        upload_to = self.tagged_objects[tag]._meta.get_field(parameter).upload_to
-                        if upload_to and not upload_to.endswith('/'):
+            klass = generic_app_models[object["class"]]
+            action = object["action"]
+            tag = object["tag"] if "tag" in object else "instance"
+            if action == "create":
+                object["parameters"] = self.replace_tagged_parameters(
+                    object["parameters"]
+                )
+                self.tagged_objects[tag] = klass(**object["parameters"])
+                for parameter in object["parameters"].keys():
+                    if isinstance(
+                        self.tagged_objects[tag]._meta.get_field(parameter), (FileField)
+                    ):
+                        upload_to = (
+                            self.tagged_objects[tag]
+                            ._meta.get_field(parameter)
+                            .upload_to
+                        )
+                        if upload_to and not upload_to.endswith("/"):
                             upload_to += "/"
                         path = f"{upload_to}{os.path.basename(self.tagged_objects[tag].__dict__[parameter])}"
-                        file_name = os.path.basename(self.tagged_objects[tag].__dict__[parameter])
-                        f = open(f"{os.getcwd()}/{self.tagged_objects[tag].__dict__[parameter]}", "rb")
+                        file_name = os.path.basename(
+                            self.tagged_objects[tag].__dict__[parameter]
+                        )
+                        f = open(
+                            f"{os.getcwd()}/{self.tagged_objects[tag].__dict__[parameter]}",
+                            "rb",
+                        )
                         file_content = f.read()
-                        new_file_name = default_storage.save(path, content=File(io.BytesIO(file_content),
-                                                                                name=f"{file_name}"))
+                        new_file_name = default_storage.save(
+                            path,
+                            content=File(io.BytesIO(file_content), name=f"{file_name}"),
+                        )
                         self.tagged_objects[tag].__dict__[parameter] = new_file_name
 
-                cache.set(threading.get_ident(), str(object['class']) + "_" + action)
+                cache.set(threading.get_ident(), str(object["class"]) + "_" + action)
                 self.tagged_objects[tag].save()
-            elif action == 'update':
-                object['filter_parameters'] = self.replace_tagged_parameters(object['filter_parameters'])
-                self.tagged_objects[tag] = klass.objects.filter(**object['filter_parameters']).first()
+            elif action == "update":
+                object["filter_parameters"] = self.replace_tagged_parameters(
+                    object["filter_parameters"]
+                )
+                self.tagged_objects[tag] = klass.objects.filter(
+                    **object["filter_parameters"]
+                ).first()
                 if self.tagged_objects[tag] is not None:
-                    for key in object['parameters']:
-                        if isinstance(self.tagged_objects[tag]._meta.get_field(key), (FileField)):
-                            upload_to = self.tagged_objects[tag]._meta.get_field(key).upload_to
-                            if upload_to and not upload_to.endswith('/'):
+                    for key in object["parameters"]:
+                        if isinstance(
+                            self.tagged_objects[tag]._meta.get_field(key), (FileField)
+                        ):
+                            upload_to = (
+                                self.tagged_objects[tag]._meta.get_field(key).upload_to
+                            )
+                            if upload_to and not upload_to.endswith("/"):
                                 upload_to += "/"
                             path = f"{upload_to}{os.path.basename(object['parameters'][key])}"
-                            file_name = os.path.basename(object['parameters'][key])
+                            file_name = os.path.basename(object["parameters"][key])
                             f = open(f"{os.getcwd()}/{object['parameters'][key]}", "rb")
                             file_content = f.read()
-                            new_file_name = default_storage.save(path, content=File(io.BytesIO(file_content),
-                                                                                    name=f"{file_name}"))
+                            new_file_name = default_storage.save(
+                                path,
+                                content=File(
+                                    io.BytesIO(file_content), name=f"{file_name}"
+                                ),
+                            )
                             setattr(self.tagged_objects[tag], key, new_file_name)
                         else:
-                            setattr(self.tagged_objects[tag], key, object['parameters'][key])
+                            setattr(
+                                self.tagged_objects[tag], key, object["parameters"][key]
+                            )
 
-                    cache.set(threading.get_ident(),
-                              str(object['class']) + "_" + action + "_" + str(self.tagged_objects[tag].pk))
+                    cache.set(
+                        threading.get_ident(),
+                        str(object["class"])
+                        + "_"
+                        + action
+                        + "_"
+                        + str(self.tagged_objects[tag].pk),
+                    )
                     self.tagged_objects[tag].save()
-            elif action == 'delete':
-                klass.objects.filter(**object['filter_parameters']).delete()
+            elif action == "delete":
+                klass.objects.filter(**object["filter_parameters"]).delete()
 
     def setUp(self) -> None:
         from datetime import datetime
 
-        generic_app_models = {f"{model.__name__}": model for model in
-                              set(apps.get_app_config(settings.repo_name).models.values())}
+        generic_app_models = {
+            f"{model.__name__}": model
+            for model in set(apps.get_app_config(settings.repo_name).models.values())
+        }
 
         self.t0 = datetime.now()
         self.tagged_objects = {}
         test_data = self.get_test_data()
         for object in test_data:
-            klass = generic_app_models[object['class']]
-            action = object['action']
-            tag = object['tag'] if 'tag' in object else 'instance'
-            if action == 'create':
-                object['parameters'] = self.replace_tagged_parameters(object['parameters'])
-                self.tagged_objects[tag] = klass(**object['parameters'])
-                cache.set(threading.get_ident(), str(object['class']) + "_" + action)
+            klass = generic_app_models[object["class"]]
+            action = object["action"]
+            tag = object["tag"] if "tag" in object else "instance"
+            if action == "create":
+                object["parameters"] = self.replace_tagged_parameters(
+                    object["parameters"]
+                )
+                self.tagged_objects[tag] = klass(**object["parameters"])
+                cache.set(threading.get_ident(), str(object["class"]) + "_" + action)
                 self.tagged_objects[tag].save()
-            elif action == 'update':
-                object['filter_parameters'] = self.replace_tagged_parameters(object['filter_parameters'])
-                self.tagged_objects[tag] = klass.objects.filter(**object['filter_parameters']).first()
+            elif action == "update":
+                object["filter_parameters"] = self.replace_tagged_parameters(
+                    object["filter_parameters"]
+                )
+                self.tagged_objects[tag] = klass.objects.filter(
+                    **object["filter_parameters"]
+                ).first()
                 if self.tagged_objects[tag] is not None:
-                    for key in object['parameters']:
-                        setattr(self.tagged_objects[tag], key, object['parameters'][key])
+                    for key in object["parameters"]:
+                        setattr(
+                            self.tagged_objects[tag], key, object["parameters"][key]
+                        )
 
-                    cache.set(threading.get_ident(),
-                              str(object['class']) + "_" + action + "_" + str(self.tagged_objects[tag].pk))
+                    cache.set(
+                        threading.get_ident(),
+                        str(object["class"])
+                        + "_"
+                        + action
+                        + "_"
+                        + str(self.tagged_objects[tag].pk),
+                    )
                     self.tagged_objects[tag].save()
-            elif action == 'delete':
-                klass.objects.filter(**object['filter_parameters']).delete()
+            elif action == "delete":
+                klass.objects.filter(**object["filter_parameters"]).delete()
 
     def tearDown(self) -> None:
         pass
@@ -134,19 +185,20 @@ class ProcessAdminTestCase(TestCase):
             path = Path(file).parent
             clean_test_path = str(path) + os.sep + "test_data.json"
         else:
-            clean_test_path = self.test_path.replace('/', os.sep)
+            clean_test_path = self.test_path.replace("/", os.sep)
             clean_test_path = os.getenv("PROJECT_ROOT") + os.sep + clean_test_path
         test_data = self.get_test_data_from_path(clean_test_path)
         return test_data
 
-
     def get_test_data_from_path(self, path):
-        with open(str(path), 'r') as f:
+        with open(str(path), "r") as f:
             test_data = json.loads(f.read())
             for index, object in enumerate(test_data):
                 if "subprocess" in object:
-                    subprocess_path = object['subprocess'].replace('/', os.sep)
-                    subprocess_path = os.getenv("PROJECT_ROOT") + os.sep + subprocess_path
+                    subprocess_path = object["subprocess"].replace("/", os.sep)
+                    subprocess_path = (
+                        os.getenv("PROJECT_ROOT") + os.sep + subprocess_path
+                    )
                     sublist = self.get_test_data_from_path(subprocess_path)
                     test_data[index] = sublist
         flat_list = []
@@ -157,10 +209,9 @@ class ProcessAdminTestCase(TestCase):
                 flat_list.append(sublist)
         return flat_list
 
-
     def get_classes(self, generic_app_models):
         test_data = self.get_test_data()
-        return set([generic_app_models[object['class']] for object in test_data])
+        return set([generic_app_models[object["class"]] for object in test_data])
 
     def check_if_all_models_are_empty(self, generic_app_models):
         for klass in self.get_classes(generic_app_models):
@@ -173,5 +224,5 @@ class ProcessAdminTestCase(TestCase):
         for klass in self.get_classes(generic_app_models):
             c = klass.objects.all().count()
             if c > 0:
-                count_of_objects_in_non_empty_models[str(klass)]=c
+                count_of_objects_in_non_empty_models[str(klass)] = c
         return count_of_objects_in_non_empty_models

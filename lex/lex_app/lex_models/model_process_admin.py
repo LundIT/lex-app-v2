@@ -22,9 +22,13 @@ def get_displayed_fields(model):
 # Beware there might be an expected behavior if the logic is reliant of creating a new object everytime
 @LexSingleton
 class ModelProcessAdmin:
-
-    def __init__(self, to_display_string=None, fields_not_in_table_view=None, main_field=None,
-                 allow_quick_instance_creation=True) -> None:
+    def __init__(
+        self,
+        to_display_string=None,
+        fields_not_in_table_view=None,
+        main_field=None,
+        allow_quick_instance_creation=True,
+    ) -> None:
         """
         :param to_display_string: can be set to a function that is applied to each instance
         for getting the display string for it. If None, the str-method is used
@@ -53,7 +57,9 @@ class ModelProcessAdmin:
 
     def _create_fields_in_table_view(self, model):
         fields = get_displayed_fields(model)
-        fields_not_in_table_view = self.fields_not_in_table_view.difference({model._meta.pk.name})
+        fields_not_in_table_view = self.fields_not_in_table_view.difference(
+            {model._meta.pk.name}
+        )
         result = subtract_from_list(fields, fields_not_in_table_view)
         self._models2fields_in_table_view[model] = result
         return result

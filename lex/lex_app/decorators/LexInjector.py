@@ -3,7 +3,7 @@ def inject(cls):
 
     def wrapper(instance_self, *args, **kwargs):
         # If the class is marked as a singleton, use the singleton instance
-        if hasattr(cls, '_is_singleton') and cls._is_singleton:
+        if hasattr(cls, "_is_singleton") and cls._is_singleton:
             injected_instance = cls()
         else:
             # Otherwise, create a new instance
