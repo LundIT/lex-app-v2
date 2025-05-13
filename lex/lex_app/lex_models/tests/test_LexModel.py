@@ -27,9 +27,27 @@ class TestLexModel(AbstractModelTestCase):
 
     def test_initial_instantiation_from_user(self):
         request = FakeRequest(name="John Doe", sub="1234")
-        context_id.set(
+        token = context_id.set(
             {"context_id": "abc", "request_obj": request, "calculation_id": "xyz"}
         )
         model = LexModelFactory.create()
-        self.assertEqual(model.created_by, "John Doe (1234)")
-        self.assertEqual(model.edited_by, None)
+        try:
+            self.assertEqual(model.created_by, "John Doe (1234)")
+            self.assertEqual(model.edited_by, None)
+        finally:
+            # Reset the context_id, since it is peristent between tests
+            context_id.reset(token)
+
+    def test_edit_by_user(self):
+        model = LexModelFactory.create()
+        request = FakeRequest(name="John Doe", sub="1234")
+        token = context_id.set(
+            {"context_id": "abc", "request_obj": request, "calculation_id": "xyz"}
+        )
+        try:
+            model.dummy_field = "New Value"
+            model.save()
+            self.assertEqual(model.created_by, "Initial Data Upload")
+            self.assertEqual(model.edited_by, "John Doe (1234)")
+        finally:
+            context_id.reset(token)
