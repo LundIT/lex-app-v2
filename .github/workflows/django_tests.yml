@@ -20,9 +20,9 @@ jobs:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_USER: lunduser
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: lunddb
+          POSTGRES_USER: django
+          POSTGRES_PASSWORD: lundadminlocal
+          POSTGRES_DB: db_lex
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
@@ -38,12 +38,6 @@ jobs:
       - name: Install python packages
         run: |
           pip install -r requirements.txt
-      - name: Setup ENV PARAMS
-        run: |
-          export DATABASE_NAME=lunddb
-          export POSTGRES_USERNAME=lunduser
-          export POSTGRES_PASSWORD=password
-          export DATABASE_DOMAIN=localhost
       - name: Run Tests
         run: |
           cd lex
