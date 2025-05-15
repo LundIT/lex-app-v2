@@ -142,6 +142,36 @@ class ModelStructureBuilderTests(SimpleTestCase):
         finally:
             del sys.modules[module_name]
 
+    def test_extract_and_save_structure_method_raises(self):
+        # Create a fake module whose getters all raise
+        module_name = "error_mod"
+        mod = ModuleType(module_name)
+
+        def bad():
+            raise RuntimeError("oops")
+
+        mod.get_model_structure = bad
+        mod.get_widget_structure = bad
+        mod.get_model_styling = bad
+        sys.modules[module_name] = mod
+
+        try:
+            with patch("builtins.print") as mock_print:
+                # Should catch each RuntimeError and print an error
+                self.builder.extract_and_save_structure(module_name)
+
+                mock_print.assert_any_call("Error calling get_model_structure: oops")
+                mock_print.assert_any_call("Error calling get_widget_structure: oops")
+                mock_print.assert_any_call("Error calling get_model_styling: oops")
+
+            # None of the attributes should have been set
+            self.assertEqual(self.builder.model_structure, {})
+            self.assertEqual(self.builder.widget_structure, [])
+            self.assertEqual(self.builder.model_styling, {})
+
+        finally:
+            del sys.modules[module_name]
+
     # === Test for get_extracted_structures ===
 
     def test_get_extracted_structures(self):
