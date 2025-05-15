@@ -55,4 +55,5 @@ jobs:
       - name: Run Tests
         run: |
           cd lex
-          python manage.py test --parallel --verbosity=2
+          coverage run --source='.' manage.py test --parallel --verbosity=2
+          coveage report

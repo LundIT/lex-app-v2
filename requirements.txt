@@ -51,3 +51,4 @@ tabulate
 django-db-views
 pre-commit
 factory-boy
+coverage
