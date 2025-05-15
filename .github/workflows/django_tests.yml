@@ -18,6 +18,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      - name: Install python packages
+        run: |
+          pip install -r requirements.txt
       - name: Run Tests
         run: |
           cd lex
