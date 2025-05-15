@@ -56,4 +56,4 @@ jobs:
         run: |
           cd lex
           coverage run --source='.' manage.py test --parallel --verbosity=2
-          coveage report
+          coverage report
