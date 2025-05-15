@@ -9,13 +9,15 @@ on:
     - cron: "00 9 * * *"
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
       matrix:
         python-version: [3.12.0]
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
       - name: Run Tests
         run: |
           cd lex
