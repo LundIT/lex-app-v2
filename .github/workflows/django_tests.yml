@@ -45,8 +45,13 @@ jobs:
       - name: Install dependecies
         run: |
           pip install --upgrade pip setuptools wheel
-          pip install pandas --prefer-binary
-          pip install -r requirements.txt
+          pip install --prefer-binary -r requirements.txt
+      - name: Save pip cache
+        if: always()
+        uses: actions/cache/save@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
       - name: Run Tests
         run: |
           cd lex
