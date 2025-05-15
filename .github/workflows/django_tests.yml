@@ -8,11 +8,11 @@ on:
   schedule:
     - cron: "00 9 * * *"
   workflow_dispatch:
-  inputs:
-    run-tests:
-      description: 'Run test suite'
-      required: true
-      default: 'yes'
+    inputs:
+      run-tests:
+        description: 'Run test suite'
+        required: true
+        default: 'yes'
 
 jobs:
   test:
