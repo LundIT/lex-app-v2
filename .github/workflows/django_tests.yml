@@ -16,16 +16,16 @@ jobs:
       matrix:
         python-version: [3.12.0]
 
-    services:
-      postgres:
-        image: postgres:latest
-        env:
-          POSTGRES_USER: django
-          POSTGRES_PASSWORD: lundadminlocal
-          POSTGRES_DB: db_lex
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
+    # services:
+    #   postgres:
+    #     image: postgres:latest
+    #     env:
+    #       POSTGRES_USER: django
+    #       POSTGRES_PASSWORD: lundadminlocal
+    #       POSTGRES_DB: db_lex
+    #     ports:
+    #       - 5432:5432
+    #     options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
