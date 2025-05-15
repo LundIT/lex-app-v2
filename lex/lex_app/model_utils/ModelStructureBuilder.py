@@ -2,7 +2,7 @@ import importlib
 import os
 from typing import Dict
 
-from lex_app.model_utils.parse_utils import ModelStructure
+from lex_app.model_utils.ModelStructure import ModelStructure
 
 
 class ModelStructureBuilder:
@@ -16,13 +16,12 @@ class ModelStructureBuilder:
         if not os.path.exists(path):
             raise FileNotFoundError(f"File not found: {path}")
 
-        if not path.endswith('.yaml'):
+        if not path.endswith(".yaml"):
             raise ValueError(f"Invalid file format: {path}")
 
         info = ModelStructure(path)
         self.model_structure = info.structure
         self.model_styling = info.styling
-
 
     def extract_and_save_structure(self, full_module_name: str) -> None:
         try:
@@ -65,22 +64,21 @@ class ModelStructureBuilder:
 
     def _get_model_path(self, path) -> str:
         try:
-            module_parts = path.split('.')
+            module_parts = path.split(".")
             repo_index = module_parts.index(self.repo)
-            return '.'.join(module_parts[repo_index + 1:-1])
+            return ".".join(module_parts[repo_index + 1 : -1])
         except ValueError as e:
             print(f"Path: {path}")
 
     def _insert_model_to_structure(self, path: str, name: str):
         current = self.model_structure
-        for p in path.split('.'):
+        for p in path.split("."):
             if p not in current:
                 current[p] = {}
             current = current[p]
         current[name] = None
 
-
     def _add_reports_to_structure(self):
-        self.model_structure['Z_Reports'] = {'calculationlog': None}
+        self.model_structure["Z_Reports"] = {"calculationlog": None}
         if os.getenv("IS_STREAMLIT_ENABLED") == "true":
-            self.model_structure['Streamlit'] = {'streamlit': None}
+            self.model_structure["Streamlit"] = {"streamlit": None}
