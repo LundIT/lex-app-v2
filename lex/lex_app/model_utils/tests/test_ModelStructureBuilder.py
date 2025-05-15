@@ -7,7 +7,7 @@ from unittest.mock import patch
 from django.test import SimpleTestCase
 
 from lex_app.model_utils.ModelStructureBuilder import ModelStructureBuilder
-from lex_app.model_utils.parse_utils import ModelStructure
+from lex_app.model_utils.ModelStructure import ModelStructure
 
 
 class ModelStructureBuilderTests(SimpleTestCase):
