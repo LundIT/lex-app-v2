@@ -24,4 +24,4 @@ jobs:
       - name: Run Tests
         run: |
           cd lex
-          python manage.py test --parallel
+          python manage.py test --parallel --verbosity=2
